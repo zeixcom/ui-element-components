@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_28bde40ff07ee84"
   },
   "keywords": [],
   "author": "",
@@ -22,5 +23,8 @@
     "chromatic": "^11.3.0",
     "lit": "^3.1.3",
     "storybook": "^8.0.9"
+  },
+  "dependencies": {
+    "@efflore/ui-element": "^0.4.0"
   }
 }
