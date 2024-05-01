@@ -76,6 +76,8 @@
   --easing-in: ease-in;
   --easing-out: ease-out;
   --easing-inout: ease-in-out;
+
+  --input-height: 2rem;
 }
 
 @media screen and (min-width: 45em) and (max-width: 75em) {
@@ -172,6 +174,8 @@ body {
 }
 
 .docs-story {
+  color: var(--color-text);
+  background: var(--color-background);
   
   header,
   main,
