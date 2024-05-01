@@ -1,9 +1,9 @@
 import { html } from 'lit';
 
-import { Button } from './Button';
-import './header.css';
+import { InputButton } from '../../components/form/input-button';
+import './page-header.css';
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }) => html`
+export const PageHeader = ({ user, onLogin, onLogout, onCreateAccount }) => html`
   <header>
     <div class="storybook-header">
       <div>
@@ -27,13 +27,13 @@ export const Header = ({ user, onLogin, onLogout, onCreateAccount }) => html`
       </div>
       <div>
         ${user
-          ? Button({ size: 'small', onClick: onLogout, label: 'Log out' })
-          : html`${Button({
+          ? InputButton({ size: 'small', onClick: onLogout, label: 'Log out' })
+          : html`${InputButton({
               size: 'small',
               onClick: onLogin,
               label: 'Log in',
             })}
-            ${Button({
+            ${InputButton({
               primary: true,
               size: 'small',
               onClick: onCreateAccount,

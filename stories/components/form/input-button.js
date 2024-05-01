@@ -1,12 +1,12 @@
 import { html } from 'lit';
 import UIElement from '@efflore/ui-element';
 
-import './button.css';
+import './input-button.css';
 
 /**
  * Primary UI component for user interaction
  */
-export const Button = ({ variant, size, label, disabled = false, onClick }) => {
+export const InputButton = ({ variant, size, label, disabled = false, onClick }) => {
 
   define('input-button', class extends UIElement {
     static observedAttributes = ['disabled'];

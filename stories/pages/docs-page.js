@@ -1,10 +1,11 @@
 import { html } from 'lit';
-import { Header } from './Header';
-import './page.css';
+import { PageHeader } from '../modules/sections/page-header';
 
-export const Page = ({ user, onLogin, onLogout, onCreateAccount }) => html`
+import './docs-page.css';
+
+export const DocsPage = ({ user, onLogin, onLogout, onCreateAccount }) => html`
   <article>
-    ${Header({
+    ${PageHeader({
       user,
       onLogin,
       onLogout,

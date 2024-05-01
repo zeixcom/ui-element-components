@@ -1,11 +1,11 @@
 import { fn } from '@storybook/test';
-import { Header } from './Header';
+import { PageHeader } from './page-header';
 
 export default {
-  title: 'Example/Header',
+  title: 'sections/page-header',
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/web-components/vue/writing-docs/autodocs
   tags: ['autodocs'],
-  render: (args) => Header(args),
+  render: (args) => PageHeader(args),
   args: {
     onLogin: fn(),
     onLogout: fn(),
