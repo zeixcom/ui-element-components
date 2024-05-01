@@ -3,43 +3,60 @@ import { Button } from './Button';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'Example/Button',
+  title: 'form/input-button',
   tags: ['autodocs'],
   render: (args) => Button(args),
   argTypes: {
-    backgroundColor: { control: 'color' },
+    /* backgroundColor: { control: 'color' }, */
+    disabled: {
+      control: 'boolean',
+      defaultValue: { summary: false },
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['primary', 'secondary', 'error', 'success'],
+      defaultValue: { summary: 'secondary' },
+    },
     size: {
       control: { type: 'select' },
       options: ['small', 'medium', 'large'],
+      defaultValue: { summary: 'medium' },
     },
   },
-  args: { onClick: fn() },
+  args: {
+    label: 'Button',
+    variant: 'secondary',
+    size: 'medium',
+    disabled: false,
+    onClick: fn()
+  },
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary = {
   args: {
-    primary: true,
-    label: 'Button',
+    variant: 'primary',
   },
 };
 
 export const Secondary = {
+  args: {},
+};
+
+export const Disabled = {
   args: {
-    label: 'Button',
+    disabled: true,
   },
 };
 
 export const Large = {
   args: {
     size: 'large',
-    label: 'Button',
   },
 };
 
 export const Small = {
   args: {
     size: 'small',
-    label: 'Button',
   },
 };
