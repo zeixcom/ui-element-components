@@ -1,5 +1,5 @@
 import { fn } from '@storybook/test';
-import { InputText } from './input-text';
+import { InputText } from './input-text.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {

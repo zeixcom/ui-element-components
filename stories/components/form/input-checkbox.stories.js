@@ -1,5 +1,5 @@
 import { fn } from '@storybook/test';
-import { InputCheckbox } from './input-checkbox';
+import { InputCheckbox } from './input-checkbox.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {

@@ -2,13 +2,13 @@
   --container-max-width: 72rem;
   --section-max-width: 48rem;
 
-  --space-xxs: 0.2361rem;
+  --space-xxs: 0.236rem;
   --space-xs: 0.382rem;
   --space-s: 0.618rem;
   --space-m: 1rem;
   --space-l: 1.618rem;
-  --space-xl: 2.6179rem;
-  --space-xxl: 4.2358rem;
+  --space-xl: 2.618rem;
+  --space-xxl: 4.236rem;
 
   --font-size-xs: clamp(0.75rem, 0.125vw + 0.725rem, 0.7813rem);
   --font-size-s: clamp(0.875rem, 0.25vw + 0.825rem, 0.9375rem);

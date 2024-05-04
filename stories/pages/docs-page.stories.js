@@ -1,4 +1,4 @@
-import { DocsPage } from './docs-page';
+import { DocsPage } from './docs-page.html';
 import * as PageHeaderStories from '../modules/sections/page-header.stories';
 
 export default {

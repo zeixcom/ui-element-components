@@ -9,7 +9,7 @@ input-button {
     border-radius: var(--space-xs);
     background-color: var(--color-secondary);
     color: var(--color-text);
-    padding: var(--space-xs) var(--space-s);
+    padding: 0 var(--space-s);
     cursor: pointer;
     font-size: var(--font-size-s);
     line-height: var(--line-height-s);
@@ -54,13 +54,15 @@ input-button {
     }
 
     &.small {
+      --input-height: var(--space-l);
       font-size: var(--font-size-xs);
-      padding: var(--space-xxs) var(--space-xs);
+      padding-inline: var(--space-xs);
     }
 
     &.large {
+      --input-height: var(--space-xl);
       font-size: var(--font-size-m);
-      padding: var(--space-s) var(--space-m);
+      padding-inline: var(--space-m);
     }
 
     &:disabled {
