@@ -1,6 +1,6 @@
 import { html } from 'lit';
 
-import InputButton from '../../../components/form/input-button/input-button.html.js';
+import InputButton from '../../../components/forms/input-button/input-button.html.js';
 
 import './code-block.css';
 import './prism-okaidia.css';

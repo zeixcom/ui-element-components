@@ -3,7 +3,7 @@ import InputCheckbox from './input-checkbox.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'form/input-checkbox',
+  title: 'forms/input-checkbox',
   tags: ['autodocs'],
   render: (args) => InputCheckbox(args),
   argTypes: {

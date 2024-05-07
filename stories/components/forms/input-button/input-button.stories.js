@@ -3,7 +3,7 @@ import InputButton from './input-button.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'form/input-button',
+  title: 'forms/input-button',
   tags: ['autodocs'],
   render: (args) => InputButton(args),
   argTypes: {

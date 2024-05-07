@@ -3,7 +3,7 @@ import InputNumber from './input-number.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'form/input-number',
+  title: 'forms/input-number',
   tags: ['autodocs'],
   render: (args) => InputNumber(args),
   argTypes: {

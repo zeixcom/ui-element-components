@@ -1,16 +1,21 @@
 import { fn } from '@storybook/test';
-import InputPassword from './input-password.html';
+import { InputText } from './input-text.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: 'form/input-password',
+  title: 'forms/input-text',
   tags: ['autodocs'],
-  render: (args) => InputPassword(args),
-  argTypes: {},
+  render: (args) => InputText(args),
+  argTypes: {
+    value: {
+      defaultValue: { summary: '' },
+    }
+  },
   args: {
-    label: 'Password',
+    label: 'Text',
     id: 'id',
     name: 'name',
+    value: '',
     onInput: fn(),
     onChange: fn(),
   },
@@ -19,4 +24,10 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Empty = {
   args: {},
+};
+
+export const Prefilled = {
+  args: {
+    value: 'Value',
+  },
 };
