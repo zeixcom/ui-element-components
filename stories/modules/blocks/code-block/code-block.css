@@ -15,6 +15,15 @@ code-block {
     text-transform: uppercase;
   }
 
+  pre {
+    color: var(--color-gray-10);
+    background: var(--color-gray-90);
+    padding: var(--space-s);
+    margin: var(--space-xs) 0;
+    overflow: auto;
+    border-radius: var(--space-xs);
+  }
+
   .copy {
     position: absolute;
     right: var(--space-s);
