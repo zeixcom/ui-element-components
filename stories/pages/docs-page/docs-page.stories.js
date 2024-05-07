@@ -1,8 +1,8 @@
-import { DocsPage } from './docs-page.html';
+import DocsPage from './docs-page.html';
 import * as PageHeaderStories from '../../modules/sections/page-header/page-header.stories';
 
 export default {
-  title: 'docs/docs-page',
+  title: 'pages/docs-page',
   render: (args) => DocsPage(args),
 };
 

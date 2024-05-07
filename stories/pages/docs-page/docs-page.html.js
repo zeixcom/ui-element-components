@@ -3,7 +3,7 @@ import { PageHeader } from '../../modules/sections/page-header/page-header.html'
 
 import './docs-page.css';
 
-export const DocsPage = ({ user, onLogin, onLogout, onCreateAccount }) => html`
+export default ({ user, onLogin, onLogout, onCreateAccount }) => html`
 <article>
   ${PageHeader({
     user,

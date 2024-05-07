@@ -11,6 +11,8 @@ define('input-number', class extends UIElement {
     const input = this.querySelector('input');
     const [decrement, increment, error, description] = ['decrement', 'increment', 'error', 'description']
       .map(className => this.querySelector(`.${className}`));
+    !this.has('error') && this.set('error', error.textContent);
+    description.textContent && !this.has('description') && this.set('description', description.textContent);
 
     const getNumber = (attr, valid, fallback) => {
       if (input.hasAttribute(attr)) {
@@ -20,15 +22,13 @@ define('input-number', class extends UIElement {
       return fallback;
     };
 
-    // replace textContent while preserving Lit's marker nodes
+    // replace textContent while preserving Lit's marker nodes in Storybook
     const replaceText = (parentNode, text) => {
       Array.from(parentNode.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
       parentNode.append(document.createTextNode(text));
     };
 
     this.step = getNumber('step', n => !Number.isNaN(n) && (n > 0), 1);
-
-    this.set('error', '');
 
     input.onchange = () => this.set('value', input.valueAsNumber);
     decrement && (decrement.onclick = () => this.set('value', v => v - this.step));

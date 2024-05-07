@@ -1,9 +1,9 @@
 import { html } from 'lit';
 
-import { InputButton } from '../../../components/form/input-button/input-button.html';
+import InputButton from '../../../components/form/input-button/input-button.html';
 import './page-header.css';
 
-export const PageHeader = ({ user, onLogin, onLogout, onCreateAccount }) => html`
+export default ({ user, onLogin, onLogout, onCreateAccount }) => html`
 <header>
   <div class="storybook-header">
     <div>

@@ -1,5 +1,5 @@
 import { fn } from '@storybook/test';
-import { InputNumber } from './input-number.html';
+import InputNumber from './input-number.html';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
@@ -65,6 +65,7 @@ export const Prefilled = {
 
 export const WithSpinbutton = {
   args: {
+    value: '42',
     min: '0',
     max: '100',
     step: '1',
@@ -74,6 +75,7 @@ export const WithSpinbutton = {
 export const WithPrefix = {
   args: {
     label: 'Price',
+    value: '0',
     min: '0',
     step: '0.05',
     prefix: 'USD',
@@ -83,6 +85,7 @@ export const WithPrefix = {
 export const WithSuffix = {
   args: {
     label: 'Width',
+    value: '16',
     min: '0',
     step: '1',
     suffix: 'px',
@@ -92,14 +95,6 @@ export const WithSuffix = {
 export const WithDescription = {
   args: {
     description: 'Description',
-  },
-};
-
-export const WithError = {
-  args: {
-    value: '-1',
-    min: '0',
-    error: 'Negative numbers are not allowed',
   },
 };
 

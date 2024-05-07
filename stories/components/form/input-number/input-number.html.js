@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './input-number.css';
 import './input-number.js';
 
-export const InputNumber = ({
+export default ({
   label,
   id,
   name,

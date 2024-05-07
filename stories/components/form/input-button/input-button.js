@@ -22,7 +22,7 @@ define('input-button', class extends UIElement {
 
     // effect to update the label
     this.effect(() => {
-      // replace textContent while preserving Lit's marker nodes
+      // replace textContent while preserving Lit's marker nodes in Storybook
       Array.from(button.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
       button.append(document.createTextNode(this.get('label')));
     });

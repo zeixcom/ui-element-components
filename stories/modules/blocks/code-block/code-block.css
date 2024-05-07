@@ -12,6 +12,7 @@ code-block {
 
   .language {
     margin-left: auto;
+    text-transform: uppercase;
   }
 
   .copy {

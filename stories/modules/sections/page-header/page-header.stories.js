@@ -1,5 +1,5 @@
 import { fn } from '@storybook/test';
-import { PageHeader } from './page-header.html';
+import PageHeader from './page-header.html';
 
 export default {
   title: 'sections/page-header',
