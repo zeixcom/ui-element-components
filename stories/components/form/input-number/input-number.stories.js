@@ -10,6 +10,18 @@ export default {
     value: {
       defaultValue: { summary: '' },
     },
+    prefix: {
+      defaultValue: { summary: '' },
+    },
+    suffix: {
+      defaultValue: { summary: '' },
+    },
+    error: {
+      defaultValue: { summary: '' },
+    },
+    description: {
+      defaultValue: { summary: '' },
+    },
     disabled: {
       control: 'boolean',
       defaultValue: { summary: false },
@@ -28,6 +40,10 @@ export default {
     id: 'id',
     name: 'name',
     value: '',
+    prefix: '',
+    suffix: '',
+    error: '',
+    description: '',
     disabled: false,
     readonly: false,
     required: false,

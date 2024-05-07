@@ -10,6 +10,7 @@ const config = {
     "@storybook/addon-interactions",
     '@storybook/addon-a11y',
     "@chromatic-com/storybook",
+    "@storybook/addon-mdx-gfm"
   ],
   framework: {
     name: "@storybook/web-components-vite",

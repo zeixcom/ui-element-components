@@ -20,6 +20,12 @@ define('input-number', class extends UIElement {
       return fallback;
     };
 
+    // replace textContent while preserving Lit's marker nodes
+    const replaceText = (parentNode, text) => {
+      Array.from(parentNode.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
+      parentNode.append(document.createTextNode(text));
+    };
+
     this.step = getNumber('step', n => !Number.isNaN(n) && (n > 0), 1);
 
     this.set('error', '');
@@ -50,7 +56,7 @@ define('input-number', class extends UIElement {
       const errorId = error.getAttribute('id');
       const invalidAttr = 'aria-invalid';
       const erorAttr = 'aria-errormessage';
-      error.textContent = errorMsg;
+      replaceText(error, errorMsg);
       if (errorMsg) {
         input.setAttribute(invalidAttr, 'true');
         input.setAttribute(erorAttr, errorId);
@@ -65,7 +71,7 @@ define('input-number', class extends UIElement {
         const descMsg = this.get('description');
         const descId = description.getAttribute('id');
         const descAttr = 'aria-describedby';
-        description.textContent = descMsg;
+        replaceText(description, descMsg);
         descMsg ? input.setAttribute(descAttr, descId) : input.removeAttribute(descAttr);
       }
     });
