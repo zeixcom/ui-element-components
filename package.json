@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@efflore/ui-element": "^0.4.0",
+    "culori": "^4.0.1",
     "prismjs": "^1.29.0"
   }
 }
