@@ -1,13 +1,11 @@
 import { fn } from '@storybook/test';
 import InputButton from './input-button.html';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
   title: 'forms/input-button',
   tags: ['autodocs'],
   render: (args) => InputButton(args),
   argTypes: {
-    /* backgroundColor: { control: 'color' }, */
     disabled: {
       control: 'boolean',
       defaultValue: { summary: false },
@@ -33,7 +31,6 @@ export default {
   },
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary = {
   args: {
     variant: 'primary',
@@ -50,14 +47,14 @@ export const Disabled = {
   },
 };
 
-export const Large = {
-  args: {
-    size: 'large',
-  },
-};
-
 export const Small = {
   args: {
     size: 'small',
+  },
+};
+
+export const Large = {
+  args: {
+    size: 'large',
   },
 };

@@ -1,0 +1,35 @@
+colorscale-editor {
+
+  button {
+    display: inline-flex;
+    gap: var(--space-s);
+    align-items: center;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+
+    > .scale,
+    > .label {
+      display: inline-block;
+      line-height: 1;
+    }
+    
+    > .label {
+      
+      strong,
+      small {
+        display: block;
+      }
+  
+      strong {
+        font-size: var(--font-size-m);
+      }
+  
+      small {
+        color: var(--color-text-soft);
+        font-size: var(--font-size-xs);
+      }
+    }
+  }
+}

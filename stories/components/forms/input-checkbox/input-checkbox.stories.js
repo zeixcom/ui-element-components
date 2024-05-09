@@ -1,7 +1,6 @@
 import { fn } from '@storybook/test';
 import InputCheckbox from './input-checkbox.html';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
   title: 'forms/input-checkbox',
   tags: ['autodocs'],
@@ -19,7 +18,6 @@ export default {
   },
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Unchecked = {
   args: {},
 };

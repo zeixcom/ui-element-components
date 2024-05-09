@@ -1,9 +1,10 @@
-import ColorScale from './color-scale.html';
+import { fn } from '@storybook/test';
+import ColorscaleEditor from './colorscale-editor.html';
 
 export default {
-  title: 'colors/color-scale',
+  title: 'apps/colorscale-editor',
   tags: ['autodocs'],
-  render: (args) => ColorScale(args),
+  render: (args) => ColorscaleEditor(args),
   argTypes: {
     color: {
       control: 'color',
@@ -19,6 +20,7 @@ export default {
     color: '#325df1',
     name: 'Blue',
     size: 'medium',
+    onClick: fn(),
   },
 };
 

@@ -139,7 +139,6 @@
 }
 
 @media (prefers-reduced-transparency) {
-
   :root {
     --opacity-translucent: 0.7;
     --opacity-dimmed: 0.9;
@@ -173,132 +172,126 @@ body {
   background-color: color-mix(in srgb, var(--color-selection) 50%, transparent);
 }
 
-.docs-story {
-  color: var(--color-text);
-  background: var(--color-background);
-  
-  header,
-  main,
-  footer {
-    margin: 0 auto;
-    max-width: var(--container-max-width);
-  }
-  
-  h1 {
-    font-size: var(--font-size-xxxl);
-    line-height: var(--line-height-xs);
-  }
-  h2 {
-    font-size: var(--font-size-xxl);
-    line-height: var(--line-height-s);
-  }
-  h3 {
-    font-size: var(--font-size-xl);
-    line-height: var(--line-height-s);
-  }
-  h4 {
-    font-size: var(--font-size-l);
-    line-height: var(--line-height-m);
-  }
-  h5 {
-    font-size: var(--font-size-m);
-    line-height: var(--line-height-m);
-  }
-  h6 {
-    font-size: var(--font-size-m);
-    line-height: var(--line-height-m);
+header,
+main,
+footer {
+  margin: 0 auto;
+  max-width: var(--container-max-width);
+}
+
+h1 {
+  font-size: var(--font-size-xxxl);
+  line-height: var(--line-height-xs);
+}
+h2 {
+  font-size: var(--font-size-xxl);
+  line-height: var(--line-height-s);
+}
+h3 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-s);
+}
+h4 {
+  font-size: var(--font-size-l);
+  line-height: var(--line-height-m);
+}
+h5 {
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
+}
+h6 {
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
+}
+
+p,
+li,
+dt,
+dd,
+pre,
+input {
+  font-size: var(--font-size-m);
+  line-height: var(--line-height-m);
+}
+th,
+td,
+small {
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-m);
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-s) var(--space-m);
+
+  dt {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-soft);
   }
 
-  p,
-  li,
-  th,
-  td,
-  dt,
-  dd,
-  pre,
-  input {
-    font-size: var(--font-size-m);
-    line-height: var(--line-height-m);
+  dd {
+    margin: 0;
   }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul,
+dl,
+table,
+section pre[class*="language-"],
+show-appreciation {
+  margin: 0 0 var(--space-l);
+}
+
+li {
+  margin: 0 0 var(--space-m);
+}
+
+p code,
+li code,
+dt code,
+dd code,
+td code {
+  background-color: var(--color-background-alt);
+  border-radius: var(--space-xxs);
+  padding: var(--space-xxs);
+  font-family: var(--font-family-mono);
+  font-size: calc(0.95 * var(--font-size-m));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  display: flex;
+  flex-direction: column;
+
   small {
-    font-size: var(--font-size-s);
-    line-height: var(--line-height-m);
+    order: -1;
+    font-weight: var(--font-weight-regular);
   }
-  
-  dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--space-s) var(--space-m);
-  
-    dt {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-text-soft);
-    }
-  
-    dd {
-      margin: 0;
-    }
-  }
-  
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  ol,
-  ul,
-  dl,
-  table,
-  section pre[class*="language-"],
-  show-appreciation {
-    margin: 0 0 var(--space-l);
-  }
-  
-  li {
-    margin: 0 0 var(--space-m);
-  }
-  
-  p code,
-  li code,
-  dt code,
-  dd code,
-  td code {
-    background-color: var(--color-background-alt);
-    border-radius: var(--space-xxs);
-    padding: var(--space-xxs);
-    font-family: var(--font-family-mono);
-    font-size: calc(0.95 * var(--font-size-m));
-  }
-  
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    display: flex;
-    flex-direction: column;
-  
-    small {
-      order: -1;
-      font-weight: var(--font-weight-regular);
-    }
-  }
-  
-  a {
-    color: var(--color-primary);
-  
-    &:hover {
-      color: var(--color-primary-hover);
-    }
-  
-    &:active {
-      color: var(--color-primary-active);
-    }
+}
+
+a {
+  color: var(--color-primary);
+
+  &:hover {
+    color: var(--color-primary-hover);
   }
 
+  &:active {
+    color: var(--color-primary-active);
+  }
 }
   
 /* Helper classes */
@@ -309,4 +302,11 @@ body {
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+/* Story context */
+
+.docs-story {
+  color: var(--color-text);
+  background: var(--color-background);
 }

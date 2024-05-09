@@ -5,11 +5,6 @@ import { converter, formatCss } from 'culori/fn';
 define('color-scale', class extends UIElement {
   static observedAttributes = ['color'];
 
-  constructor() {
-    super();
-    this.hydrate();
-  }
-
   connectedCallback() {
 
     this.effect(() => {
@@ -39,29 +34,15 @@ define('color-scale', class extends UIElement {
       for (let i = 1; i < 5; i++) {
         this.style.setProperty(`--color-darken${i * 20}`, getStepColor((5 - i) / 10));
       }
-    });
-  }
 
-  hydrate() {
-
-    // we only need to hydrate if there is no server-generated shadow root or the browser doesn't attach it
-    if (!this.shadowRoot) {
-
-      // polyfill shadow root if browser doesn't support declarative shadow root yet
-      let template = this.querySelector('template[shadowrootmode]');
-      if (template) {
-        this.attachShadow({ mode: template.getAttribute('shadowrootmode') }).appendChild(template.content);
-        template.remove();
-      
-      // clone own template to hydrate
+      // lightness of base color > 71%: black has better contrast
+      if (base.l > 0.71) {
+        this.style.setProperty('--color-text', 'black');
+        this.style.setProperty('--color-text-soft', getStepColor(0.1));
       } else {
-        template = this.getRootNode().getElementById('color-scale-template');
-        if (!template) {
-          console.error('Could not attach shadow root for <color-scale>');
-        } else {
-          this.attachShadow({ mode: 'open' }).appendChild(template.content.cloneNode(true));
-        }
+        this.style.setProperty('--color-text', 'white');
+        this.style.setProperty('--color-text-soft', getStepColor(0.9));
       }
-    }
+    });
   }
 });

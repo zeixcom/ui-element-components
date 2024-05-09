@@ -1,7 +1,6 @@
 import { fn } from '@storybook/test';
 import { InputText } from './input-text.html';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
   title: 'forms/input-text',
   tags: ['autodocs'],
@@ -21,7 +20,6 @@ export default {
   },
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Empty = {
   args: {},
 };
