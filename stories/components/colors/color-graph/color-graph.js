@@ -17,16 +17,11 @@ define('color-graph', class extends UIElement {
     knob.onmousedown = () => dragging = true;
     knob.onmouseup = () => dragging = false;
     
+    // handle dragging
     this.onmousemove = e => {
-      const inCanvas = (x, y) => {
-        return x && (x >= 0) && (x < canvasSize)
-          && y && (y >= 0.1 * canvasSize) && (y < 0.9 * canvasSize);
-      };
-      const getColorFromPosition = (x, y) => {
-        const l = 1 - (y / canvasSize);
-        const c = x / (2.5 * canvasSize);
-        return { mode: 'oklch', l, c, h: this.get('hue') };
-      }
+      const h = this.get('hue');
+      const inCanvas = (x, y) => x && (x >= 0) && (x < canvasSize) && y && (y >= 0.1 * canvasSize) && (y < 0.9 * canvasSize);
+      const getColorFromPosition = (x, y) => ({ mode: 'oklch', l: 1 - (y / canvasSize), c: x / (2.5 * canvasSize), h });
       const inP3Gamut = inGamut('p3');
       
       if (dragging) {
@@ -46,13 +41,10 @@ define('color-graph', class extends UIElement {
 
       const getStepColor = step => {
         const calcLightness = () => {
-          const l = base.l;
-          const exp = 2 * Math.log((1 - l) / l);
+          const exp = 2 * Math.log((1 - base.l) / base.l);
           return (Math.exp(exp * step) - 1) / (Math.exp(exp) - 1);
         };
-        const calcSinChroma = () => {
-          return base.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
-        };
+        const calcSinChroma = () => base.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
         const stepL = base.l !== 0.5 ? calcLightness() : step;
         const stepC = base.c > 0 ? calcSinChroma() : 0;
         return { mode: 'oklch', l: stepL, c: stepC, h: base.h };
@@ -82,22 +74,24 @@ define('color-graph', class extends UIElement {
         this.style.setProperty(`--color-${key}`, formatCss(color));
         setStepPosition(key, color);
       }
+      const event = new CustomEvent('color-change', { detail: base, bubbles: true });
+      this.dispatchEvent(event);
     });
 
     // redraw canvas if hue changes
     this.effect(() => {
-      const hue = this.get('hue');
+      const h = this.get('hue');
       const inP3Gamut = inGamut('p3');
       const inRGBGamut = inGamut('rgb');
 
       const getColorFromPosition = (x, y) => {
         const l = 1 - (y / canvasSize);
         const c = x / (2.5 * canvasSize);
-        const color = `oklch(${l} ${c} ${hue})`;
+        const color = `oklch(${l} ${c} ${h})`;
         if (inRGBGamut(color)) {
           return color;
         } else if (inP3Gamut(color)) {
-          return `oklch(${l} ${c} ${hue} / 0.5)`;
+          return `oklch(${l} ${c} ${h} / 0.5)`;
         }
         return;
       };

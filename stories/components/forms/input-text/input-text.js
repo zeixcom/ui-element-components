@@ -17,7 +17,11 @@ define('input-text', class extends UIElement {
     };
 
     // event listener for 'input' event on the input field
-    this.oninput = e => this.set('value', e.target.value);
+    this.oninput = e => {
+      this.set('value', e.target.value);
+      const event = new CustomEvent('value-change', { detail: e.target.value, bubbles: true });
+      this.dispatchEvent(event);
+    };
 
     // update value
     this.effect(() => {

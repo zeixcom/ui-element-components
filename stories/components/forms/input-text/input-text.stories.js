@@ -1,5 +1,5 @@
 import { fn } from '@storybook/test';
-import { InputText } from './input-text.html';
+import InputText from './input-text.html';
 
 export default {
   title: 'forms/input-text',

@@ -31,10 +31,16 @@ define('input-number', class extends UIElement {
       return !Number.isNaN(temp) ? [temp, getNumber('min'), getNumber('max')] : [,,];
     })();
 
+    const triggerChange = value => {
+      this.set('value', value);
+      const event = new CustomEvent('value-change', { detail: this.get('value'), bubbles: true });
+      this.dispatchEvent(event);
+    };
+
     // handle input and click event changes
-    input.onchange = () => this.set('value', input.valueAsNumber);
-    decrement && (decrement.onclick = () => this.set('value', v => v - step));
-    increment && (increment.onclick = () => this.set('value', v => v + step));
+    input.onchange = () => triggerChange(input.valueAsNumber);
+    decrement && (decrement.onclick = () => triggerChange(v => v - step));
+    increment && (increment.onclick = () => triggerChange(v => v + step));
 
     // update value
     this.effect(() => {
@@ -44,6 +50,8 @@ define('input-number', class extends UIElement {
         step && decrement && (decrement.disabled = (min && (value - step < min)));
         step && increment && (increment.disabled = (max && (value + step > max)));
         this.setAttribute('value', value);
+        const event = new CustomEvent('value-change', { detail: value, bubbles: true });
+        // this.dispatchEvent(event);
       }
       this.set('error', input.validationMessage);
     });

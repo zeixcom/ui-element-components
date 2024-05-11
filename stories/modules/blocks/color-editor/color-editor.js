@@ -13,18 +13,26 @@ define('color-editor', class extends UIElement {
 
     this.set('name', this.querySelector('input-text.name').getAttribute('value'));
 
-    // handle input changes
-    this.onchange = e => {
-      if (e.target.id === 'name-input') {
-        this.set('name', e.target.value);
+    // handle color-change event from color-graph
+    this.addEventListener('color-change', e => {
+      this.set('base', e.detail);
+    });
+
+    // handle value-change event from input-number and input-text
+    this.addEventListener('value-change', e => {
+      e.stopPropagation();
+      const value = e.detail;
+      const id = e.target.id;
+      if (e.target.className === 'name') {
+        this.set('name', e.detail);
       } else {
-        const color = {...this.get('base')}; // ensure we don't mutate the original
-        const value = parseFloat(e.target.value);
-        color[e.target.id[0]] = e.target.id[0] === 'l' ? value / 100 : value;
-        console.log(color);
+        const color = {...this.get('base')};
+        color[id[0]] = id[0] === 'l' ? value / 100 : value;
         this.set('base', color);
+        const event = new CustomEvent('color-change', { detail: color, bubbles: true });
+        this.dispatchEvent(event);
       }
-    };
+    });
 
     // update if name changes
     this.effect(() => {
