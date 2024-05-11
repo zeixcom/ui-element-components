@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './color-scale.css';
 import './color-scale.js';
 
-export default ({ color = '#325df1', name, size = 'medium' }) => html`
+export default ({ color = '#143dda', name, size = 'medium' }) => html`
 <color-scale color=${color} class=${size}>
   <ol>
     <li class="lighten80"></li>

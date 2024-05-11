@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import './input-number.css';
 import './input-number.js';
@@ -8,12 +8,13 @@ export default ({
   id,
   name,
   value,
+  step,
   min,
   max,
-  step,
   form,
   pattern,
   placeholder,
+  length = 'short',
   prefix = '',
   suffix = '',
   error = '',
@@ -21,37 +22,40 @@ export default ({
   disabled = false,
   readonly = false,
   required = false,
+  integer = false,
+  className,
   onInput,
   onChange,
 }) => html`
-<input-number value="${value}">
+<input-number value=${value} ?integer=${integer} class=${className || nothing}>
   <label for="${id}-input">${label}</label>
   <div class="row">
-    <div class="group">
-      <span>${prefix}</span>
+    <div class="group ${length}">
+      ${prefix && html`<span>${prefix}</span>`}
       <input
         type="number"
         id="${id}-input"
-        name="${name || id}"
-        value="${value}"
-        ?min=${min}
-        ?max=${max}
-        ?step=${step}
-        ?form=${form}
-        ?pattern=${pattern}
-        ?placeholder=${placeholder}
-        ?aria-invalid=${error && 'true'}
-        ?aria-errormessage=${error && `${id}-error`}
-        ?aria-describedby=${description && `${id}-description`}
+        name=${name || id}
+        value=${value}
+        min=${min || nothing}
+        max=${max || nothing}
+        step=${integer ? step : 'any'}
+        form=${form || nothing}
+        pattern=${pattern || nothing}
+        placeholder=${placeholder || nothing}
+        aria-invalid=${error ? 'true' : nothing}
+        aria-errormessage=${error ? `${id}-error` : nothing}
+        aria-describedby=${description ? `${id}-description` : nothing}
         ?disabled=${disabled}
         ?readonly=${readonly}
         ?required=${required}
+        autocomplete="off"
         @input=${onInput}
         @change=${onChange}
       />
-      <span>${suffix}</span>
+      ${suffix && html`<span>${suffix}</span>`}
     </div>
-    ${step && (html`<div class="spinbutton">
+    ${step && (html`<div class="spinbutton" data-step=${step}>
       <button type="button" class="decrement" aria-label="decrement">−</button>
       <button type="button" class="increment" aria-label="increment">+</button>
     </div>`)}

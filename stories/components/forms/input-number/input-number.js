@@ -3,24 +3,15 @@ import UIElement from '@efflore/ui-element';
 define('input-number', class extends UIElement {
   static observedAttributes = ['value', 'description'];
 
-  attributeMapping = {
-    value: v => Number.isInteger(this.step) ? parseInt(v, 10) : parseFloat(v),
-  }
+  attributeMapping = { value: v => this.isInteger ? parseInt(v, 10) : parseFloat(v) };
 
   connectedCallback() {
+    this.isInteger = this.hasAttribute('integer');
     const input = this.querySelector('input');
-    const [decrement, increment, error, description] = ['decrement', 'increment', 'error', 'description']
+    const [spinbutton, decrement, increment, error, description] = ['spinbutton', 'decrement', 'increment', 'error', 'description']
       .map(className => this.querySelector(`.${className}`));
     !this.has('error') && this.set('error', error.textContent);
     description.textContent && !this.has('description') && this.set('description', description.textContent);
-
-    const getNumber = (attr, valid, fallback) => {
-      if (input.hasAttribute(attr)) {
-        const num = parseFloat(input.getAttribute(attr));
-        return valid(num) ? num : fallback;
-      }
-      return fallback;
-    };
 
     // replace textContent while preserving Lit's marker nodes in Storybook
     const replaceText = (parentNode, text) => {
@@ -28,29 +19,36 @@ define('input-number', class extends UIElement {
       parentNode.append(document.createTextNode(text));
     };
 
-    this.step = getNumber('step', n => !Number.isNaN(n) && (n > 0), 1);
+    // setup spinbutton with step and min/max attributes
+    const [step, min, max] = (() => {
+      const parseNumber = v => this.isInteger ? parseInt(v, 10) : parseFloat(v);
+      const getNumber = attr => {
+        const num = parseNumber(input.getAttribute(attr));
+        return !Number.isNaN(num) && num;
+      };
+      if (!spinbutton) return [,,];
+      const temp = parseNumber(spinbutton.dataset.step);
+      return !Number.isNaN(temp) ? [temp, getNumber('min'), getNumber('max')] : [,,];
+    })();
 
+    // handle input and click event changes
     input.onchange = () => this.set('value', input.valueAsNumber);
-    decrement && (decrement.onclick = () => this.set('value', v => v - this.step));
-    increment && (increment.onclick = () => this.set('value', v => v + this.step));
+    decrement && (decrement.onclick = () => this.set('value', v => v - step));
+    increment && (increment.onclick = () => this.set('value', v => v + step));
 
+    // update value
     this.effect(() => {
       const value = this.get('value');
       if (!Number.isNaN(value)) {
         input.value = value;
-        if (decrement) {
-          const min = getNumber('min', n => !Number.isNaN(n), undefined);
-          decrement.disabled = (min && (value - this.step < min));
-        }
-        if (increment) {
-          const max = getNumber('max', n => !Number.isNaN(n), undefined);
-          increment.disabled = (max && (value + this.step > max));
-        }
+        step && decrement && (decrement.disabled = (min && (value - step < min)));
+        step && increment && (increment.disabled = (max && (value + step > max)));
         this.setAttribute('value', value);
       }
       this.set('error', input.validationMessage);
     });
 
+    // update error message and aria-invalid attribute
     this.effect(() => {
       const errorMsg = this.get('error');
       const errorId = error.getAttribute('id');
@@ -66,6 +64,7 @@ define('input-number', class extends UIElement {
       }
     });
 
+    // update description message and aria-describedby attribute
     this.effect(() => {
       if (this.has('description')) {
         const descMsg = this.get('description');

@@ -1,9 +1,9 @@
-import ColorDetails from './color-details.html';
+import ColorGraph from './color-graph.html';
 
 export default {
-  title: 'colors/color-details',
+  title: 'colors/color-graph',
   tags: ['autodocs'],
-  render: (args) => ColorDetails(args),
+  render: (args) => ColorGraph(args),
   argTypes: {
     color: {
       control: 'color',
@@ -12,7 +12,6 @@ export default {
   },
   args: {
     color: '#143dda',
-    name: 'Blue',
   },
 };
 

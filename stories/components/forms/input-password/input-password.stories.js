@@ -10,6 +10,7 @@ export default {
     label: 'Password',
     id: 'id',
     name: 'name',
+    className: '',
     onInput: fn(),
     onChange: fn(),
   },

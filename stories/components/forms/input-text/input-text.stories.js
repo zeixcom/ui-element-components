@@ -15,6 +15,7 @@ export default {
     id: 'id',
     name: 'name',
     value: '',
+    className: '',
     onInput: fn(),
     onChange: fn(),
   },

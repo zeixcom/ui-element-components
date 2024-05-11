@@ -7,7 +7,7 @@ export default {
   argTypes: {
     color: {
       control: 'color',
-      defaultValue: { summary: '#325df1' },
+      defaultValue: { summary: '#143dda' },
     },
     size: {
       control: { type: 'select' },
@@ -16,7 +16,7 @@ export default {
     },
   },
   args: {
-    color: '#325df1',
+    color: '#143dda',
     name: 'Blue',
     size: 'medium',
   },

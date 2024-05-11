@@ -14,6 +14,7 @@ export default {
   args: {
     label: 'Checkbox',
     checked: false,
+    className: '',
     onChange: fn()
   },
 };

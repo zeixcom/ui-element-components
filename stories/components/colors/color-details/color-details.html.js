@@ -3,7 +3,7 @@ import { html } from 'lit';
 import './color-details.css';
 import './color-details.js';
 
-export default ({ color = '#325df1', name }) => html`
+export default ({ color = '#143dda', name }) => html`
 <color-details color=${color}>
   <details>
     <summary>
@@ -14,14 +14,16 @@ export default ({ color = '#325df1', name }) => html`
           <small class="value">${color}</small>
       </div>
     </summary>
-    <dl>
-      <dt>Lightness:</dt>
-      <dd class="lightness"></dd>
-      <dt>Chroma:</dt>
-      <dd class="chroma"></dd>
-      <dt>Hue:</dt>
-      <dd class="hue"></dd>
-    </dl>
-    <p><code class="css"></code></p>
+    <div class="details">
+      <dl>
+        <dt>Lightness:</dt>
+        <dd class="lightness"></dd>
+        <dt>Chroma:</dt>
+        <dd class="chroma"></dd>
+        <dt>Hue:</dt>
+        <dd class="hue"></dd>
+      </dl>
+      <p><code class="css"></code></p>
+    </div>
   </details>
 </color-details>`;

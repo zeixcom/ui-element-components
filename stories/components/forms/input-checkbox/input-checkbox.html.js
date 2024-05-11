@@ -3,8 +3,8 @@ import { html } from 'lit';
 import './input-checkbox.css';
 import './input-checkbox.js';
 
-export default ({ label, checked = false, onChange }) => html`
-<input-checkbox ?checked=${checked}>
+export default ({ label, checked = false, className, onChange }) => html`
+<input-checkbox ?checked=${checked} class=${className}>
   <label>
     <input
       class="visually-hidden"

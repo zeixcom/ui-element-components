@@ -1,19 +1,31 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
-import { converter, formatCss } from 'culori/fn';
+import { converter, formatCss, formatHex } from 'culori/fn';
 
 define('color-scale', class extends UIElement {
-  static observedAttributes = ['color'];
+  static observedAttributes = ['color', 'name'];
+
+  attributeMapping = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
+    const name = this.querySelector('.label strong');
+    !this.has('name') && this.set('name', name.textContent);
 
+    // replace textContent while preserving Lit's marker nodes in Storybook
+    const replaceText = (parentNode, text) => {
+      Array.from(parentNode.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
+      parentNode.append(document.createTextNode(text));
+    };
+
+    // update if name changes
     this.effect(() => {
-      const oklch = converter('oklch');
-      this.set('base', oklch(this.get('color')));
+      replaceText(name, this.get('name'));
     });
 
+    // update if base color changes
     this.effect(() => {
       const base = this.get('base');
+
       const getStepColor = step => {
         const calcLightness = () => {
           const l = base.l;
@@ -25,8 +37,10 @@ define('color-scale', class extends UIElement {
         };
         const stepL = base.l !== 0.5 ? calcLightness() : step;
         const stepC = base.c > 0 ? calcSinChroma() : 0;
-        return formatCss({ l: stepL, c: stepC, h: base.h, mode: 'oklch' });
+        return formatCss({ mode: 'oklch', l: stepL, c: stepC, h: base.h });
       };
+
+      replaceText(this.querySelector('.label small'), formatHex(base));
       this.style.setProperty('--color-base', formatCss(base));
       for (let i = 4; i > 0; i--) {
         this.style.setProperty(`--color-lighten${i * 20}`, getStepColor((5 + i) / 10));

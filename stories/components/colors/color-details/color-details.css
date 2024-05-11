@@ -10,6 +10,10 @@ color-details {
     }
   }
 
+  details[open] summary {
+    margin-bottom: var(--space-xs);
+  }
+
   .summary {
     display: inline-flex;
     align-items: center;
@@ -45,6 +49,10 @@ color-details {
     font-size: var(--font-size-xs);
   }
 
+  .details {
+    margin-left: var(--space-l);
+  }
+
   dl {
     margin: 0 0 var(--space-s);
     display: inline-grid;
@@ -58,6 +66,8 @@ color-details {
     display: inline-block;
     text-align: right;
     font-size: var(--font-size-s);
+    font-weight: 400;
+    line-height: var(--line-height-s);
   }
 
   dd {
@@ -65,14 +75,16 @@ color-details {
     display: inline-block;
     margin: 0;
     font-size: var(--font-size-s);
+    line-height: var(--line-height-s);
   }
 
   p {
-    margin: 0 0 var(--space-m);
+    margin: 0 0 var(--space-l);
     line-height: 1;
   }
 
   code {
     font-size: var(--font-size-s);
+    line-height: var(--line-height-s);
   }
 }

@@ -9,18 +9,6 @@ export default {
     value: {
       defaultValue: { summary: '' },
     },
-    prefix: {
-      defaultValue: { summary: '' },
-    },
-    suffix: {
-      defaultValue: { summary: '' },
-    },
-    error: {
-      defaultValue: { summary: '' },
-    },
-    description: {
-      defaultValue: { summary: '' },
-    },
     disabled: {
       control: 'boolean',
       defaultValue: { summary: false },
@@ -33,12 +21,27 @@ export default {
       control: 'boolean',
       defaultValue: { summary: false },
     },
+    integer: {
+      control: 'boolean',
+      defaultValue: { summary: false },
+    },
+    length: {
+      control: { type: 'select' },
+      options: ['short', 'auto'],
+      defaultValue: { summary: 'short' },
+    },
   },
   args: {
     label: 'Number',
+    length: 'short',
     id: 'id',
     name: 'name',
     value: '',
+    step: '',
+    min: '',
+    max: '',
+    form: '',
+    pattern: '',
     prefix: '',
     suffix: '',
     error: '',
@@ -46,6 +49,8 @@ export default {
     disabled: false,
     readonly: false,
     required: false,
+    integer: false,
+    className: '',
     onInput: fn(),
     onChange: fn(),
   },
@@ -67,6 +72,7 @@ export const WithSpinbutton = {
     min: '0',
     max: '100',
     step: '1',
+    integer: true,
   },
 };
 
@@ -87,6 +93,7 @@ export const WithSuffix = {
     min: '0',
     step: '1',
     suffix: 'px',
+    integer: true,
   },
 };
 

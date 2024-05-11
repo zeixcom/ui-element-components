@@ -25,8 +25,8 @@ export default {
     label: 'Button',
     variant: 'secondary',
     size: 'medium',
-    className: '',
     disabled: false,
+    className: '',
     onClick: fn()
   },
 };

@@ -1,9 +1,11 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
-import { converter, round } from 'culori/fn';
+import { converter, formatCss, formatHex, round } from 'culori/fn';
 
 define('color-details', class extends UIElement {
-  static observedAttributes = ['color'];
+  static observedAttributes = ['color', 'name'];
+
+  attributeMapping = { color: v => converter('oklch')(v) };
 
   connectedCallback() {
     const name = this.querySelector('.label strong');
@@ -15,20 +17,20 @@ define('color-details', class extends UIElement {
       parentNode.append(document.createTextNode(text));
     };
 
+    // update if name changes
     this.effect(() => {
       replaceText(name, this.get('name'));
     });
 
+    // update if color changes
     this.effect(() => {
-      const oklch = converter('oklch');
       const color = this.get('color');
-      const base = oklch(color);
-      this.style.setProperty('--color-swatch', color);
-      replaceText(this.querySelector('.value'), color);
-      replaceText(this.querySelector('.lightness'), `${round(2)(base.l * 100)}%`);
-      replaceText(this.querySelector('.chroma'), round(4)(base.c));
-      replaceText(this.querySelector('.hue'), `${round(2)(base.h)}°`);
-      replaceText(this.querySelector('.css'), `oklch(${round(4)(base.l)} ${round(4)(base.c)} ${round(2)(base.h)})`);
+      this.style.setProperty('--color-swatch', formatCss(color));
+      replaceText(this.querySelector('.value'), formatHex(color));
+      replaceText(this.querySelector('.lightness'), `${round(2)(color.l * 100)}%`);
+      replaceText(this.querySelector('.chroma'), round(4)(color.c));
+      replaceText(this.querySelector('.hue'), `${round(2)(color.h)}°`);
+      replaceText(this.querySelector('.css'), `oklch(${round(4)(color.l)} ${round(4)(color.c)} ${round(2)(color.h)})`);
     });
 
   }

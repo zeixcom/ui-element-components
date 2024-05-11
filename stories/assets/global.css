@@ -34,9 +34,9 @@
   --color-gray-80: #6d6f71;
   --color-gray-90: #404142;
   --color-black: black;
-  --color-primary: #325df1;
-  --color-primary-hover: #2144ca;
-  --color-primary-active: #18338f;
+  --color-primary: #143dda;
+  --color-primary-hover: #061baf;
+  --color-primary-active: #030778;
   --color-secondary: var(--color-gray-30);
   --color-secondary-hover: var(--color-gray-40);
   --color-secondary-active: var(--color-gray-50);
@@ -208,13 +208,13 @@ p,
 li,
 dt,
 dd,
-pre,
 input {
   font-size: var(--font-size-m);
   line-height: var(--line-height-m);
 }
 th,
 td,
+pre,
 small {
   font-size: var(--font-size-s);
   line-height: var(--line-height-m);
@@ -246,8 +246,7 @@ ol,
 ul,
 dl,
 table,
-section pre[class*="language-"],
-show-appreciation {
+section pre[class*="language-"] {
   margin: 0 0 var(--space-l);
 }
 
