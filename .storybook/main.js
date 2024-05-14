@@ -9,14 +9,12 @@ const config = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     '@storybook/addon-a11y',
-    "@chromatic-com/storybook"
+    "@chromatic-com/storybook",
   ],
   framework: {
     name: "@storybook/web-components-vite",
     options: {},
   },
-  docs: {
-    autodocs: "tag",
-  },
+  docs: {},
 };
 export default config;
