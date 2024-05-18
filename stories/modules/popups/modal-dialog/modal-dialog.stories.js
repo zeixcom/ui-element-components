@@ -3,7 +3,6 @@ import ModalDialog from './modal-dialog.html';
 
 export default {
   title: 'popups/modal-dialog',
-  tags: ['autodocs'],
   render: (args) => ModalDialog(args),
   argTypes: {},
   args: {

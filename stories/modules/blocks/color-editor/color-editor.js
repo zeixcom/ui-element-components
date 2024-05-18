@@ -1,6 +1,6 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
-import { converter, formatCss, round } from 'culori/fn';
+import { converter, formatCss } from 'culori/fn';
 
 define('color-editor', class extends UIElement {
   static observedAttributes = ['color'];
@@ -11,23 +11,23 @@ define('color-editor', class extends UIElement {
     const graph = this.querySelector('color-graph');
     const scale = this.querySelector('color-scale');
 
-    this.set('name', this.querySelector('input-text.name').getAttribute('value'));
+    this.set('name', this.querySelector('input-field.name').getAttribute('value'));
 
     // handle color-change event from color-graph
     this.addEventListener('color-change', e => {
       this.set('base', e.detail);
     });
 
-    // handle value-change event from input-number and input-text
+    // handle value-change event from input-field
     this.addEventListener('value-change', e => {
       e.stopPropagation();
       const value = e.detail;
-      const id = e.target.id;
+      const comp = e.target.className[0];
       if (e.target.className === 'name') {
         this.set('name', e.detail);
       } else {
         const color = {...this.get('base')};
-        color[id[0]] = id[0] === 'l' ? value / 100 : value;
+        color[comp] = comp === 'l' ? value / 100 : value;
         this.set('base', color);
         const event = new CustomEvent('color-change', { detail: color, bubbles: true });
         this.dispatchEvent(event);
@@ -58,11 +58,18 @@ define('color-editor', class extends UIElement {
         return { mode: 'oklch', l: stepL, c: stepC, h: base.h };
       };
 
+      const fn = (number, digits = 2) => new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits,
+        useGrouping: false,
+      }).format(number);
+
       graph.set('base', base);
       scale.set('base', base);
-      this.querySelector('input-number.lightness').set('value', round(2)(base.l * 100));
-      this.querySelector('input-number.chroma').set('value', round(4)(base.c));
-      this.querySelector('input-number.hue').set('value', round(2)(base.h));
+      this.querySelector('input-field.lightness').set('value', fn(base.l * 100));
+      this.querySelector('input-field.chroma').set('value', fn(base.c, 4));
+      this.querySelector('input-field.hue').set('value', fn(base.h));
       this.style.setProperty('--color-base', formatCss(base));
       this.querySelector(`.base color-details`).set('color', base);
       for (let i = 4; i > 0; i--) {

@@ -2,7 +2,6 @@ import ColorScale from './color-scale.html';
 
 export default {
   title: 'colors/color-scale',
-  tags: ['autodocs'],
   render: (args) => ColorScale(args),
   argTypes: {
     color: {

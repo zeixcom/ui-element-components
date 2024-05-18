@@ -3,7 +3,6 @@ import InputCheckbox from './input-checkbox.html';
 
 export default {
   title: 'forms/input-checkbox',
-  tags: ['autodocs'],
   render: (args) => InputCheckbox(args),
   argTypes: {
     checked: {

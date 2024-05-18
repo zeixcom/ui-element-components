@@ -58,6 +58,7 @@ color-graph {
 
   li {
     position: absolute;
+    box-sizing: border-box;
     top: 0;
     left: 0;
     width: var(--step-size);

@@ -3,8 +3,7 @@ import { html } from 'lit';
 import ColorGraph from '../../../components/colors/color-graph/color-graph.html.js';
 import ColorScale from '../../../components/colors/color-scale/color-scale.html.js';
 import ColorDetails from '../../../components/colors/color-details/color-details.html.js';
-import InputText from '../../../components/forms/input-text/input-text.html.js';
-import InputNumber from '../../../components/forms/input-number/input-number.html.js';
+import InputField from '../../../components/forms/input-field/input-field.html.js';
 
 import './color-editor.css';
 import './color-editor.js';
@@ -16,8 +15,10 @@ export default ({ color = '#143dda', name }) => html`
     <div class="scale">
       ${ColorScale({ color, name, size: 'medium' })}
       <div class="inputs">
-        ${InputNumber({
+        ${InputField({
           label: 'Lightness',
+          type: 'number',
+          length: 'short',
           id: 'l',
           value: '45.96',
           min: '0',
@@ -27,18 +28,22 @@ export default ({ color = '#143dda', name }) => html`
           required: true,
           className: 'lightness'
         })}
-        ${InputNumber({
+        ${InputField({
           label: 'Chroma',
+          type: 'number',
+          length: 'short',
           id: 'c',
           value: '0.2393',
           min: '0',
           max: '0.4',
-          step: '0.01',
+          step: '0.001',
           required: true,
           className: 'chroma'
         })}
-        ${InputNumber({
+        ${InputField({
           label: 'Hue',
+          type: 'number',
+          length: 'short',
           id: 'h',
           value: '265.04',
           min: '0',
@@ -50,7 +55,7 @@ export default ({ color = '#143dda', name }) => html`
         })}
       </div>
     </div>
-    ${InputText({ label: 'Name', id: 'name', value: name, required: true, className: 'name' })}
+    ${InputField({ label: 'Name', id: 'name', value: name, required: true, className: 'name' })}
   </div>
   <ol class="list">
     <li class="lighten80">${ColorDetails({ name: `${name} 10` })}</li>

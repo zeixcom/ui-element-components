@@ -2,7 +2,6 @@ import ColorDetails from './color-details.html';
 
 export default {
   title: 'colors/color-details',
-  tags: ['autodocs'],
   render: (args) => ColorDetails(args),
   argTypes: {
     color: {

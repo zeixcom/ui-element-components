@@ -4,7 +4,6 @@ import CodeBlock from './code-block.html';
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
   title: 'blocks/code-block',
-  tags: ['autodocs'],
   render: (args) => CodeBlock(args),
   argTypes: {
     language: {

@@ -3,7 +3,6 @@ import ShowAppreciation from './show-appreciation.html';
 
 export default {
   title: 'atoms/show-appreciation',
-  tags: ['autodocs'],
   render: (args) => ShowAppreciation(args),
   argTypes: {
     emoji: {

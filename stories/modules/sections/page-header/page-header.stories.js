@@ -3,7 +3,6 @@ import PageHeader from './page-header.html';
 
 export default {
   title: 'sections/page-header',
-  tags: ['autodocs'],
   render: (args) => PageHeader(args),
   args: {
     onLogin: fn(),

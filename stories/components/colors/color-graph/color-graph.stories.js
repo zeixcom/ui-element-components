@@ -2,7 +2,6 @@ import ColorGraph from './color-graph.html';
 
 export default {
   title: 'colors/color-graph',
-  tags: ['autodocs'],
   render: (args) => ColorGraph(args),
   argTypes: {
     color: {

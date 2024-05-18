@@ -3,7 +3,6 @@ import InputButton from './input-button.html';
 
 export default {
   title: 'forms/input-button',
-  tags: ['autodocs'],
   render: (args) => InputButton(args),
   argTypes: {
     disabled: {

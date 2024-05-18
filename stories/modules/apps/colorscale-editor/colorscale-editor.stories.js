@@ -3,7 +3,6 @@ import ColorscaleEditor from './colorscale-editor.html';
 
 export default {
   title: 'apps/colorscale-editor',
-  tags: ['autodocs'],
   render: (args) => ColorscaleEditor(args),
   argTypes: {
     color: {
