@@ -10,32 +10,39 @@ define('color-graph', class extends UIElement {
   connectedCallback() {
     const canvasSize = 400;
     let dragging = false;
-    let resetColor = this.get('base');
-    this.set('hue', resetColor.h);
+    let base = this.get('base');
+    this.set('hue', base.h);
 
     const knob = this.querySelector('.knob');
 
-    const repositionScale = base => {
-      resetColor = base;
+    // reposition knob and scale if color changes
+    const repositionScale = color => {
+      base = color;
 
       const getStepColor = step => {
         const calcLightness = () => {
-          const exp = 2 * Math.log((1 - base.l) / base.l);
+          const exp = 2 * Math.log((1 - color.l) / color.l);
           return (Math.exp(exp * step) - 1) / (Math.exp(exp) - 1);
         };
-        const calcSinChroma = () => base.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
-        const stepL = base.l !== 0.5 ? calcLightness() : step;
-        const stepC = base.c > 0 ? calcSinChroma() : 0;
-        return { mode: 'oklch', l: stepL, c: stepC, h: base.h };
+        const calcSinChroma = () => color.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
+        const stepL = color.l !== 0.5 ? calcLightness() : step;
+        const stepC = color.c > 0 ? calcSinChroma() : 0;
+        return { mode: 'oklch', l: stepL, c: stepC, h: color.h };
       };
 
-      const setStepPosition = (key, color) => {
-        const x = Math.round(color.c * 2.5 * canvasSize);
-        const y = Math.round((1 - color.l) * canvasSize);
+      const setStepPosition = (key, col) => {
+        const x = Math.round(col.c * 2.5 * canvasSize);
+        const y = Math.round((1 - col.l) * canvasSize);
         const el = this.querySelector(`.${key}`);
         el.style.top = `${y}px`;
         el.style.left = `${x}px`;
-        el.style.borderColor = color.l > 0.71 ? 'black' : 'white';
+        el.style.borderColor = col.l > 0.71 ? 'black' : 'white';
+      };
+
+      const setStepColor = (key, step) => {
+        const col = getStepColor(step);
+        this.style.setProperty(`--color-${key}`, formatCss(col));
+        setStepPosition(key, col);
       };
 
       const fn = (number, digits = 2) => new Intl.NumberFormat('en-US', {
@@ -45,51 +52,80 @@ define('color-graph', class extends UIElement {
         useGrouping: false,
       }).format(number);
 
-      this.style.setProperty('--color-base', formatCss(base));
-      setStepPosition('knob', base);
-      this.querySelector('.knob span').innerHTML = `${fn(base.l * 100)}%<br />${fn(base.c, 4)}`;
-      for (let i = 4; i > 0; i--) {
-        const key = `lighten${i * 20}`;
-        const color = getStepColor((5 + i) / 10);
-        this.style.setProperty(`--color-${key}`, formatCss(color));
-        setStepPosition(key, color);
-      }
-      for (let i = 1; i < 5; i++) {
-        const key = `darken${i * 20}`;
-        const color = getStepColor((5 - i) / 10);
-        this.style.setProperty(`--color-${key}`, formatCss(color));
-        setStepPosition(key, color);
-      }
+      this.style.setProperty('--color-base', formatCss(color));
+      setStepPosition('knob', color);
+      this.querySelector('.knob span').innerHTML = `${fn(color.l * 100)}%<br />${fn(color.c, 4)}`;
+      for (let i = 4; i > 0; i--) setStepColor(`lighten${i * 20}`, (5 + i) / 10);
+      for (let i = 1; i < 5; i++) setStepColor(`darken${i * 20}`, (5 - i) / 10);
+    };
+
+    // move knob to a new position
+    const moveKnob = (x, y) => {
+      const getColorFromPosition = (x, y) => ({
+        mode: 'oklch',
+        l: 1 - (Math.min(Math.max(y, 0), canvasSize) / canvasSize),
+        c: Math.min(Math.max(x, 0), canvasSize) / (2.5 * canvasSize),
+        h: base.h,
+      });
+      const inP3Gamut = inGamut('p3');
+      const color = getColorFromPosition(x, y);
+      inP3Gamut(color) && repositionScale(color);
+    };
+
+    // trigger color-change event to commit the color change
+    const triggerChange = color => {
+      this.set('base', color);
+      const event = new CustomEvent('color-change', { detail: color, bubbles: true });
+      this.dispatchEvent(event);
     };
     
     // handle dragging
     knob.onmousedown = () => dragging = true;
     this.onmousemove = e => {
       if (!dragging || (e.buttons !== 1) || (e.target.localName !== 'canvas')) return;
-      const h = this.get('hue');
-      const getColorFromPosition = (x, y) => ({
-        mode: 'oklch',
-        l: 1 - (Math.min(Math.max(y, 0), canvasSize) / canvasSize),
-        c: Math.min(Math.max(x, 0), canvasSize) / (2.5 * canvasSize),
-        h
-      });
-      const inP3Gamut = inGamut('p3');
       const x = e.offsetX;
       const y = e.offsetY;
-      const color = getColorFromPosition(x, y);
-      inP3Gamut(color) && repositionScale(color);
+      moveKnob(x, y);
     };
     this.onmouseup = () => {
       if (!dragging) return;
       dragging = false;
-      this.set('base', resetColor);
-      const event = new CustomEvent('color-change', { detail: resetColor, bubbles: true });
-      this.dispatchEvent(event);
+      triggerChange(base);
     };
+
+    // handle arrow key events
+    knob.onkeydown = e => {
+      if (e.key.substring(0, 5) !== 'Arrow') return;
+      e.stopPropagation();
+      e.preventDefault();
+  
+      const stepOffset = e.shiftKey ? 10 : 1;
+      let x = knob.offsetLeft;
+      let y = knob.offsetTop;
+  
+      switch (e.key) {
+        case 'ArrowDown':
+          y += stepOffset;
+          break;
+        case 'ArrowUp':
+          y -= stepOffset;
+          break;
+        case 'ArrowLeft':
+          x -= stepOffset;
+          break;
+        case 'ArrowRight':
+          x += stepOffset;
+          break;
+        default:
+          return;
+      }
+      moveKnob(x, y);
+      triggerChange(base);
+    }
 
     // reclaculate if base color changes
     this.effect(() => {
-      const base = this.get('base');
+      base = this.get('base');
       repositionScale(base);
       this.set('hue', base.h);
     });

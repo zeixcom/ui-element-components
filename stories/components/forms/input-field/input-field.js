@@ -45,6 +45,7 @@ define('input-field', class extends UIElement {
       return zerone * (max - min) + min;
     };
 
+    // trigger value-change event to commit the value change
     const triggerChange = value => {
       this.set('value', value);
       const newValue = this.get('value'); // we need to get the evaluated value in case value is a function

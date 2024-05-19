@@ -17,6 +17,7 @@ define('color-slider', class extends UIElement {
 
     const thumb = this.querySelector('.thumb');
 
+    // reposition thumb if color changes
     const repositionThumb = color => {
       hue = color.h;
 
@@ -31,23 +32,55 @@ define('color-slider', class extends UIElement {
       this.style.setProperty('--color-base', formatCss(color));
       this.querySelector('.thumb span').innerHTML = `${fn(color.h)}°`;
     };
+
+    // move thumb to a new position
+    const moveThumb = x => {
+      const inP3Gamut = inGamut('p3');
+      const color = {...base, h: Math.min(Math.max(x - thumbOffset, 0), trackWidth) * 360 / trackWidth};
+      inP3Gamut(color) && repositionThumb(color);
+    };
+
+    // trigger color-change event to commit the color change
+    const triggerChange = color => {
+      this.set('base', color);
+      const event = new CustomEvent('color-change', { detail: color, bubbles: true });
+      this.dispatchEvent(event);
+    };
     
     // handle dragging
-    this.onmousedown = () => dragging = true;
+    thumb.onmousedown = () => dragging = true;
     this.onmousemove = e => {
       if (!dragging || (e.buttons !== 1) || (e.target.localName !== this.localName)) return;
-      const getHueFromPosition = x => Math.min(Math.max(x - thumbOffset, 0), trackWidth) * 360 / trackWidth;
-      const inP3Gamut = inGamut('p3');
-      const color = {...base, h: getHueFromPosition(e.offsetX)};
-      inP3Gamut(color) && repositionThumb(color);
+      moveThumb(e.offsetX);
     };
     this.onmouseup = () => {
       if (!dragging) return;
       dragging = false;
-      this.set('base', {...base, h: hue });
-      const event = new CustomEvent('color-change', { detail: base, bubbles: true });
-      this.dispatchEvent(event);
+      triggerChange({...base, h: hue });
     };
+
+    // handle arrow key events
+    thumb.onkeydown = e => {
+      if (e.key.substring(0, 5) !== 'Arrow') return;
+      e.stopPropagation();
+      e.preventDefault();
+  
+      const stepOffset = e.shiftKey ? 10 : 1;
+      let x = thumb.offsetLeft;
+  
+      switch (e.key) {
+        case 'ArrowLeft':
+          x -= stepOffset;
+          break;
+        case 'ArrowRight':
+          x += stepOffset;
+          break;
+        default:
+          return;
+      }
+      moveThumb(x);
+      triggerChange({...base, h: hue });
+    }
 
     // redraw slider track if color changes
     this.effect(() => {
