@@ -9,11 +9,12 @@ define('color-editor', class extends UIElement {
 
   connectedCallback() {
     const graph = this.querySelector('color-graph');
+    const slider = this.querySelector('color-slider');
     const scale = this.querySelector('color-scale');
 
     this.set('name', this.querySelector('input-field.name').getAttribute('value'));
 
-    // handle color-change event from color-graph
+    // handle color-change event from color-graph or color-slider
     this.addEventListener('color-change', e => {
       this.set('base', e.detail);
     });
@@ -66,6 +67,7 @@ define('color-editor', class extends UIElement {
       }).format(number);
 
       graph.set('base', base);
+      slider.set('base', base);
       scale.set('base', base);
       this.querySelector('input-field.lightness').set('value', fn(base.l * 100));
       this.querySelector('input-field.chroma').set('value', fn(base.c, 4));

@@ -14,37 +14,9 @@ define('color-graph', class extends UIElement {
     this.set('hue', resetColor.h);
 
     const knob = this.querySelector('.knob');
-    
-    // handle dragging
-    knob.onmousedown = () => dragging = true;
-    this.onmousemove = e => {
-      if (!dragging || (e.buttons !== 1) || (e.target.localName !== 'canvas')) return;
-      const h = this.get('hue');
-      const inCanvas = (x, y) => x && (x >= 0) && (x < canvasSize) && y && (y >= 0) && (y < canvasSize);
-      const getColorFromPosition = (x, y) => ({ mode: 'oklch', l: 1 - (y / canvasSize), c: x / (2.5 * canvasSize), h });
-      const inP3Gamut = inGamut('p3');
-      const x = e.offsetX;
-      const y = e.offsetY;
-      if (inCanvas(x, y)) {
-        const color = getColorFromPosition(x, y);
-        inP3Gamut(color) && this.set('base', color);
-      }
-    };
-    this.onmouseleave = () => {
-      dragging = false;
-      this.set('base', resetColor);
-    }
-    knob.onmouseup = () => {
-      dragging = false;
-      resetColor = this.get('base');
-      const event = new CustomEvent('color-change', { detail: this.get('base'), bubbles: true });
-      this.dispatchEvent(event);
-    };
 
-    // reclaculate if base color changes
-    this.effect(() => {
-      const base = this.get('base');
-      this.set('hue', base.h);
+    const repositionScale = base => {
+      resetColor = base;
 
       const getStepColor = step => {
         const calcLightness = () => {
@@ -88,6 +60,38 @@ define('color-graph', class extends UIElement {
         this.style.setProperty(`--color-${key}`, formatCss(color));
         setStepPosition(key, color);
       }
+    };
+    
+    // handle dragging
+    knob.onmousedown = () => dragging = true;
+    this.onmousemove = e => {
+      if (!dragging || (e.buttons !== 1) || (e.target.localName !== 'canvas')) return;
+      const h = this.get('hue');
+      const getColorFromPosition = (x, y) => ({
+        mode: 'oklch',
+        l: 1 - (Math.min(Math.max(y, 0), canvasSize) / canvasSize),
+        c: Math.min(Math.max(x, 0), canvasSize) / (2.5 * canvasSize),
+        h
+      });
+      const inP3Gamut = inGamut('p3');
+      const x = e.offsetX;
+      const y = e.offsetY;
+      const color = getColorFromPosition(x, y);
+      inP3Gamut(color) && repositionScale(color);
+    };
+    this.onmouseup = () => {
+      if (!dragging) return;
+      dragging = false;
+      this.set('base', resetColor);
+      const event = new CustomEvent('color-change', { detail: resetColor, bubbles: true });
+      this.dispatchEvent(event);
+    };
+
+    // reclaculate if base color changes
+    this.effect(() => {
+      const base = this.get('base');
+      repositionScale(base);
+      this.set('hue', base.h);
     });
 
     // redraw canvas if hue changes

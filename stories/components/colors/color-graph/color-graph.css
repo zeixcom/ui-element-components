@@ -28,26 +28,26 @@ color-graph {
 
   .knob span {
     display: inline-block;
-    background: rgba(0 0 0 / 0.8);
+    background: rgba(0 0 0 / var(--opacity-dimmed));
     color: white;
     position: absolute;
     left: var(--knob-size);
-    padding: 0.25rem;
-    border-radius: 0.25rem;
+    padding: var(--space-xxs);
+    border-radius: var(--space-xxs);
     transform: translateY(-50%);
-    margin-left: 0.5rem;
+    margin-left: var(--space-xs);
   }
 
   .knob span:before {
     position: absolute;
-    left: -0.5rem;
-    top: calc(50% - 0.5rem);
+    left: calc(-1 * var(--space-xs));
+    top: calc(50% - var(--space-xs));
     content: '';
     width: 0;
     height: 0;
-    border: 0.5rem solid transparent;
+    border: var(--space-xs) solid transparent;
     border-left-width: 0;
-    border-right-color: rgba(0 0 0 / 0.8);
+    border-right-color: rgba(0 0 0 / var(--opacity-dimmed));
   }
 
   ol {

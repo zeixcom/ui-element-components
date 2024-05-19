@@ -3,14 +3,15 @@ color-editor {
   gap: var(--space-l);
   align-items: flex-start;
 
-  .graph {
+  .editor {
     flex-grow: 0;
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
   }
 
-  color-graph {
+  color-graph,
+  color-slider {
     display: block;
   }
 

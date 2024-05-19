@@ -41,7 +41,7 @@ define('input-field', class extends UIElement {
     const nearestStep = v => {
       const steps = Math.round((max - min) / step);
       let zerone = Math.round((v - min) * steps / (max - min)) / steps; // bring to 0-1 range    
-      zerone = Math.min(Math.max(zerone, 0), 1) // keep in range in case value is off limits
+      zerone = Math.min(Math.max(zerone, 0), 1); // keep in range in case value is off limits
       return zerone * (max - min) + min;
     };
 

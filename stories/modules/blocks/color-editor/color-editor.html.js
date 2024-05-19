@@ -1,6 +1,7 @@
 import { html } from 'lit';
 
 import ColorGraph from '../../../components/colors/color-graph/color-graph.html.js';
+import ColorSlider from '../../../components/colors/color-slider/color-slider.html.js';
 import ColorScale from '../../../components/colors/color-scale/color-scale.html.js';
 import ColorDetails from '../../../components/colors/color-details/color-details.html.js';
 import InputField from '../../../components/forms/input-field/input-field.html.js';
@@ -10,8 +11,11 @@ import './color-editor.js';
 
 export default ({ color = '#143dda', name }) => html`
 <color-editor color=${color}>
-  <div class="graph">
-    ${ColorGraph({ color })}
+  <div class="editor">
+    <div class="graph">
+      ${ColorGraph({ color })}
+      ${ColorSlider({ color, axis: 'hue' })}
+    </div>
     <div class="scale">
       ${ColorScale({ color, name, size: 'medium' })}
       <div class="inputs">
