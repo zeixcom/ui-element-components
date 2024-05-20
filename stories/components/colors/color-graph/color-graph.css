@@ -50,13 +50,13 @@ color-graph {
     border-right-color: rgba(0 0 0 / var(--opacity-dimmed));
   }
 
-  ol {
+  & ol {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  li {
+  & li {
     position: absolute;
     box-sizing: border-box;
     top: 0;

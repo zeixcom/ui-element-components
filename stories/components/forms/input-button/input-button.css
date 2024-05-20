@@ -2,7 +2,7 @@ input-button {
   display: inline-block;
   flex-grow: 0;
 
-  button {
+  & button {
     height: var(--input-height);
     min-width: var(--input-height);
     border: 1px solid var(--color-border);
@@ -76,20 +76,20 @@ input-button {
 
   input-button {
 
-    button:not(:disabled):hover {
+    & button:not(:disabled):hover {
       background-color: var(--color-secondary-hover);
       opacity: var(--opacity-solid);
     }
 
-    button.primary:not(:disabled):hover {
+    & button.primary:not(:disabled):hover {
       background-color: var(--color-primary-hover);
     }
 
-    button.error:not(:disabled):hover {
+    & button.error:not(:disabled):hover {
       background-color: var(--color-error-hover);
     }
 
-    button.success:not(:disabled):hover {
+    & button.success:not(:disabled):hover {
       background-color: var(--color-success-hover);
     }
   }

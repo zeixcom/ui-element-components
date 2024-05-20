@@ -15,7 +15,7 @@ code-block {
     text-transform: uppercase;
   }
 
-  pre {
+  & pre {
     color: var(--color-gray-10);
     background: var(--color-gray-90);
     padding: var(--space-s);

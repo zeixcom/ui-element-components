@@ -13,7 +13,7 @@ color-slider {
   height: var(--slider-height);
   background-color: oklch(50% 0 0);
 
-  canvas {
+  & canvas {
     width: var(--track-width);
     height: var(--track-height);
     margin: calc((var(--slider-width) - var(--track-width)) / 2);

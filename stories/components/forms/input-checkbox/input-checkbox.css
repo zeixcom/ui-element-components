@@ -1,7 +1,7 @@
 input-checkbox {
   flex-grow: 1;
 
-  label {
+  & label {
     display: flex;
     gap: var(--space-s);
     line-height: var(--input-height);
@@ -27,7 +27,7 @@ input-checkbox {
   &[checked] label {
     opacity: var(--opacity-translucent);
 
-    span {
+    & span {
       text-decoration: line-through;
     }
 
@@ -48,7 +48,7 @@ input-checkbox {
 
   input-checkbox {
 
-    label:hover::before {
+    & label:hover::before {
       background-color: var(--color-secondary-hover);
       opacity: var(--opacity-solid);
     }

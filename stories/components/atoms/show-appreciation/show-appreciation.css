@@ -1,7 +1,7 @@
 show-appreciation {
   display: inline-block;
 
-  button {
+  & button {
     display: flex;
     flex-direction: row;
     gap: var(--space-s);

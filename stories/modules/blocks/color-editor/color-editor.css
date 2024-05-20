@@ -10,8 +10,8 @@ color-editor {
     gap: var(--space-m);
   }
 
-  color-graph,
-  color-slider {
+  & color-graph,
+  & color-slider {
     display: block;
   }
 
@@ -22,7 +22,7 @@ color-editor {
     margin-top: var(--space-s);
   }
 
-  color-scale {
+  & color-scale {
     flex-grow: 0;
   }
 
@@ -39,7 +39,7 @@ color-editor {
     padding: 0;
     flex-grow: 1;
 
-    li {
+    & li {
       margin: 0;
       padding: 0;
     }

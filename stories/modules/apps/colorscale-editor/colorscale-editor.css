@@ -1,6 +1,6 @@
 colorscale-editor {
 
-  button {
+  & button {
     display: inline-flex;
     gap: var(--space-s);
     align-items: center;
@@ -17,16 +17,16 @@ colorscale-editor {
     
     > .label {
       
-      strong,
-      small {
+      & strong,
+      & small {
         display: block;
       }
   
-      strong {
+      & strong {
         font-size: var(--font-size-m);
       }
   
-      small {
+      & small {
         color: var(--color-text-soft);
         font-size: var(--font-size-xs);
       }

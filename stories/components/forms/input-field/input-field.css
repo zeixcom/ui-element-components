@@ -6,26 +6,26 @@ input-field {
 
   &:focus-within {
 
-    label,
-    p,
-    span,
-    button:not(:disabled) {
+    & label,
+    & p,
+    & span,
+    & button:not(:disabled) {
       opacity: var(--opacity-solid);
     }
 
-    input {
+    & input {
       color: var(--color-text);
     }
   }
 
-  label,
-  p,
-  span {
+  & label,
+  & p,
+  & span {
     opacity: var(--opacity-dimmed);
     transition: opacity var(--transition-short) var(--easing-inout);
   }
 
-  label {
+  & label {
     display: block;
     font-size: var(--font-size-s);
     color: var(--color-text);
@@ -57,7 +57,7 @@ input-field {
     }
   }
 
-  input {
+  & input {
     flex-grow: 1;
     display: inline-block;
     box-sizing: border-box;
@@ -71,11 +71,11 @@ input-field {
     transition: color var(--transition-short) var(--easing-inout);
   }
 
-  input[type="number"] {
+  & input[type="number"] {
     text-align: right;
   }
 
-  span {
+  & span {
     flex-grow: 0;
   }
 
@@ -91,7 +91,7 @@ input-field {
     display: flex;
   }
 
-  button {
+  & button {
     border: 1px solid var(--color-border);
     background-color: var(--color-secondary);
     color: var(--color-text);
@@ -148,7 +148,7 @@ input-field {
 
   input-field {
 
-    button:not(:disabled):hover {
+    & button:not(:disabled):hover {
       background-color: var(--color-secondary-hover);
     }
 
