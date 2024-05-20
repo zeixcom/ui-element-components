@@ -12,17 +12,19 @@ color-slider {
   width: var(--slider-width);
   height: var(--slider-height);
   background-color: oklch(50% 0 0);
+  user-select: none;
 
   & canvas {
     width: var(--track-width);
     height: var(--track-height);
     margin: calc((var(--slider-width) - var(--track-width)) / 2);
+    user-select: none;
   }
 
   .thumb {
     position: absolute;
-    top: calc((var(--slider-height) - var(--knob-size)) / 2);
-    left: 0;
+    top: calc(var(--slider-height) / 2);
+    left: calc((var(--slider-width) - var(--track-width)) / 2);
     width: var(--knob-size);
     height: var(--knob-size);
     background-color: var(--color-base);
@@ -30,6 +32,8 @@ color-slider {
     border-radius: 50%;
     cursor: ew-resize;
     user-select: none;
+    touch-action: none;
+    transform: translate(calc(var(--knob-size) / -2), calc(var(--knob-size) / -2));
   }
   
   .thumb span {

@@ -9,13 +9,13 @@ define('color-slider', class extends UIElement {
 
   connectedCallback() {
     const trackWidth = 360;
-    const thumbOffset = 4; // left margin of canvas - thumb size / 2
+    const trackOffset = 20;
     // const axis = this.getAttribute('axis');
-    let dragging = false;
     let base;
     let hue;
 
     const thumb = this.querySelector('.thumb');
+    const track = this.querySelector('canvas');
 
     // reposition thumb if color changes
     const repositionThumb = color => {
@@ -28,7 +28,7 @@ define('color-slider', class extends UIElement {
         useGrouping: false,
       }).format(number);
 
-      thumb.style.left = `${Math.round(color.h * 360 / trackWidth) + 4}px`;
+      thumb.style.left = `${Math.round(color.h * 360 / trackWidth) + trackOffset}px`;
       this.style.setProperty('--color-base', formatCss(color));
       this.querySelector('.thumb span').innerHTML = `${fn(color.h)}°`;
     };
@@ -36,7 +36,7 @@ define('color-slider', class extends UIElement {
     // move thumb to a new position
     const moveThumb = x => {
       const inP3Gamut = inGamut('p3');
-      const color = {...base, h: Math.min(Math.max(x - thumbOffset, 0), trackWidth) * 360 / trackWidth};
+      const color = {...base, h: Math.min(Math.max(x, 0), trackWidth) * 360 / trackWidth};
       inP3Gamut(color) && repositionThumb(color);
     };
 
@@ -48,15 +48,18 @@ define('color-slider', class extends UIElement {
     };
     
     // handle dragging
-    thumb.onmousedown = () => dragging = true;
-    this.onmousemove = e => {
-      if (!dragging || (e.buttons !== 1) || (e.target.localName !== this.localName)) return;
-      moveThumb(e.offsetX);
-    };
-    this.onmouseup = () => {
-      if (!dragging) return;
-      dragging = false;
-      triggerChange({...base, h: hue });
+    thumb.onpointerdown = e => {
+      thumb.setPointerCapture(e.pointerId);
+    
+      thumb.onpointermove = e => {
+        moveThumb(Math.round(e.clientX - track.getBoundingClientRect().left));
+      };
+    
+      thumb.onpointerup = () => {
+        thumb.onpointermove = null;
+        thumb.onpointerup = null;
+        triggerChange({...base, h: hue });
+      };
     };
 
     // handle arrow key events

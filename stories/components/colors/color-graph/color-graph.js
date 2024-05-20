@@ -9,7 +9,6 @@ define('color-graph', class extends UIElement {
 
   connectedCallback() {
     const canvasSize = 400;
-    let dragging = false;
     let base = this.get('base');
     this.set('hue', base.h);
 
@@ -80,17 +79,20 @@ define('color-graph', class extends UIElement {
     };
     
     // handle dragging
-    knob.onmousedown = () => dragging = true;
-    this.onmousemove = e => {
-      if (!dragging || (e.buttons !== 1) || (e.target.localName !== 'canvas')) return;
-      const x = e.offsetX;
-      const y = e.offsetY;
-      moveKnob(x, y);
-    };
-    this.onmouseup = () => {
-      if (!dragging) return;
-      dragging = false;
-      triggerChange(base);
+    knob.onpointerdown = e => {
+      knob.setPointerCapture(e.pointerId);
+    
+      knob.onpointermove = e => {
+        const x = e.clientX - this.getBoundingClientRect().left;
+        const y = e.clientY - this.getBoundingClientRect().top;
+        moveKnob(x, y);
+      };
+    
+      knob.onpointerup = () => {
+        knob.onpointermove = null;
+        knob.onpointerup = null;
+        triggerChange(base);
+      };
     };
 
     // handle arrow key events

@@ -11,6 +11,11 @@ color-graph {
   width: var(--canvas-size);
   height: var(--canvas-size);
   background-color: oklch(50% 0 0);
+  user-select: none;
+
+  & canvas {
+    user-select: none;
+  }
 
   .knob {
     position: absolute;
@@ -23,6 +28,7 @@ color-graph {
     border: 2px solid var(--color-border);
     cursor: move;
     user-select: none;
+    touch-action: none;
     transform: translate(calc(var(--knob-size) / -2), calc(var(--knob-size) / -2));
   }
 
@@ -54,6 +60,7 @@ color-graph {
     list-style: none;
     margin: 0;
     padding: 0;
+    user-select: none;
   }
 
   & li {
@@ -67,6 +74,7 @@ color-graph {
     border-radius: 100%;
     background-color: transparent;
     border: 1px solid black;
+    user-select: none;
   }
 
   .lighten80 { background: var(--color-lighten80); }
