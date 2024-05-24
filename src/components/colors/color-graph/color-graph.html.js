@@ -6,7 +6,7 @@ import './color-graph.js';
 export default ({ color = '#143dda' }) => html`
 <color-graph color=${color}>
   <canvas width="400" height="400"></canvas>
-  <ol>
+  <ol role="presentation">
     <li class="lighten80"></li>
     <li class="lighten60"></li>
     <li class="lighten40"></li>

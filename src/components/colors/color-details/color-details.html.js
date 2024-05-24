@@ -3,10 +3,10 @@ import { html } from 'lit';
 import './color-details.css';
 import './color-details.js';
 
-export default ({ color = '#143dda', name }) => html`
+export default ({ color = '#143dda', name, open, onClick }) => html`
 <color-details color=${color}>
-  <details>
-    <summary>
+  <details ?open=${open}>
+    <summary @click=${onClick}>
       <div class="summary">
         <span class="swatch"></span>
         <span class="label">
@@ -23,7 +23,14 @@ export default ({ color = '#143dda', name }) => html`
         <dt>Hue:</dt>
         <dd class="hue"></dd>
       </dl>
-      <p><code class="css"></code></p>
+      <dl>
+        <dt>OKLCH:</dt>
+        <dd class="oklch"></dd>
+        <dt>RGB:</dt>
+        <dd class="rgb"></dd>
+        <dt>HSL:</dt>
+        <dd class="hsl"></dd>
+      </dl>
     </div>
   </details>
 </color-details>`;

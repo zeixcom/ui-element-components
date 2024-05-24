@@ -66,7 +66,7 @@ export default ({ color = '#143dda', name }) => html`
     <li class="lighten60">${ColorDetails({ name: `${name} 20` })}</li>
     <li class="lighten40">${ColorDetails({ name: `${name} 30` })}</li>
     <li class="lighten20">${ColorDetails({ name: `${name} 40` })}</li>
-    <li class="base">${ColorDetails({ color, name: `${name} 50` })}</li>
+    <li class="base">${ColorDetails({ color, name: `${name} 50`, open: true })}</li>
     <li class="darken20">${ColorDetails({ name: `${name} 60` })}</li>
     <li class="darken40">${ColorDetails({ name: `${name} 70` })}</li>
     <li class="darken60">${ColorDetails({ name: `${name} 80` })}</li>

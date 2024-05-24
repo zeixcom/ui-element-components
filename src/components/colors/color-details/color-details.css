@@ -50,6 +50,9 @@ color-details {
   }
 
   .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
     margin-left: var(--space-l);
   }
 
@@ -74,16 +77,6 @@ color-details {
     grid-column: 2;
     display: inline-block;
     margin: 0;
-    font-size: var(--font-size-s);
-    line-height: var(--line-height-s);
-  }
-
-  & p {
-    margin: 0 0 var(--space-l);
-    line-height: 1;
-  }
-
-  & code {
     font-size: var(--font-size-s);
     line-height: var(--line-height-s);
   }

@@ -5,7 +5,7 @@ import './color-scale.js';
 
 export default ({ color = '#143dda', name, size = 'medium' }) => html`
 <color-scale color=${color} class=${size}>
-  <ol>
+  <ol role="presentation">
     <li class="lighten80"></li>
     <li class="lighten60"></li>
     <li class="lighten40"></li>

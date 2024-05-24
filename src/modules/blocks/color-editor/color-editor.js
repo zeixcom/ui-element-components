@@ -8,8 +8,6 @@ define('color-editor', class extends UIElement {
   attributeMapping = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
-    const graph = this.querySelector('color-graph');
-    const slider = this.querySelector('color-slider');
     const scale = this.querySelector('color-scale');
 
     this.set('name', this.querySelector('input-field.name').getAttribute('value'));
@@ -21,7 +19,7 @@ define('color-editor', class extends UIElement {
 
     // handle value-change event from input-field
     this.addEventListener('value-change', e => {
-      e.stopPropagation();
+      e.stopPropagation(); // only color-change event should bubble up
       const value = e.detail;
       const comp = e.target.className[0];
       if (e.target.className === 'name') {
@@ -45,7 +43,7 @@ define('color-editor', class extends UIElement {
     // update if base color changes
     this.effect(() => {
       const base = this.get('base');
-
+      
       const getStepColor = step => {
         const calcLightness = () => {
           const exp = 2 * Math.log((1 - base.l) / base.l);
@@ -66,8 +64,8 @@ define('color-editor', class extends UIElement {
         useGrouping: false,
       }).format(number);
 
-      graph.set('base', base);
-      slider.set('base', base);
+      this.querySelector('color-graph').set('base', base);
+      this.querySelector('color-slider').set('base', base);
       scale.set('base', base);
       this.querySelector('input-field.lightness').set('value', fn(base.l * 100));
       this.querySelector('input-field.chroma').set('value', fn(base.c, 4));

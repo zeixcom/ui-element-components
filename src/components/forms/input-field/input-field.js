@@ -27,7 +27,7 @@ define('input-field', class extends UIElement {
 
     // setup spinbutton with step and min/max attributes
     const [step, min, max] = (() => {
-      if (!this.isNumber || !spinbutton) return [,,];
+      if (!this.isNumber || !spinbutton) return [];
       const getNumber = attr => {
         const num = this.parseNumber(input.getAttribute(attr));
         return !Number.isNaN(num) && num;
@@ -35,7 +35,7 @@ define('input-field', class extends UIElement {
       // ensure value is a number in case attributeChangedCallback before connectedCallback
       this.set('value', this.parseNumber(input.value));
       const temp = this.parseNumber(spinbutton.dataset.step);
-      return !Number.isNaN(temp) ? [temp, getNumber('min'), getNumber('max')] : [,,];
+      return !Number.isNaN(temp) ? [temp, getNumber('min'), getNumber('max')] : [];
     })();
 
     const nearestStep = v => {

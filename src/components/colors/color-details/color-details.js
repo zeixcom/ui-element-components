@@ -1,6 +1,6 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
-import { converter, formatCss, formatHex } from 'culori/fn';
+import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn';
 
 define('color-details', class extends UIElement {
   static observedAttributes = ['color', 'name'];
@@ -33,12 +33,16 @@ define('color-details', class extends UIElement {
         useGrouping: false,
       }).format(number);
 
+      const setTextContent = (selector, value) => this.querySelector(selector).textContent = value;
+
       this.style.setProperty('--color-swatch', formatCss(color));
       replaceText(this.querySelector('.value'), formatHex(color));
-      replaceText(this.querySelector('.lightness'), `${fn(color.l * 100)}%`);
-      replaceText(this.querySelector('.chroma'), fn(color.c, 4));
-      replaceText(this.querySelector('.hue'), `${fn(color.h)}°`);
-      replaceText(this.querySelector('.css'), `oklch(${fn(color.l, 4)} ${fn(color.c, 4)} ${fn(color.h)})`);
+      setTextContent('.lightness', `${fn(color.l * 100)}%`);
+      setTextContent('.chroma', fn(color.c, 4));
+      setTextContent('.hue', `${fn(color.h)}°`);
+      setTextContent('.oklch', `oklch(${fn(color.l, 4)} ${fn(color.c, 4)} ${fn(color.h)})`);
+      setTextContent('.rgb', formatRgb(color));
+      setTextContent('.hsl', formatHsl(color));
     });
 
   }

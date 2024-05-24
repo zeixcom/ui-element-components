@@ -104,7 +104,7 @@ define('color-slider', class extends UIElement {
         return 'transparent';
       };
       
-      if (!base || (color.l !== base.l) && (color.c !== base.c)) {
+      if (!base || (color.l !== base.l) || (color.c !== base.c)) {
         const ctx = this.querySelector('canvas').getContext('2d', { colorSpace: 'display-p3' });
         ctx.clearRect(0, 0, trackWidth, 1);
         for (let x = 0; x < trackWidth; x++) {
