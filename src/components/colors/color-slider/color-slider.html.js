@@ -22,7 +22,6 @@ export default ({
     aria-valuemin=${min}
     aria-valuemax=${max}
     aria-valuenow=${min}
-    aria-valuetext="${min}°"
     @pointerDown=${onPointerDown}
     @keydown=${onKeyDown}
   >

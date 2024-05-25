@@ -39,10 +39,11 @@ color-slider {
   
   .thumb span {
     display: inline-block;
+    font-size: var(--font-size-xs);
     background: rgba(0 0 0 / var(--opacity-dimmed));
     color: white;
     position: absolute;
-    top: calc(-1 * var(--knob-size) - 2px);
+    top: calc(-1 * var(--knob-size));
     left: calc(0.5 * var(--knob-size) - 2px);
     transform: translateX(-50%);
     padding: var(--space-xxs);

@@ -124,11 +124,11 @@ define('color-graph', class extends UIElement {
       const getColorFromPosition = (x, y) => {
         const l = 1 - (y / canvasSize);
         const c = x / (2.5 * canvasSize);
-        const color = `oklch(${l} ${c} ${h})`;
-        if (inRGBGamut(color)) {
+        const color = { mode: 'oklch', l, c, h };
+        if (inRGBGamut(color)) return color;
+        if (inP3Gamut(color)) {
+          color.alpha = 0.5;
           return color;
-        } else if (inP3Gamut(color)) {
-          return `oklch(${l} ${c} ${h} / 0.5)`;
         }
         return;
       };
@@ -139,7 +139,7 @@ define('color-graph', class extends UIElement {
         for (let x = 0; x < canvasSize; x++) {
           const bgColor = getColorFromPosition(x, y);
           if (bgColor) {
-            ctx.fillStyle = bgColor;
+            ctx.fillStyle = formatCss(bgColor);
             ctx.fillRect(x, y, 1, 1);
           } else {
             x = canvasSize;

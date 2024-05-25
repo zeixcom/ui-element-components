@@ -38,6 +38,22 @@ export default {
   },
 };
 
+export const Lightness = {
+  args: {
+    label: 'Lightness',
+    axis: 'l',
+    max: 100,
+  },
+};
+
+export const Chroma = {
+  args: {
+    label: 'Chroma',
+    axis: 'c',
+    max: 0.4,
+  },
+};
+
 export const Hue = {
   args: {
     label: 'Hue',

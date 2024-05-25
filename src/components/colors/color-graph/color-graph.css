@@ -36,6 +36,7 @@ color-graph {
     display: inline-block;
     background: rgba(0 0 0 / var(--opacity-dimmed));
     color: white;
+    font-size: var(--font-size-xs);
     position: absolute;
     left: var(--knob-size);
     padding: var(--space-xxs);

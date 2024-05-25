@@ -14,7 +14,7 @@ export default ({ color = '#143dda', name }) => html`
   <div class="editor">
     <div class="graph">
       ${ColorGraph({ color })}
-      ${ColorSlider({ color, axis: 'hue' })}
+      ${ColorSlider({ label: 'Hue', color, axis: 'h', min: 0, max: 360 })}
     </div>
     <div class="scale">
       ${ColorScale({ color, name, size: 'medium' })}

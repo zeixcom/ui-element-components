@@ -9,35 +9,44 @@ define('color-slider', class extends UIElement {
   attributeMapping = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
-    const trackWidth = 360;
-    const trackOffset = 20;
-    // const axis = this.getAttribute('axis');
     let base;
-    let hue;
-
+    let channel;
+    const axis = this.getAttribute('axis') || 'h';
     const thumb = this.querySelector('.thumb');
     const track = this.querySelector('canvas');
+    const max = parseFloat(thumb.getAttribute('aria-valuemax'), 10) || 360;
+    const trackWidth = track.getBoundingClientRect().width;
+    const trackOffset = 20;
+
+    // return formatted value text
+    const getValueText = color => {
+      switch (axis) {
+        case 'h': return `${formatNumber(color.h)}°`;
+        case 'l': return `${formatNumber(color.l * 100)}%`;
+        case 'c': return formatNumber(color.c, 4);
+      }
+    };
 
     // reposition thumb if color changes
     const repositionThumb = color => {
-      hue = color.h;
-      thumb.style.left = `${Math.round(color.h * 360 / trackWidth) + trackOffset}px`;
+      channel = color[axis];
+      thumb.style.left = `${Math.round((axis === 'l' ? color[axis] * 100 : color[axis]) * trackWidth / max) + trackOffset}px`;
       this.style.setProperty('--color-base', formatCss(color));
-      this.querySelector('.thumb span').innerHTML = `${formatNumber(color.h)}°`;
+      this.querySelector('.thumb span').innerHTML = getValueText(color);
     };
 
     // move thumb to a new position
     const moveThumb = x => {
       const inP3Gamut = inGamut('p3');
-      const color = {...base, h: Math.min(Math.max(x, 0), trackWidth) * 360 / trackWidth};
+      const color = {...base, [axis]: Math.min(Math.max(x, 0), 1) * (axis === 'l' ? max / 100 : max)};
       inP3Gamut(color) && repositionThumb(color);
     };
 
     // trigger color-change event to commit the color change
     const triggerChange = color => {
       this.set('base', color);
-      thumb.setAttribute('aria-valuenow', color.h);
-      thumb.setAttribute('aria-valuetext', `${formatNumber(color.h)}°`);
+      thumb.setAttribute('aria-valuenow', color[axis]);
+      thumb.setAttribute('aria-valuetext', getValueText(color));
       const event = new CustomEvent('color-change', { detail: color, bubbles: true });
       this.dispatchEvent(event);
     };
@@ -47,13 +56,13 @@ define('color-slider', class extends UIElement {
       thumb.setPointerCapture(e.pointerId);
     
       thumb.onpointermove = e => {
-        moveThumb(Math.round(e.clientX - track.getBoundingClientRect().left));
+        moveThumb((e.clientX - track.getBoundingClientRect().left) / trackWidth);
       };
     
       thumb.onpointerup = () => {
         thumb.onpointermove = null;
         thumb.onpointerup = null;
-        triggerChange({...base, h: hue });
+        triggerChange({...base, [axis]: channel });
       };
     };
 
@@ -76,34 +85,37 @@ define('color-slider', class extends UIElement {
         default:
           return;
       }
-      moveThumb(x);
-      triggerChange({...base, h: hue });
+      moveThumb(x / trackWidth);
+      triggerChange({...base, [axis]: channel });
     }
 
     // redraw slider track if color changes
     this.effect(() => {
       const color = this.get('base');
-      const l = color.l;
-      const c = color.c;
       const inP3Gamut = inGamut('p3');
       const inRGBGamut = inGamut('rgb');
 
-      const getColorFromPosition = x => {
-        const h = x * 360 / trackWidth;
-        const newColor = `oklch(${l} ${c} ${h})`;
-        if (inRGBGamut(newColor)) {
-          return newColor;
-        } else if (inP3Gamut(newColor)) {
-          return `oklch(${l} ${c} ${h} / 0.5)`;
+      const shouldUpdateTrack = () => {
+        if (!base) return true;
+        switch (axis) {
+          case 'h': return (color.l!== base.l) || (color.c!== base.c);
+          case 'l': return (color.c!== base.c) || (color.h!== base.h);
+          case 'c': return (color.l!== base.l) || (color.h!== base.h);
         }
-        return 'transparent';
+      }
+
+      const getColorFromPosition = x => {
+        const newColor = {...color, [axis]: x * (axis === 'l' ? max / 100 : max) };
+        if (inRGBGamut(newColor)) return newColor;
+        inP3Gamut(newColor) ? newColor.alpha = 0.5 : newColor.alpha = 0;
+        return newColor;
       };
       
-      if (!base || (color.l !== base.l) || (color.c !== base.c)) {
+      if (shouldUpdateTrack()) {
         const ctx = this.querySelector('canvas').getContext('2d', { colorSpace: 'display-p3' });
         ctx.clearRect(0, 0, trackWidth, 1);
         for (let x = 0; x < trackWidth; x++) {
-          ctx.fillStyle = getColorFromPosition(x);
+          ctx.fillStyle = formatCss(getColorFromPosition(x / trackWidth));
           ctx.fillRect(x, 0, 1, 1);
         }
         thumb.style.borderColor = color.l > 0.71 ? 'black' : 'white';
