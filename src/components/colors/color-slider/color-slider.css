@@ -28,6 +28,7 @@ color-slider {
     width: var(--knob-size);
     height: var(--knob-size);
     background-color: var(--color-base);
+    box-sizing: border-box;
     border: 2px solid var(--color-border);
     border-radius: 50%;
     cursor: ew-resize;
@@ -41,7 +42,8 @@ color-slider {
     background: rgba(0 0 0 / var(--opacity-dimmed));
     color: white;
     position: absolute;
-    top: calc(-1 * var(--knob-size));
+    top: calc(-1 * var(--knob-size) - 2px);
+    left: calc(0.5 * var(--knob-size) - 2px);
     transform: translateX(-50%);
     padding: var(--space-xxs);
     border-radius: var(--space-xxs);

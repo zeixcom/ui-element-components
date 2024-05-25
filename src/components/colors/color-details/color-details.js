@@ -1,6 +1,7 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn';
+import { define, replaceText, formatNumber } from '../../../assets/js/utils';
 
 define('color-details', class extends UIElement {
   static observedAttributes = ['color', 'name'];
@@ -11,12 +12,6 @@ define('color-details', class extends UIElement {
     const name = this.querySelector('.label strong');
     !this.has('name') && this.set('name', name.textContent);
 
-    // replace textContent while preserving Lit's marker nodes in Storybook
-    const replaceText = (parentNode, text) => {
-      Array.from(parentNode.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
-      parentNode.append(document.createTextNode(text));
-    };
-
     // update if name changes
     this.effect(() => {
       replaceText(name, this.get('name'));
@@ -25,22 +20,14 @@ define('color-details', class extends UIElement {
     // update if color changes
     this.effect(() => {
       const color = this.get('color');
-
-      const fn = (number, digits = 2) => new Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: digits,
-        useGrouping: false,
-      }).format(number);
-
       const setTextContent = (selector, value) => this.querySelector(selector).textContent = value;
 
       this.style.setProperty('--color-swatch', formatCss(color));
       replaceText(this.querySelector('.value'), formatHex(color));
-      setTextContent('.lightness', `${fn(color.l * 100)}%`);
-      setTextContent('.chroma', fn(color.c, 4));
-      setTextContent('.hue', `${fn(color.h)}°`);
-      setTextContent('.oklch', `oklch(${fn(color.l, 4)} ${fn(color.c, 4)} ${fn(color.h)})`);
+      setTextContent('.lightness', `${formatNumber(color.l * 100)}%`);
+      setTextContent('.chroma', formatNumber(color.c, 4));
+      setTextContent('.hue', `${formatNumber(color.h)}°`);
+      setTextContent('.oklch', `oklch(${formatNumber(color.l, 4)} ${formatNumber(color.c, 4)} ${formatNumber(color.h)})`);
       setTextContent('.rgb', formatRgb(color));
       setTextContent('.hsl', formatHsl(color));
     });

@@ -1,6 +1,7 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
+import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
 
 define('color-graph', class extends UIElement {
   static observedAttributes = ['color'];
@@ -18,17 +19,6 @@ define('color-graph', class extends UIElement {
     const repositionScale = color => {
       base = color;
 
-      const getStepColor = step => {
-        const calcLightness = () => {
-          const exp = 2 * Math.log((1 - color.l) / color.l);
-          return (Math.exp(exp * step) - 1) / (Math.exp(exp) - 1);
-        };
-        const calcSinChroma = () => color.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
-        const stepL = color.l !== 0.5 ? calcLightness() : step;
-        const stepC = color.c > 0 ? calcSinChroma() : 0;
-        return { mode: 'oklch', l: stepL, c: stepC, h: color.h };
-      };
-
       const setStepPosition = (key, col) => {
         const x = Math.round(col.c * 2.5 * canvasSize);
         const y = Math.round((1 - col.l) * canvasSize);
@@ -39,21 +29,14 @@ define('color-graph', class extends UIElement {
       };
 
       const setStepColor = (key, step) => {
-        const col = getStepColor(step);
+        const col = getStepColor(color, step);
         this.style.setProperty(`--color-${key}`, formatCss(col));
         setStepPosition(key, col);
       };
 
-      const fn = (number, digits = 2) => new Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: digits,
-        useGrouping: false,
-      }).format(number);
-
       this.style.setProperty('--color-base', formatCss(color));
       setStepPosition('knob', color);
-      this.querySelector('.knob span').innerHTML = `${fn(color.l * 100)}%<br />${fn(color.c, 4)}`;
+      this.querySelector('.knob span').innerHTML = `${formatNumber(color.l * 100)}%<br />${formatNumber(color.c, 4)}`;
       for (let i = 4; i > 0; i--) setStepColor(`lighten${i * 20}`, (5 + i) / 10);
       for (let i = 1; i < 5; i++) setStepColor(`darken${i * 20}`, (5 - i) / 10);
     };

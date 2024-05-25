@@ -1,6 +1,7 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
+import { define, formatNumber } from '../../../assets/js/utils';
 
 define('color-slider', class extends UIElement {
   static observedAttributes = ['color'];
@@ -20,17 +21,9 @@ define('color-slider', class extends UIElement {
     // reposition thumb if color changes
     const repositionThumb = color => {
       hue = color.h;
-
-      const fn = (number, digits = 2) => new Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: digits,
-        useGrouping: false,
-      }).format(number);
-
       thumb.style.left = `${Math.round(color.h * 360 / trackWidth) + trackOffset}px`;
       this.style.setProperty('--color-base', formatCss(color));
-      this.querySelector('.thumb span').innerHTML = `${fn(color.h)}°`;
+      this.querySelector('.thumb span').innerHTML = `${formatNumber(color.h)}°`;
     };
 
     // move thumb to a new position
@@ -43,6 +36,8 @@ define('color-slider', class extends UIElement {
     // trigger color-change event to commit the color change
     const triggerChange = color => {
       this.set('base', color);
+      thumb.setAttribute('aria-valuenow', color.h);
+      thumb.setAttribute('aria-valuetext', `${formatNumber(color.h)}°`);
       const event = new CustomEvent('color-change', { detail: color, bubbles: true });
       this.dispatchEvent(event);
     };
@@ -69,7 +64,7 @@ define('color-slider', class extends UIElement {
       e.preventDefault();
   
       const stepOffset = e.shiftKey ? 10 : 1;
-      let x = thumb.offsetLeft;
+      let x = thumb.offsetLeft - trackOffset;
   
       switch (e.key) {
         case 'ArrowLeft':

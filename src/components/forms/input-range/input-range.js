@@ -1,4 +1,6 @@
 import UIElement from '@efflore/ui-element';
+import { define } from '../../../assets/js/utils';
+
 
 define('input-range', class extends UIElement {
 

@@ -1,4 +1,5 @@
 import UIElement from '@efflore/ui-element';
+import { define, replaceText, formatNumber } from '../../../assets/js/utils';
 
 define('input-field', class extends UIElement {
   static observedAttributes = ['value', 'description'];
@@ -18,12 +19,6 @@ define('input-field', class extends UIElement {
       .map(className => this.querySelector(`.${className}`));
     !this.has('error') && this.set('error', error.textContent);
     description.textContent && !this.has('description') && this.set('description', description.textContent);
-
-    // replace textContent while preserving Lit's marker nodes in Storybook
-    const replaceText = (parentNode, text) => {
-      Array.from(parentNode.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
-      parentNode.append(document.createTextNode(text));
-    };
 
     // setup spinbutton with step and min/max attributes
     const [step, min, max] = (() => {

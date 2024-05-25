@@ -1,4 +1,5 @@
 import UIElement from '@efflore/ui-element';
+import { define } from '../../../assets/js/utils';
 
 define('input-button', class extends UIElement {
   static observedAttributes = ['disabled'];

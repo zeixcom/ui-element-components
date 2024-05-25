@@ -1,6 +1,7 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatCss } from 'culori/fn';
+import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
 
 define('color-editor', class extends UIElement {
   static observedAttributes = ['color'];
@@ -43,46 +44,19 @@ define('color-editor', class extends UIElement {
     // update if base color changes
     this.effect(() => {
       const base = this.get('base');
-      
-      const getStepColor = step => {
-        const calcLightness = () => {
-          const exp = 2 * Math.log((1 - base.l) / base.l);
-          return (Math.exp(exp * step) - 1) / (Math.exp(exp) - 1);
-        };
-        const calcSinChroma = () => {
-          return base.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
-        };
-        const stepL = base.l !== 0.5 ? calcLightness() : step;
-        const stepC = base.c > 0 ? calcSinChroma() : 0;
-        return { mode: 'oklch', l: stepL, c: stepC, h: base.h };
-      };
-
-      const fn = (number, digits = 2) => new Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: digits,
-        useGrouping: false,
-      }).format(number);
 
       this.querySelector('color-graph').set('base', base);
       this.querySelector('color-slider').set('base', base);
       scale.set('base', base);
-      this.querySelector('input-field.lightness').set('value', fn(base.l * 100));
-      this.querySelector('input-field.chroma').set('value', fn(base.c, 4));
-      this.querySelector('input-field.hue').set('value', fn(base.h));
-      this.style.setProperty('--color-base', formatCss(base));
+      this.querySelector('input-field.lightness').set('value', formatNumber(base.l * 100));
+      this.querySelector('input-field.chroma').set('value', formatNumber(base.c, 4));
+      this.querySelector('input-field.hue').set('value', formatNumber(base.h));
       this.querySelector(`.base color-details`).set('color', base);
       for (let i = 4; i > 0; i--) {
-        const key = `lighten${i * 20}`;
-        const color = getStepColor((5 + i) / 10);
-        this.style.setProperty(`--color-${key}`, formatCss(color));
-        this.querySelector(`.${key} color-details`).set('color', color);
+        this.querySelector(`.lighten${i * 20} color-details`).set('color',  getStepColor(base, (5 + i) / 10));
       }
       for (let i = 1; i < 5; i++) {
-        const key = `darken${i * 20}`;
-        const color = getStepColor((5 - i) / 10);
-        this.style.setProperty(`--color-${key}`, formatCss(color));
-        this.querySelector(`.${key} color-details`).set('color', color);
+        this.querySelector(`.darken${i * 20} color-details`).set('color', getStepColor(base, (5 - i) / 10));
       }
     });
   }

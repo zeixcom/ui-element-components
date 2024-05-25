@@ -1,4 +1,5 @@
 import UIElement from '@efflore/ui-element';
+import { define } from '../../../assets/js/utils';
 
 define('show-appreciation', class extends UIElement {
   static observedAttributes = ['count'];

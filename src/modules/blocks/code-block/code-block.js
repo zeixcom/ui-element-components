@@ -1,5 +1,6 @@
 import UIElement from '@efflore/ui-element';
 import Prism from 'prismjs';
+import { define } from '../../../assets/js/utils';
 
 define('code-block', class extends UIElement {
   static observedAttributes = ['collapsed'];
