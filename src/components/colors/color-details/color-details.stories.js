@@ -31,19 +31,19 @@ export const Closed = {
 
     await step('Initial state', async () => {
       await expect(summary).toHaveTextContent(`${args.name} ${args.color}`);
-      expect(details.open, 'open').toBeFalsy();
+      expect(details.open, 'open').toBe(false);
     });
 
     await step('Click on summary', async () => {
       await userEvent.click(summary);
       await expect(args.onClick).toHaveBeenCalled();
-      expect(details.open, 'open').toBeTruthy();
+      expect(details.open, 'open').toBe(true);
     });
 
     await step('Click on summary again', async () => {
       await userEvent.click(summary);
       await expect(args.onClick).toHaveBeenCalled();
-      expect(details.open, 'open').toBeFalsy();
+      expect(details.open, 'open').toBe(false);
     });
   },
 };
@@ -57,19 +57,19 @@ export const Open = {
 
     await step('Initial state', async () => {
       await expect(summary).toHaveTextContent(`${args.name} ${args.color}`);
-      expect(details.open, 'open').toBeTruthy();
+      expect(details.open, 'open').toBe(true);
     });
 
     await step('Click on summary', async () => {
       await userEvent.click(summary);
       await expect(args.onClick).toHaveBeenCalled();
-      expect(details.open, 'open').toBeFalsy();
+      expect(details.open, 'open').toBe(false);
     });
 
     await step('Click on summary again', async () => {
       await userEvent.click(summary);
       await expect(args.onClick).toHaveBeenCalled();
-      expect(details.open, 'open').toBeTruthy();
+      expect(details.open, 'open').toBe(true);
     });
   },
 };

@@ -11,7 +11,7 @@ color-slider {
   display: inline-block;
   width: var(--slider-width);
   height: var(--slider-height);
-  background-color: oklch(50% 0 0);
+  background-color: var(--color-background-alt);
   user-select: none;
 
   & canvas {

@@ -1,5 +1,5 @@
 import UIElement from '@efflore/ui-element';
-import { define, replaceText, formatNumber } from '../../../assets/js/utils';
+import { define, replaceText } from '../../../assets/js/utils';
 
 define('input-field', class extends UIElement {
   static observedAttributes = ['value', 'description'];
@@ -20,12 +20,14 @@ define('input-field', class extends UIElement {
     !this.has('error') && this.set('error', error.textContent);
     description.textContent && !this.has('description') && this.set('description', description.textContent);
 
+    const isNumber = num => typeof num === 'number';
+
     // setup spinbutton with step and min/max attributes
     const [step, min, max] = (() => {
       if (!this.isNumber || !spinbutton) return [];
       const getNumber = attr => {
-        const num = this.parseNumber(input.getAttribute(attr));
-        return !Number.isNaN(num) && num;
+        const num = this.parseNumber(input[attr]);
+        if (isNumber(num) && !Number.isNaN(num)) return num;
       };
       // ensure value is a number in case attributeChangedCallback before connectedCallback
       this.set('value', this.parseNumber(input.value));
@@ -33,17 +35,19 @@ define('input-field', class extends UIElement {
       return !Number.isNaN(temp) ? [temp, getNumber('min'), getNumber('max')] : [];
     })();
 
+    // bring value to nearest step
     const nearestStep = v => {
       const steps = Math.round((max - min) / step);
       let zerone = Math.round((v - min) * steps / (max - min)) / steps; // bring to 0-1 range    
       zerone = Math.min(Math.max(zerone, 0), 1); // keep in range in case value is off limits
-      return zerone * (max - min) + min;
+      const value = zerone * (max - min) + min;
+      return this.isInteger ? Math.round(value) : value;
     };
 
     // trigger value-change event to commit the value change
     const triggerChange = value => {
       this.set('value', value);
-      const newValue = this.get('value'); // we need to get the evaluated value in case value is a function
+      const newValue = (typeof value === 'function') ? this.get('value') : value;
       (input.value !== String(newValue)) && (value = newValue);
       this.set('error', input.validationMessage);
       const event = new CustomEvent('value-change', { detail: newValue, bubbles: true });
@@ -53,23 +57,22 @@ define('input-field', class extends UIElement {
     // handle input and click event changes
     input.onchange = () => triggerChange(this.isNumber ? input.valueAsNumber : input.value);
     if (spinbutton) {
-      decrement && (decrement.onclick = () => triggerChange(v => nearestStep(v - step)));
-      increment && (increment.onclick = () => triggerChange(v => nearestStep(v + step)));
+      decrement && (decrement.onclick = e => triggerChange(v => nearestStep(v - (e.shiftKey ? step * 10 : step))));
+      increment && (increment.onclick = e => triggerChange(v => nearestStep(v + (e.shiftKey ? step * 10 : step))));
     }
 
     // update value
     this.effect(() => {
       let value = this.get('value');
-      if (this.isNumber && (typeof value !== 'number')) {
+      if (this.isNumber && !isNumber(value)) { // ensure value is a number if it is not already a number
         value = this.parseNumber(value);
         return this.set('value', value); // effect will be called again with numeric value
       }
-      if (this.isNumber && !Number.isNaN(value)) {
+      if (this.isNumber && !Number.isNaN(value)) { // change value only if it is a valid number
         input.value = value;
-        step && decrement && (decrement.disabled = (min && (value - step < min)));
-        step && increment && (increment.disabled = (max && (value + step > max)));
+        step && decrement && (decrement.disabled = (isNumber(min) && (value - step < min)));
+        step && increment && (increment.disabled = (isNumber(max) && (value + step > max)));
       }
-      (input.type !== 'password') && this.setAttribute('value', value);
     });
 
     // update error message and aria-invalid attribute

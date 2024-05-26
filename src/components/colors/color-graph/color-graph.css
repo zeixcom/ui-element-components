@@ -10,7 +10,7 @@ color-graph {
   flex-direction: column;
   width: var(--canvas-size);
   height: var(--canvas-size);
-  background-color: oklch(50% 0 0);
+  background-color: var(--color-background-alt);
   user-select: none;
 
   & canvas {

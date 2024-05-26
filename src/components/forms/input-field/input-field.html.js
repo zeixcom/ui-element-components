@@ -9,9 +9,11 @@ export default ({
   id,
   name,
   value,
-  step,
-  min,
+  step = 1,
+  min = 0,
   max,
+  decrementLabel = 'decrement',
+  incrementLabel = 'increment',
   form,
   pattern,
   placeholder,
@@ -28,7 +30,11 @@ export default ({
   onInput,
   onChange,
 }) => html`
-<input-field value=${value} ?integer=${type === 'number' && integer} class=${className || nothing}>
+<input-field
+  value=${value || nothing}
+  ?integer=${type === 'number' && integer}
+  class=${className || nothing}
+>
   <label for="${id}-input">${label}</label>
   <div class="row">
     <div class="group ${length}">
@@ -38,9 +44,9 @@ export default ({
         id="${id}-input"
         name=${name || id}
         value=${value || nothing}
-        min=${min || nothing}
-        max=${max || nothing}
-        step=${integer ? step : 'any'}
+        min=${(type === 'number') && (typeof min === 'number') ? min : nothing}
+        max=${(type === 'number') && (typeof max === 'number') ? max : nothing}
+        step=${(type === 'number') ? (integer ? step : 'any') : nothing}
         form=${form || nothing}
         pattern=${pattern || nothing}
         placeholder=${placeholder || nothing}
@@ -57,8 +63,8 @@ export default ({
       ${suffix && html`<span>${suffix}</span>`}
     </div>
     ${(type === 'number') && step ? html`<div class="spinbutton" data-step=${step}>
-      <button type="button" class="decrement" aria-label="decrement">−</button>
-      <button type="button" class="increment" aria-label="increment">+</button>
+      <button type="button" class="decrement" aria-label=${decrementLabel}>−</button>
+      <button type="button" class="increment" aria-label=${incrementLabel}>+</button>
     </div>` : nothing}
   </div>
   <p id="${id}-error" class="error" aria-live="assertive">${error}</p>
