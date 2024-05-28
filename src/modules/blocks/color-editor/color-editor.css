@@ -19,7 +19,6 @@ color-editor {
     display: flex;
     align-items: flex-start;
     gap: var(--space-l);
-    margin-top: var(--space-s);
   }
 
   & color-scale {

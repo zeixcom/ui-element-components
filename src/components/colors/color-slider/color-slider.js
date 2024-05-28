@@ -15,7 +15,7 @@ define('color-slider', class extends UIElement {
     const thumb = this.querySelector('.thumb');
     const track = this.querySelector('canvas');
     const max = parseFloat(thumb.getAttribute('aria-valuemax'), 10) || 360;
-    const trackWidth = track.getBoundingClientRect().width;
+    let trackWidth = 360;
     const trackOffset = 20;
 
     // return formatted value text
@@ -53,11 +53,9 @@ define('color-slider', class extends UIElement {
     
     // handle dragging
     thumb.onpointerdown = e => {
+      const rect = track.getBoundingClientRect();
       thumb.setPointerCapture(e.pointerId);
-    
-      thumb.onpointermove = e => {
-        moveThumb((e.clientX - track.getBoundingClientRect().left) / trackWidth);
-      };
+      thumb.onpointermove = e => moveThumb((e.clientX - rect.left) / trackWidth);
     
       thumb.onpointerup = () => {
         thumb.onpointermove = null;
@@ -112,7 +110,8 @@ define('color-slider', class extends UIElement {
       };
       
       if (shouldUpdateTrack()) {
-        const ctx = this.querySelector('canvas').getContext('2d', { colorSpace: 'display-p3' });
+        const ctx = track.getContext('2d', { colorSpace: 'display-p3' });
+        trackWidth = track.getBoundingClientRect().width;
         ctx.clearRect(0, 0, trackWidth, 1);
         for (let x = 0; x < trackWidth; x++) {
           ctx.fillStyle = formatCss(getColorFromPosition(x / trackWidth));

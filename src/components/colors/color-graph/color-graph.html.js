@@ -1,10 +1,10 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import './color-graph.css';
 import './color-graph.js';
 
-export default ({ color = '#143dda' }) => html`
-<color-graph color=${color}>
+export default ({ color, className, onPointerDown, onKeyDown }) => html`
+<color-graph color=${color || nothing} class=${className || nothing}>
   <canvas width="400" height="400"></canvas>
   <ol role="presentation">
     <li class="lighten80"></li>
@@ -16,7 +16,7 @@ export default ({ color = '#143dda' }) => html`
     <li class="darken60"></li>
     <li class="darken80"></li>
   </ol>
-  <button class="knob">
+  <button class="knob" @pointerdown=${onPointerDown} @keydown=${onKeyDown}>
     <span></span>
   </button>
 </color-graph>`;

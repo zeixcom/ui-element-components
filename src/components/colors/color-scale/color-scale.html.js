@@ -1,10 +1,10 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import './color-scale.css';
 import './color-scale.js';
 
-export default ({ color = '#143dda', name, size = 'medium' }) => html`
-<color-scale color=${color} class=${size}>
+export default ({ color, name, size = 'medium' }) => html`
+<color-scale color=${color || nothing} class=${size}>
   <ol role="presentation">
     <li class="lighten80"></li>
     <li class="lighten60"></li>

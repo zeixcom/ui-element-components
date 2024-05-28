@@ -1,4 +1,4 @@
-import { expect, fn, userEvent, within } from '@storybook/test';
+import { expect, fireEvent, fn, userEvent, within } from '@storybook/test';
 import InputField from './input-field.html';
 
 export default {
@@ -96,6 +96,7 @@ export const Empty = {
 
     await step('Initial state', async () => {
       await expect(input).toHaveValue(args.value);
+      await expect(input).toHaveAccessibleName(args.label);
     });
 
     await step('Change value', async () => {
@@ -164,6 +165,7 @@ export const WithSpinbutton = {
       input.blur();
       await new Promise(requestAnimationFrame);
       await expect(input).toBeInvalid();
+      await expect(input).toHaveAccessibleErrorMessage(input.validationMessage);
     });
 
     await step('Change value from outside', async () => {
@@ -275,7 +277,7 @@ export const Password = {
     const input = canvas.getByText('', { selector: 'input' });
 
     await step('Initial state', async () => {
-      await expect(input.type, 'type').toBe(args.type);
+      await expect(input).toHaveAttribute('type', args.type);
     });
   }
 };
@@ -288,10 +290,12 @@ export const WithDescription = {
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByText('', { selector: 'input-field' });
+    const input = canvas.getByRole('textbox');
     const description = canvas.getByText(args.description);
 
     await step('Initial state', async () => {
       await expect(description).toBeVisible();
+      await expect(input).toHaveAccessibleDescription(args.description);
     });
 
     await step('Changed description from outside', async () => {
@@ -353,10 +357,12 @@ export const Required = {
 
     await step('Clear value', async () => {
       await userEvent.clear(input);
+      fireEvent(input, new Event('change', { bubbles: true }));
       await expect(input).toHaveValue('');
       input.blur();
       await new Promise(requestAnimationFrame);
       await expect(input).toBeInvalid();
+      await expect(input).toHaveAccessibleErrorMessage(input.validationMessage);
     });
   }
 };

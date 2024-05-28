@@ -1,10 +1,10 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import './color-details.css';
 import './color-details.js';
 
-export default ({ color = '#143dda', name, open, onClick }) => html`
-<color-details color=${color}>
+export default ({ color, name, open, className, onClick }) => html`
+<color-details color=${color || nothing} class=${className || nothing}>
   <details ?open=${open}>
     <summary @click=${onClick}>
       <div class="summary">

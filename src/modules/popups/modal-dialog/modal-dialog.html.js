@@ -1,18 +1,26 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import './modal-dialog.css';
 import './modal-dialog.js';
 
-export default ({ title }) => html`
-<modal-dialog>
-  <button type="button" class="open" aria-haspopup="dialog">Open Dialog</button>
+export default ({
+  openLabel = 'Open dialog',
+  closeLabel = 'Close dialog',
+  title = 'Modal Dialog',
+  content,
+  footer,
+  className
+}) => html`
+<modal-dialog class=${className || nothing}>
+  <button type="button" class="open" aria-haspopup="dialog">${openLabel}</button>
   <dialog>
     <header>
       <h2>${title}</h2>
-      <button type="button" class="close" aria-label="Close">×</button>
+      <button type="button" class="close" aria-label=${closeLabel}>×</button>
     </header>
-    <div class="content"></div>
-    <footer>
-    </footer>
+    <form method="dialog">
+      <div class="content">${content}</div>
+      <footer>${footer}</footer>
+    </form>
   </dialog>
 </modal-dialog>`;

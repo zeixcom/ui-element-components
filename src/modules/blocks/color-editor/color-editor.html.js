@@ -1,4 +1,4 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import ColorGraph from '../../../components/colors/color-graph/color-graph.html.js';
 import ColorSlider from '../../../components/colors/color-slider/color-slider.html.js';
@@ -9,9 +9,10 @@ import InputField from '../../../components/forms/input-field/input-field.html.j
 import './color-editor.css';
 import './color-editor.js';
 
-export default ({ color = '#143dda', name }) => html`
-<color-editor color=${color}>
+export default ({ color, name, className }) => html`
+<color-editor color=${color || nothing} class=${className || nothing}>
   <div class="editor">
+    ${InputField({ label: 'Name', id: 'name', value: name, required: true, className: 'name' })}
     <div class="graph">
       ${ColorGraph({ color })}
       ${ColorSlider({ label: 'Hue', color, axis: 'h', min: 0, max: 360 })}
@@ -59,7 +60,6 @@ export default ({ color = '#143dda', name }) => html`
         })}
       </div>
     </div>
-    ${InputField({ label: 'Name', id: 'name', value: name, required: true, className: 'name' })}
   </div>
   <ol class="list">
     <li class="lighten80">${ColorDetails({ name: `${name} 10` })}</li>

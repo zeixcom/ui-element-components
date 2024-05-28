@@ -1,3 +1,4 @@
+import { expect, fn, userEvent, within } from '@storybook/test';
 import ColorGraph from './color-graph.html';
 
 export default {
@@ -11,6 +12,8 @@ export default {
   },
   args: {
     color: '#143dda',
+    onPointerDown: fn(),
+    onKeyDown: fn(),
   },
 };
 

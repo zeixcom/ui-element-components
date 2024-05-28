@@ -115,8 +115,8 @@ define('input-field', class extends UIElement {
    * Clear the input field
    */
   clear() {
-    this.set('value', '');
     this.querySelector('input').value = '';
+    this.set('value', '');
   }
 
 });

@@ -13,6 +13,8 @@
       @import './src/components/colors/color-details/color-details.css';
       @import './src/components/forms/input-field/input-field.css';
       @import './src/modules/blocks/color-editor/color-editor.css';
+      @import './src/modules/popups/modal-dialog/modal-dialog.css';
+      @import './src/modules/apps/color-picker/color-picker.css';
     </style>
 
     <script type="module">
@@ -22,408 +24,447 @@
       import './src/components/colors/color-details/color-details.js';
       import './src/components/forms/input-field/input-field.js';
       import './src/modules/blocks/color-editor/color-editor.js';
+      import './src/modules/popups/modal-dialog/modal-dialog.js';
+      import './src/modules/apps/color-picker/color-picker.js';
     </script>
 
   </head>
   <body>
-    <color-editor color="#143dda">
-      <div class="editor">
-        <div class="graph">
+    <color-picker name="Blue" color="#143dda">
+      <modal-dialog>
+        <button type="button" class="open" aria-haspopup="dialog"><span class="scale">
+      <color-scale color="#143dda" class="tiny">
+        <ol role="presentation">
+          <li class="lighten80"></li>
+          <li class="lighten60"></li>
+          <li class="lighten40"></li>
+          <li class="lighten20"></li>
+          <li class="base">
+            <span class="label">
+              <strong>Blue</strong>
+              <small>#143dda</small>
+            </span>
+          </li>
+          <li class="darken20"></li>
+          <li class="darken40"></li>
+          <li class="darken60"></li>
+          <li class="darken80"></li>
+        </ol>
+      </color-scale></span>
+              <span class="label">
+                <strong>Blue</strong>
+                <small>#143dda</small>
+              </span></button>
+        <dialog>
+          <header>
+            <h2>Edit Color Scale</h2>
+            <button type="button" class="close" aria-label="Close dialog">×</button>
+          </header>
+          <form method="dialog">
+            <div class="content">
+      <color-editor color="#143dda">
+        <div class="editor">
           
-    <color-graph color="#143dda">
-      <canvas width="400" height="400"></canvas>
-      <ol role="presentation">
-        <li class="lighten80"></li>
-        <li class="lighten60"></li>
-        <li class="lighten40"></li>
-        <li class="lighten20"></li>
-        <li class="darken20"></li>
-        <li class="darken40"></li>
-        <li class="darken60"></li>
-        <li class="darken80"></li>
-      </ol>
-      <button class="knob">
-        <span></span>
-      </button>
-    </color-graph>
-          
-    <color-slider color="#143dda" axis="h">
-      <canvas width="360" height="1"></canvas>
-      <div class="thumb" role="slider" tabindex="0" aria-label="Hue" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0">
-        <span></span>
-      </div>
-    </color-slider>
-        </div>
-        <div class="scale">
-          
-    <color-scale color="#143dda" class="medium">
-      <ol role="presentation">
-        <li class="lighten80"></li>
-        <li class="lighten60"></li>
-        <li class="lighten40"></li>
-        <li class="lighten20"></li>
-        <li class="base">
-          <span class="label">
-            <strong>Blue</strong>
-            <small>#143dda</small>
-          </span>
-        </li>
-        <li class="darken20"></li>
-        <li class="darken40"></li>
-        <li class="darken60"></li>
-        <li class="darken80"></li>
-      </ol>
-    </color-scale>
-          <div class="inputs">
+      <input-field value="Blue" class="name">
+        <label for="name-input">Name</label>
+        <div class="row">
+          <div class="group auto">
             
-    <input-field value="45.96" class="lightness">
-      <label for="l-input">Lightness</label>
-      <div class="row">
-        <div class="group short">
-          
-          <input autocomplete="off" type="number" id="l-input" name="l" value="45.96" min="0" max="100" step="any" required="">
-          <span>%</span>
-        </div>
-        <div class="spinbutton" data-step="0.25">
-          <button type="button" class="decrement" aria-label="decrement">−</button>
-          <button type="button" class="increment" aria-label="increment">+</button>
-        </div>
-      </div>
-      <p class="error" aria-live="assertive" id="l-error"></p>
-      <p class="description" aria-live="polite" id="l-description"></p>
-    </input-field>
+            <input autocomplete="off" type="text" id="name-input" name="name" value="Blue" required="">
             
-    <input-field value="0.2393" class="chroma">
-      <label for="c-input">Chroma</label>
-      <div class="row">
-        <div class="group short">
-          
-          <input autocomplete="off" type="number" id="c-input" name="c" value="0.2393" min="0" max="0.4" step="any" required="">
+          </div>
           
         </div>
-        <div class="spinbutton" data-step="0.001">
-          <button type="button" class="decrement" aria-label="decrement">−</button>
-          <button type="button" class="increment" aria-label="increment">+</button>
-        </div>
-      </div>
-      <p class="error" aria-live="assertive" id="c-error"></p>
-      <p class="description" aria-live="polite" id="c-description"></p>
-    </input-field>
+        <p class="error" aria-live="assertive" id="name-error"></p>
+        <p class="description" aria-live="polite" id="name-description"></p>
+      </input-field>
+          <div class="graph">
             
-    <input-field value="265.04" class="hue">
-      <label for="h-input">Hue</label>
-      <div class="row">
-        <div class="group short">
-          
-          <input autocomplete="off" type="number" id="h-input" name="h" value="265.04" min="0" max="360" step="any" required="">
-          <span>°</span>
+      <color-graph color="#143dda">
+        <canvas width="400" height="400"></canvas>
+        <ol role="presentation">
+          <li class="lighten80"></li>
+          <li class="lighten60"></li>
+          <li class="lighten40"></li>
+          <li class="lighten20"></li>
+          <li class="darken20"></li>
+          <li class="darken40"></li>
+          <li class="darken60"></li>
+          <li class="darken80"></li>
+        </ol>
+        <button class="knob">
+          <span></span>
+        </button>
+      </color-graph>
+            
+      <color-slider color="#143dda" axis="h">
+        <canvas width="360" height="1"></canvas>
+        <div class="thumb" role="slider" tabindex="0" aria-label="Hue" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0">
+          <span></span>
         </div>
-        <div class="spinbutton" data-step="1">
-          <button type="button" class="decrement" aria-label="decrement">−</button>
-          <button type="button" class="increment" aria-label="increment">+</button>
-        </div>
-      </div>
-      <p class="error" aria-live="assertive" id="h-error"></p>
-      <p class="description" aria-live="polite" id="h-description"></p>
-    </input-field>
+      </color-slider>
+          </div>
+          <div class="scale">
+            
+      <color-scale color="#143dda" class="medium">
+        <ol role="presentation">
+          <li class="lighten80"></li>
+          <li class="lighten60"></li>
+          <li class="lighten40"></li>
+          <li class="lighten20"></li>
+          <li class="base">
+            <span class="label">
+              <strong>Blue</strong>
+              <small>#143dda</small>
+            </span>
+          </li>
+          <li class="darken20"></li>
+          <li class="darken40"></li>
+          <li class="darken60"></li>
+          <li class="darken80"></li>
+        </ol>
+      </color-scale>
+            <div class="inputs">
+              
+      <input-field value="45.96" class="lightness">
+        <label for="l-input">Lightness</label>
+        <div class="row">
+          <div class="group short">
+            
+            <input autocomplete="off" type="number" id="l-input" name="l" value="45.96" min="0" max="100" step="any" required="">
+            <span>%</span>
+          </div>
+          <div class="spinbutton" data-step="0.25">
+            <button type="button" class="decrement" aria-label="decrement">−</button>
+            <button type="button" class="increment" aria-label="increment">+</button>
           </div>
         </div>
-        
-    <input-field value="Blue" class="name">
-      <label for="name-input">Name</label>
-      <div class="row">
-        <div class="group auto">
-          
-          <input autocomplete="off" type="text" id="name-input" name="name" value="Blue" step="any" required="">
-          
+        <p class="error" aria-live="assertive" id="l-error"></p>
+        <p class="description" aria-live="polite" id="l-description"></p>
+      </input-field>
+              
+      <input-field value="0.2393" class="chroma">
+        <label for="c-input">Chroma</label>
+        <div class="row">
+          <div class="group short">
+            
+            <input autocomplete="off" type="number" id="c-input" name="c" value="0.2393" min="0" max="0.4" step="any" required="">
+            
+          </div>
+          <div class="spinbutton" data-step="0.001">
+            <button type="button" class="decrement" aria-label="decrement">−</button>
+            <button type="button" class="increment" aria-label="increment">+</button>
+          </div>
         </div>
-        
-      </div>
-      <p class="error" aria-live="assertive" id="name-error"></p>
-      <p class="description" aria-live="polite" id="name-description"></p>
-    </input-field>
-      </div>
-      <ol class="list">
-        <li class="lighten80">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 10</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
+        <p class="error" aria-live="assertive" id="c-error"></p>
+        <p class="description" aria-live="polite" id="c-description"></p>
+      </input-field>
+              
+      <input-field value="265.04" class="hue">
+        <label for="h-input">Hue</label>
+        <div class="row">
+          <div class="group short">
+            
+            <input autocomplete="off" type="number" id="h-input" name="h" value="265.04" min="0" max="360" step="any" required="">
+            <span>°</span>
+          </div>
+          <div class="spinbutton" data-step="1">
+            <button type="button" class="decrement" aria-label="decrement">−</button>
+            <button type="button" class="increment" aria-label="increment">+</button>
+          </div>
         </div>
-      </details>
-    </color-details></li>
-        <li class="lighten60">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 20</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
+        <p class="error" aria-live="assertive" id="h-error"></p>
+        <p class="description" aria-live="polite" id="h-description"></p>
+      </input-field>
+            </div>
+          </div>
         </div>
-      </details>
-    </color-details></li>
-        <li class="lighten40">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 30</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-        <li class="lighten20">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 40</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-        <li class="base">
-    <color-details color="#143dda">
-      <details open="">
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 50</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-        <li class="darken20">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 60</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-        <li class="darken40">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 70</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-        <li class="darken60">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 80</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-        <li class="darken80">
-    <color-details color="#143dda">
-      <details>
-        <summary>
-          <div class="summary">
-            <span class="swatch"></span>
-            <span class="label">
-              <strong>Blue 90</strong>
-              <small class="value">#143dda</small>
-          </span></div>
-        </summary>
-        <div class="details">
-          <dl>
-            <dt>Lightness:</dt>
-            <dd class="lightness"></dd>
-            <dt>Chroma:</dt>
-            <dd class="chroma"></dd>
-            <dt>Hue:</dt>
-            <dd class="hue"></dd>
-          </dl>
-          <dl>
-            <dt>OKLCH:</dt>
-            <dd class="oklch"></dd>
-            <dt>RGB:</dt>
-            <dd class="rgb"></dd>
-            <dt>HSL:</dt>
-            <dd class="hsl"></dd>
-          </dl>
-        </div>
-      </details>
-    </color-details></li>
-      </ol>
-    </color-editor>
-      </body>
+        <ol class="list">
+          <li class="lighten80">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 10</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="lighten60">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 20</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="lighten40">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 30</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="lighten20">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 40</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="base">
+      <color-details color="#143dda">
+        <details open="">
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 50</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="darken20">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 60</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="darken40">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 70</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="darken60">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 80</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+          <li class="darken80">
+      <color-details color="#143dda">
+        <details>
+          <summary>
+            <div class="summary">
+              <span class="swatch"></span>
+              <span class="label">
+                <strong>Blue 90</strong>
+                <small class="value">#143dda</small>
+            </span></div>
+          </summary>
+          <div class="details">
+            <dl>
+              <dt>Lightness:</dt>
+              <dd class="lightness"></dd>
+              <dt>Chroma:</dt>
+              <dd class="chroma"></dd>
+              <dt>Hue:</dt>
+              <dd class="hue"></dd>
+            </dl>
+            <dl>
+              <dt>OKLCH:</dt>
+              <dd class="oklch"></dd>
+              <dt>RGB:</dt>
+              <dd class="rgb"></dd>
+              <dt>HSL:</dt>
+              <dd class="hsl"></dd>
+            </dl>
+          </div>
+        </details>
+      </color-details></li>
+        </ol>
+      </color-editor></div>
+            <footer></footer>
+          </form>
+        </dialog>
+      </modal-dialog>
+    </color-picker>
+  </body>
 </html>

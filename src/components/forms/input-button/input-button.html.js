@@ -1,10 +1,10 @@
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 import './input-button.css';
 import './input-button.js';
 
 export default ({ variant, size, label, disabled = false, className, onClick }) => html`
-<input-button class=${className}>
+<input-button class=${className || nothing}>
   <button
     type="button"
     class=${[variant || 'secondary', size || 'medium'].join(' ')}

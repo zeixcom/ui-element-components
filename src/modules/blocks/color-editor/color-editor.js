@@ -1,6 +1,6 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
-import { converter, formatCss } from 'culori/fn';
+import { converter } from 'culori/fn';
 import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
 
 define('color-editor', class extends UIElement {
@@ -20,12 +20,12 @@ define('color-editor', class extends UIElement {
 
     // handle value-change event from input-field
     this.addEventListener('value-change', e => {
-      e.stopPropagation(); // only color-change event should bubble up
       const value = e.detail;
       const comp = e.target.className[0];
       if (e.target.className === 'name') {
         this.set('name', e.detail);
       } else {
+        e.stopPropagation(); // only color-change event should bubble up
         const color = {...this.get('base')};
         color[comp] = comp === 'l' ? value / 100 : value;
         this.set('base', color);

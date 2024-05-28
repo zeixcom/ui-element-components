@@ -1,6 +1,6 @@
-colorscale-editor {
+color-picker {
 
-  & button {
+  > modal-dialog > button {
     display: inline-flex;
     gap: var(--space-s);
     align-items: center;
@@ -16,6 +16,7 @@ colorscale-editor {
     }
     
     > .label {
+      text-align: start;
       
       & strong,
       & small {
@@ -23,6 +24,7 @@ colorscale-editor {
       }
   
       & strong {
+        color: var(--color-text);
         font-size: var(--font-size-m);
       }
   

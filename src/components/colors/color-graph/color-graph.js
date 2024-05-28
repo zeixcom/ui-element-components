@@ -63,13 +63,9 @@ define('color-graph', class extends UIElement {
     
     // handle dragging
     knob.onpointerdown = e => {
+      const rect = this.getBoundingClientRect();
       knob.setPointerCapture(e.pointerId);
-    
-      knob.onpointermove = e => {
-        const x = e.clientX - this.getBoundingClientRect().left;
-        const y = e.clientY - this.getBoundingClientRect().top;
-        moveKnob(x, y);
-      };
+      knob.onpointermove = e => moveKnob(e.clientX - rect.left, e.clientY - rect.top);
     
       knob.onpointerup = () => {
         knob.onpointermove = null;

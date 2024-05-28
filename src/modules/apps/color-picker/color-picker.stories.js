@@ -1,9 +1,9 @@
 import { fn } from '@storybook/test';
-import ColorscaleEditor from './colorscale-editor.html';
+import ColorPicker from './color-picker.html';
 
 export default {
-  title: 'apps/colorscale-editor',
-  render: (args) => ColorscaleEditor(args),
+  title: 'apps/color-picker',
+  render: (args) => ColorPicker(args),
   argTypes: {
     color: {
       control: 'color',

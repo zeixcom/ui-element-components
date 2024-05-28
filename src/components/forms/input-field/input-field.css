@@ -114,6 +114,7 @@ input-field {
     height: 2rem;
     opacity: var(--opacity-transparent);
     transition: opacity var(--transition-short) var(--easing-inout);
+    user-select: none;
 
     &:active {
       background-color: var(--color-secondary-active);
