@@ -35,6 +35,20 @@ define('color-slider', class extends UIElement {
       this.querySelector('.thumb span').innerHTML = getValueText(color);
     };
 
+    // adjust to box size changes
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentBoxSize) {
+          const sliderWidth = entry.contentBoxSize[0].inlineSize;
+          trackWidth = sliderWidth - trackOffset * 2;
+          this.style.setProperty('--slider-width', sliderWidth);
+          this.style.setProperty('--track-width', trackWidth);
+          repositionThumb(base);
+        }
+      }
+    });
+    resizeObserver.observe(this);
+
     // move thumb to a new position
     const moveThumb = x => {
       const inP3Gamut = inGamut('p3');
@@ -111,8 +125,12 @@ define('color-slider', class extends UIElement {
       
       if (shouldUpdateTrack()) {
         const ctx = track.getContext('2d', { colorSpace: 'display-p3' });
-        trackWidth = track.getBoundingClientRect().width;
-        ctx.clearRect(0, 0, trackWidth, 1);
+        ctx.clearRect(0, 0, 360, 1);
+        const sliderWidth = this.getBoundingClientRect().width;
+        trackWidth = sliderWidth - trackOffset * 2;
+        this.style.setProperty('--slider-width', sliderWidth);
+        this.style.setProperty('--track-width', trackWidth);
+        track.setAttribute('width', trackWidth);
         for (let x = 0; x < trackWidth; x++) {
           ctx.fillStyle = formatCss(getColorFromPosition(x / trackWidth));
           ctx.fillRect(x, 0, 1, 1);

@@ -24,22 +24,22 @@
   --line-height-l: 1.618;
 
   --color-white: white;
-  --color-gray-10: #f6f7f8;
-  --color-gray-20: #ebeef0;
-  --color-gray-30: #dee3e5;
-  --color-gray-40: #cfd4d8;
-  --color-gray-50: #bdc3c7;
-  --color-gray-60: #a8adb1;
-  --color-gray-70: #8e9295;
-  --color-gray-80: #6d6f71;
-  --color-gray-90: #404142;
+  --color-gray-10: #f0f0f0;
+  --color-gray-20: #dedede;
+  --color-gray-30: #cacaca;
+  --color-gray-40: #b3b3b3;
+  --color-gray-50: #999;
+  --color-gray-60: #7b7b7b;
+  --color-gray-70: #5b5b5b;
+  --color-gray-80: #373737;
+  --color-gray-90: #121212;
   --color-black: black;
   --color-primary: #143dda;
   --color-primary-hover: #061baf;
   --color-primary-active: #030778;
-  --color-secondary: var(--color-gray-30);
-  --color-secondary-hover: var(--color-gray-40);
-  --color-secondary-active: var(--color-gray-50);
+  --color-secondary: var(--color-gray-20);
+  --color-secondary-hover: var(--color-gray-30);
+  --color-secondary-active: var(--color-gray-40);
   --color-selection: #1ea9ea;
   --color-error: #c83c15;
   --color-error-hover: #a32a07;
@@ -308,4 +308,8 @@ a {
 .docs-story {
   color: var(--color-text);
   background: var(--color-background);
+}
+
+#root-inner {
+  container-type: inline-size;
 }

@@ -1,3 +1,8 @@
+body.scroll-lock {
+  position: fixed;
+  overflow-y: hidden;
+}
+
 modal-dialog {
 
   > button {
@@ -7,8 +12,8 @@ modal-dialog {
     cursor: pointer;
   }
 
-  & dialog[open] {
-    display: flex;
+  & dialog {
+    display: none;
     flex-direction: column;
     border: 0;
     padding: 0;
@@ -18,6 +23,19 @@ modal-dialog {
     max-height: 100dvh;
     color: var(--color-text);
     background: var(--color-background);
+    opacity: var(--opacity-transparent);
+    transition: opacity var(--transition-medium) var(--easing-inout);
+
+    &::backdrop {
+      backdrop-filter: blur(0);
+      transition: backdrop-filter var(--transition-medium) var(--easing-inout);
+      background: color-mix(in srgb, var(--color-gray-50) 50%, transparent);
+    }
+  }
+
+  & dialog[open] {
+    display: flex;
+    opacity: var(--opacity-solid);
 
     > header {
       display: flex;
@@ -56,11 +74,31 @@ modal-dialog {
     > form {
       padding: 0 var(--space-l) var(--space-m);
       overflow-y: auto;
+      --bgRGB: 240 240 240;
+      --bg: rgb(var(--bgRGB) / 100%);
+      --bgTrans: rgb(var(--bgRGB) / 0%);
+      --shadow: rgb(0 0 0 / 50%);
+    
+      background:
+        /* Shadow Cover TOP */
+        linear-gradient(var(--bg) 30%, var(--bgTrans)) center top,
+        
+        /* Shadow Cover BOTTOM */
+        linear-gradient(var(--bgTrans), var(--bg) 70%) center bottom,
+        
+        /* Shadow TOP */
+        radial-gradient(farthest-side at 50% 0, var(--shadow), rgb(0 0 0 / 0%)) center top,
+        
+        /* Shadow BOTTOM */
+        radial-gradient(farthest-side at 50% 100%, var(--shadow), rgba(0 0 0 / 0%)) center bottom;
+      
+      background-repeat: no-repeat;
+      background-size: 100% 3rem, 100% 3rem, 100% 1rem, 100% 1rem;
+      background-attachment: local, local, scroll, scroll;
     }
 
     &::backdrop {
       backdrop-filter: blur(1rem);
-      background: color-mix(in srgb, var(--color-gray-50) 50%, transparent);
     }
   }
 }

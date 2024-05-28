@@ -9,7 +9,7 @@ define('color-graph', class extends UIElement {
   attributeMapping = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
-    const canvasSize = 400;
+    let canvasSize = 400;
     let base = this.get('base');
     this.set('hue', base.h);
 
@@ -41,6 +41,18 @@ define('color-graph', class extends UIElement {
       for (let i = 1; i < 5; i++) setStepColor(`darken${i * 20}`, (5 - i) / 10);
     };
 
+    // adjust to box size changes
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentBoxSize) {
+          canvasSize = entry.contentBoxSize[0].inlineSize;
+          this.style.setProperty('--canvas-size', canvasSize);
+          repositionScale(base);
+        }
+      }
+    });
+    resizeObserver.observe(this);
+
     // move knob to a new position
     const moveKnob = (x, y) => {
       const getColorFromPosition = (x, y) => ({
@@ -49,6 +61,7 @@ define('color-graph', class extends UIElement {
         c: Math.min(Math.max(x, 0), canvasSize) / (2.5 * canvasSize),
         h: base.h,
       });
+
       const inP3Gamut = inGamut('p3');
       const color = getColorFromPosition(x, y);
       inP3Gamut(color) && repositionScale(color);
@@ -129,8 +142,13 @@ define('color-graph', class extends UIElement {
         return;
       };
       
-      const ctx = this.querySelector('canvas').getContext('2d', { colorSpace: 'display-p3' });
-      ctx.clearRect(0, 0, canvasSize, canvasSize);
+      const canvas = this.querySelector('canvas');
+      const ctx = canvas.getContext('2d', { colorSpace: 'display-p3' });
+      ctx.clearRect(0, 0, 400, 400);
+      canvasSize = this.getBoundingClientRect().width;
+      this.style.setProperty('--canvas-size', canvasSize);
+      canvas.setAttribute('width', canvasSize);
+      canvas.setAttribute('height', canvasSize);
       for (let y = 0; y < canvasSize; y++) {
         for (let x = 0; x < canvasSize; x++) {
           const bgColor = getColorFromPosition(x, y);

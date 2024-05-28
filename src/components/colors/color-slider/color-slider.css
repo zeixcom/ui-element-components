@@ -6,6 +6,7 @@ color-slider {
   --slider-height: 48px;
   --track-width: 360px;
   --track-height: 8px;
+  --track-offset: 20px;
 
   position: relative;
   display: inline-block;
@@ -15,16 +16,16 @@ color-slider {
   user-select: none;
 
   & canvas {
-    width: var(--track-width);
+    width: calc(100% - 2 * var(--track-offset));
     height: var(--track-height);
-    margin: calc((var(--slider-width) - var(--track-width)) / 2);
+    margin: var(--track-offset);
     user-select: none;
   }
 
   .thumb {
     position: absolute;
     top: calc(var(--slider-height) / 2);
-    left: calc((var(--slider-width) - var(--track-width)) / 2);
+    left: var(--track-offset);
     width: var(--knob-size);
     height: var(--knob-size);
     background-color: var(--color-base);

@@ -14,6 +14,9 @@ color-graph {
   user-select: none;
 
   & canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
     user-select: none;
   }
 

@@ -1,5 +1,8 @@
 color-editor {
+  --canvas-size: 400px;
+  
   display: flex;
+  flex-direction: column;
   gap: var(--space-l);
   align-items: flex-start;
 
@@ -8,6 +11,12 @@ color-editor {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
+    width: 100%;
+    max-width: var(--canvas-size);
+  }
+
+  .graph {
+    container-type: inline-size;
   }
 
   & color-graph,
@@ -42,5 +51,12 @@ color-editor {
       margin: 0;
       padding: 0;
     }
+  }
+}
+
+@container (min-width: 40em) {
+
+  color-editor {
+    flex-direction: row;
   }
 }
