@@ -15,7 +15,7 @@ define('color-slider', class extends UIElement {
     const thumb = this.querySelector('.thumb');
     const track = this.querySelector('canvas');
     const max = parseFloat(thumb.getAttribute('aria-valuemax'), 10) || 360;
-    let trackWidth = 360;
+    let trackWidth;
     const trackOffset = 20;
 
     // return formatted value text
@@ -25,6 +25,34 @@ define('color-slider', class extends UIElement {
         case 'l': return `${formatNumber(color.l * 100)}%`;
         case 'c': return formatNumber(color.c, 4);
       }
+    };
+
+    // redraw the track
+    const redrawTrack = color => {
+      const inP3Gamut = inGamut('p3');
+      const inRGBGamut = inGamut('rgb');
+
+      const getColorFromPosition = x => {
+        const newColor = {...color, [axis]: x * (axis === 'l' ? max / 100 : max) };
+        if (inRGBGamut(newColor)) return newColor;
+        inP3Gamut(newColor) ? newColor.alpha = 0.5 : newColor.alpha = 0;
+        return newColor;
+      };
+
+      const ctx = track.getContext('2d', { colorSpace: 'display-p3' });
+      ctx.clearRect(0, 0, 360, 1);
+      if (!trackWidth) {
+        const sliderWidth = this.getBoundingClientRect().width;
+        trackWidth = sliderWidth - trackOffset * 2;
+        this.style.setProperty('--slider-width', sliderWidth);
+        this.style.setProperty('--track-width', trackWidth);
+      }
+      track.setAttribute('width', trackWidth);
+      for (let x = 0; x < trackWidth; x++) {
+        ctx.fillStyle = formatCss(getColorFromPosition(x / trackWidth));
+        ctx.fillRect(x, 0, 1, 1);
+      }
+      thumb.style.borderColor = color.l > 0.71 ? 'black' : 'white';
     };
 
     // reposition thumb if color changes
@@ -43,6 +71,7 @@ define('color-slider', class extends UIElement {
           trackWidth = sliderWidth - trackOffset * 2;
           this.style.setProperty('--slider-width', sliderWidth);
           this.style.setProperty('--track-width', trackWidth);
+          redrawTrack(base);
           repositionThumb(base);
         }
       }
@@ -104,8 +133,6 @@ define('color-slider', class extends UIElement {
     // redraw slider track if color changes
     this.effect(() => {
       const color = this.get('base');
-      const inP3Gamut = inGamut('p3');
-      const inRGBGamut = inGamut('rgb');
 
       const shouldUpdateTrack = () => {
         if (!base) return true;
@@ -115,28 +142,8 @@ define('color-slider', class extends UIElement {
           case 'c': return (color.l!== base.l) || (color.h!== base.h);
         }
       }
-
-      const getColorFromPosition = x => {
-        const newColor = {...color, [axis]: x * (axis === 'l' ? max / 100 : max) };
-        if (inRGBGamut(newColor)) return newColor;
-        inP3Gamut(newColor) ? newColor.alpha = 0.5 : newColor.alpha = 0;
-        return newColor;
-      };
       
-      if (shouldUpdateTrack()) {
-        const ctx = track.getContext('2d', { colorSpace: 'display-p3' });
-        ctx.clearRect(0, 0, 360, 1);
-        const sliderWidth = this.getBoundingClientRect().width;
-        trackWidth = sliderWidth - trackOffset * 2;
-        this.style.setProperty('--slider-width', sliderWidth);
-        this.style.setProperty('--track-width', trackWidth);
-        track.setAttribute('width', trackWidth);
-        for (let x = 0; x < trackWidth; x++) {
-          ctx.fillStyle = formatCss(getColorFromPosition(x / trackWidth));
-          ctx.fillRect(x, 0, 1, 1);
-        }
-        thumb.style.borderColor = color.l > 0.71 ? 'black' : 'white';
-      }
+      shouldUpdateTrack() && redrawTrack(color);
       base = color;
       repositionThumb(color);
     });

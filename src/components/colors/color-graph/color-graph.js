@@ -9,11 +9,50 @@ define('color-graph', class extends UIElement {
   attributeMapping = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
-    let canvasSize = 400;
+    let canvasSize;
     let base = this.get('base');
     this.set('hue', base.h);
 
     const knob = this.querySelector('.knob');
+
+    // redraw canvas if size or hue changes
+    const redrawCanvas = h => {
+      const inP3Gamut = inGamut('p3');
+      const inRGBGamut = inGamut('rgb');
+
+      const getColorFromPosition = (x, y) => {
+        const l = 1 - (y / canvasSize);
+        const c = x / (2.5 * canvasSize);
+        const color = { mode: 'oklch', l, c, h };
+        if (inRGBGamut(color)) return color;
+        if (inP3Gamut(color)) {
+          color.alpha = 0.5;
+          return color;
+        }
+        return;
+      };
+      
+      const canvas = this.querySelector('canvas');
+      const ctx = canvas.getContext('2d', { colorSpace: 'display-p3' });
+      ctx.clearRect(0, 0, 400, 400);
+      if (!canvasSize) {
+        canvasSize = this.getBoundingClientRect().width;
+        this.style.setProperty('--canvas-size', canvasSize);
+      }
+      canvas.setAttribute('width', canvasSize);
+      canvas.setAttribute('height', canvasSize);
+      for (let y = 0; y < canvasSize; y++) {
+        for (let x = 0; x < canvasSize; x++) {
+          const bgColor = getColorFromPosition(x, y);
+          if (bgColor) {
+            ctx.fillStyle = formatCss(bgColor);
+            ctx.fillRect(x, y, 1, 1);
+          } else {
+            x = canvasSize;
+          }
+        }
+      }
+    };
 
     // reposition knob and scale if color changes
     const repositionScale = color => {
@@ -47,6 +86,7 @@ define('color-graph', class extends UIElement {
         if (entry.contentBoxSize) {
           canvasSize = entry.contentBoxSize[0].inlineSize;
           this.style.setProperty('--canvas-size', canvasSize);
+          redrawCanvas(base.h);
           repositionScale(base);
         }
       }
@@ -127,39 +167,7 @@ define('color-graph', class extends UIElement {
     // redraw canvas if hue changes
     this.effect(() => {
       const h = this.get('hue');
-      const inP3Gamut = inGamut('p3');
-      const inRGBGamut = inGamut('rgb');
-
-      const getColorFromPosition = (x, y) => {
-        const l = 1 - (y / canvasSize);
-        const c = x / (2.5 * canvasSize);
-        const color = { mode: 'oklch', l, c, h };
-        if (inRGBGamut(color)) return color;
-        if (inP3Gamut(color)) {
-          color.alpha = 0.5;
-          return color;
-        }
-        return;
-      };
-      
-      const canvas = this.querySelector('canvas');
-      const ctx = canvas.getContext('2d', { colorSpace: 'display-p3' });
-      ctx.clearRect(0, 0, 400, 400);
-      canvasSize = this.getBoundingClientRect().width;
-      this.style.setProperty('--canvas-size', canvasSize);
-      canvas.setAttribute('width', canvasSize);
-      canvas.setAttribute('height', canvasSize);
-      for (let y = 0; y < canvasSize; y++) {
-        for (let x = 0; x < canvasSize; x++) {
-          const bgColor = getColorFromPosition(x, y);
-          if (bgColor) {
-            ctx.fillStyle = formatCss(bgColor);
-            ctx.fillRect(x, y, 1, 1);
-          } else {
-            x = canvasSize;
-          }
-        }
-      }
+      redrawCanvas(h);
     });
   }
 

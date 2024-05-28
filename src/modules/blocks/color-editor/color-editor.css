@@ -1,6 +1,6 @@
 color-editor {
   --canvas-size: 400px;
-  
+
   display: flex;
   flex-direction: column;
   gap: var(--space-l);
@@ -22,6 +22,7 @@ color-editor {
   & color-graph,
   & color-slider {
     display: block;
+    width: 100%;
   }
 
   .scale {

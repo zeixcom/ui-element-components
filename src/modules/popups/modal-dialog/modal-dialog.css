@@ -95,6 +95,10 @@ modal-dialog {
       background-repeat: no-repeat;
       background-size: 100% 3rem, 100% 3rem, 100% 1rem, 100% 1rem;
       background-attachment: local, local, scroll, scroll;
+
+      .content {
+        container-type: inline-size;
+      }
     }
 
     &::backdrop {
