@@ -9,16 +9,11 @@ define('code-block', class extends UIElement {
 
   connectedCallback() {
     const language = this.getAttribute('language') || 'html';
-    const content = this.querySelector('code');
     const copyButton = this.querySelector('.copy');
     const overlay = this.querySelector('.overlay');
+    const content = this.querySelector('code');
+    !this.has('code') && this.set('code', content.textContent.trim());
     !this.has('collapsed') && this.set('collapsed', false);
-
-    // apply syntax highlighting while preserving Lit's marker nodes in Storybook
-    const code = document.createElement('code');
-    code.innerHTML = Prism.highlight(content.textContent.trim(), Prism.languages[language], language);
-    Array.from(content.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
-    Array.from(code.childNodes).forEach(node => content.appendChild(node));
 
     // copy to clipboard
     copyButton.onclick = async () => {
@@ -53,10 +48,23 @@ define('code-block', class extends UIElement {
       this.set('collapsed', false);
     };
 
+    // update code
+    this.effect(() => {
+      // apply syntax highlighting while preserving Lit's marker nodes in Storybook
+      const code = document.createElement('code');
+      code.innerHTML = Prism.highlight(this.get('code'), Prism.languages[language], language);
+      Array.from(content.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
+      Array.from(code.childNodes).forEach(node => content.appendChild(node));
+    });
+
     // update collapsed attribute
     this.effect(() => {
-      const collapsed = this.get('collapsed');
-      collapsed ? this.setAttribute('collapsed', '') : this.removeAttribute('collapsed');
+      this.get('collapsed')? this.setAttribute('collapsed', '') : this.removeAttribute('collapsed');
+    });
+
+    // update collapsed attribute
+    this.effect(() => {
+      this.get('collapsed') ? this.setAttribute('collapsed', '') : this.removeAttribute('collapsed');
     });
     
   }

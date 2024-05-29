@@ -21,7 +21,7 @@ define('scroll-area', class extends UIElement {
         this.set('visible', true);
         this.set('overflow', entry.intersectionRatio < threshold); // ignore rounding errors because of fraction pixels
       }
-    }, { root: this, threshold: threshold }).observe(content);
+    }, { root: this, threshold: [0, threshold] }).observe(content);
 
     const overflowingAtStart = container => {
       if (orientation === 'horizontal') return (container.scrollLeft !== 0);

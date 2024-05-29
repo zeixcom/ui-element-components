@@ -43,6 +43,7 @@ define('color-slider', class extends UIElement {
         return newColor;
       };
 
+      this.setAttribute('visible', '');
       this.set('redraw', false);
       const ctx = track.getContext('2d', { colorSpace: 'display-p3' });
       ctx.clearRect(0, 0, 360, 1);
@@ -167,13 +168,7 @@ define('color-slider', class extends UIElement {
 
     // bind resize observer only when visible
     this.effect(() => {
-      if (this.get('visible')) {
-        this.setAttribute('visible', '');
-        this.resizeObserver.observe(this);
-      } else {
-        this.removeAttribute('visible');
-        this.resizeObserver.unobserve(this);
-      }
+      this.get('visible') ? this.resizeObserver.observe(this) : this.resizeObserver.unobserve(this);
     });
   }
 

@@ -27,7 +27,7 @@ define('color-details', class extends UIElement {
       setTextContent('.lightness', `${formatNumber(color.l * 100)}%`);
       setTextContent('.chroma', formatNumber(color.c, 4));
       setTextContent('.hue', `${formatNumber(color.h)}°`);
-      setTextContent('.oklch', `oklch(${formatNumber(color.l, 4)} ${formatNumber(color.c, 4)} ${formatNumber(color.h)})`);
+      setTextContent('.oklch', `oklch(${formatNumber(color.l * 100)}% ${formatNumber(color.c, 4)} ${formatNumber(color.h)})`);
       setTextContent('.rgb', formatRgb(color));
       setTextContent('.hsl', formatHsl(color));
     });

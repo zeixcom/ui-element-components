@@ -1,6 +1,6 @@
 import UIElement from '@efflore/ui-element';
 import 'culori/css';
-import { converter } from 'culori/fn';
+import { converter, formatHex } from 'culori/fn';
 import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
 
 define('color-editor', class extends UIElement {
@@ -10,7 +10,6 @@ define('color-editor', class extends UIElement {
 
   connectedCallback() {
     const scale = this.querySelector('color-scale');
-
     this.set('name', this.querySelector('input-field.name').getAttribute('value'));
 
     // handle color-change event from color-graph or color-slider
@@ -37,6 +36,7 @@ define('color-editor', class extends UIElement {
     // update if name changes
     this.effect(() => {
       const name = this.get('name');
+
       scale.set('name', name);
       this.querySelectorAll('color-details').forEach((el, i) => el.set('name', `${name} ${(i + 1) * 10}`));
     });
@@ -58,6 +58,19 @@ define('color-editor', class extends UIElement {
       for (let i = 1; i < 5; i++) {
         this.querySelector(`.darken${i * 20} color-details`).set('color', getStepColor(base, (5 - i) / 10));
       }
+    });
+
+    // update css custom properties if base color or name changes
+    this.effect(() => {
+      const base = this.get('base');
+      const name = this.get('name').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+      let code = '';
+      for (let i = 1; i < 10; i++) {
+        const color = getStepColor(base, 1 - (i / 10));
+        code += `--color-${name}-${i * 10}: oklch(${formatNumber(color.l * 100)}% ${formatNumber(color.c, 4)} ${formatNumber(color.h)}); /* ${formatHex(color)} */` + '\n';
+      }
+      this.querySelector('code-block').set('code', code);
     });
   }
 });

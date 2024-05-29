@@ -34,7 +34,8 @@ define('color-graph', class extends UIElement {
         }
         return;
       };
-      
+
+      this.setAttribute('visible', '');
       this.set('redraw', false);
       hue = h;
       const canvas = this.querySelector('canvas');
@@ -182,15 +183,8 @@ define('color-graph', class extends UIElement {
     });
 
     // bind resize observer only when visible
-    // bind resize observer only when visible
     this.effect(() => {
-      if (this.get('visible')) {
-        this.setAttribute('visible', '');
-        this.resizeObserver.observe(this);
-      } else {
-        this.removeAttribute('visible');
-        this.resizeObserver.unobserve(this);
-      }
+      this.get('visible') ? this.resizeObserver.observe(this) : this.resizeObserver.unobserve(this);
     });
   }
 

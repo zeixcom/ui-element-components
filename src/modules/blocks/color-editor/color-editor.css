@@ -1,63 +1,71 @@
 color-editor {
   --canvas-size: 400px;
-
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-l);
-  align-items: flex-start;
-
-  .editor {
-    flex-grow: 0;
+  
+  .panel {
     display: flex;
     flex-direction: column;
-    gap: var(--space-m);
-    width: 100%;
-    max-width: var(--canvas-size);
-  }
-
-  .graph {
-    container-type: inline-size;
-  }
-
-  & color-graph,
-  & color-slider {
-    display: block;
-    width: 100%;
-  }
-
-  .scale {
-    display: flex;
-    align-items: flex-start;
     gap: var(--space-l);
-  }
+    align-items: flex-start;
 
-  & color-scale {
-    flex-grow: 0;
-  }
+    .editor {
+      flex-grow: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-m);
+      width: 100%;
+      max-width: var(--canvas-size);
+    }
 
-  .inputs {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-s);
-    flex-grow: 1;
-  }
+    .graph {
+      container-type: inline-size;
+    }
 
-  .list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    flex-grow: 1;
+    & color-graph,
+    & color-slider {
+      display: block;
+      width: 100%;
+    }
 
-    & li {
+    .scale {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-l);
+    }
+
+    & color-scale {
+      flex-grow: 0;
+    }
+
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-s);
+      flex-grow: 1;
+    }
+
+    .list {
+      list-style: none;
       margin: 0;
       padding: 0;
+      flex-grow: 1;
+
+      & li {
+        margin: 0;
+        padding: 0;
+      }
     }
+  }
+
+  & code-block {
+    display: block;
+    width: 100%;
+    margin: 0;
   }
 }
 
 @container (min-width: 40em) {
 
-  color-editor {
+  color-editor .panel {
     flex-direction: row;
 
     .editor {
