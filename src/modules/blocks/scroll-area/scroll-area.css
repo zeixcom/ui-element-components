@@ -1,0 +1,91 @@
+scroll-area {
+  --shadow-color: rgb(0 0 0 / 10%);
+
+  display: block;
+  position: relative;
+  -webkit-overflow-scrolling: touch; /* iOS Overflow Momentum Scroll */
+
+  .scroll-area__content {
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      position: sticky;
+      opacity: 0;
+      transition: opacity var(--transition-short);
+      z-index: 1;
+      pointer-events: none;
+    }
+  }
+
+  &[orientation="horizontal"] {
+    overflow-x: auto;
+
+    .scroll-area__content {
+
+      &::before,
+      &::after {
+        height: 100%;
+        width: var(--space-s);
+      }
+
+      &::before {
+        left: 0;
+        background: linear-gradient(to left, transparent, var(--shadow-color));
+      }
+
+      &::after {
+        right: 0;
+        background: linear-gradient(to right, transparent, var(--shadow-color));
+      }
+    }
+  
+    &.overflow-start .scroll-area__content::before {
+      opacity: 1;
+    }
+  
+    &.overflow-end .scroll-area__content::after {
+      opacity: 1;
+    }
+  }
+
+  &[orientation="vertical"] {
+    overflow-y: auto;
+
+    .scroll-area__content {
+      container-type: inline-size;
+
+      &::before,
+      &::after {
+        width: 100%;
+        height: var(--space-m);
+      }
+
+      &::before {
+        top: 0;
+        background: linear-gradient(to top, transparent, var(--shadow-color));
+      }
+
+      &::after {
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent, var(--shadow-color));
+      }
+    }
+  
+    &.overflow-start .scroll-area__content::before {
+      opacity: 1;
+    }
+  
+    &.overflow-end .scroll-area__content::after {
+      opacity: 1;
+    }
+  }
+
+}
+
+@media (prefers-color-scheme: dark) {
+  scroll-area {
+    --shadow-color: rgb(0 0 0 / 50%);
+  }
+}

@@ -12,6 +12,12 @@ color-graph {
   height: var(--canvas-size);
   background-color: var(--color-background-alt);
   user-select: none;
+  opacity: var(--opacity-transparent);
+  transition: opacity var(--transition-medium) var(--easing-inout);
+
+  &[visible] {
+    opacity: var(--opacity-opaque);
+  }
 
   & canvas {
     display: block;

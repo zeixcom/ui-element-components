@@ -11,8 +11,11 @@ define('color-graph', class extends UIElement {
   connectedCallback() {
     let canvasSize;
     let base = this.get('base');
-    this.set('hue', base.h);
-
+    let hue;
+    let resizing;
+    this.set('visible', false);
+    this.set('redraw', true);
+    const redrawTimeout = 250; // milliseconds
     const knob = this.querySelector('.knob');
 
     // redraw canvas if size or hue changes
@@ -32,6 +35,8 @@ define('color-graph', class extends UIElement {
         return;
       };
       
+      this.set('redraw', false);
+      hue = h;
       const canvas = this.querySelector('canvas');
       const ctx = canvas.getContext('2d', { colorSpace: 'display-p3' });
       ctx.clearRect(0, 0, 400, 400);
@@ -80,18 +85,25 @@ define('color-graph', class extends UIElement {
       for (let i = 1; i < 5; i++) setStepColor(`darken${i * 20}`, (5 - i) / 10);
     };
 
+    // adjust to visibility changes
+    this.intersectionObserver = new IntersectionObserver(([entry]) => {
+      this.set('visible', entry.intersectionRatio > 0);
+    }).observe(this);
+
     // adjust to box size changes
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.contentBoxSize) {
-          canvasSize = entry.contentBoxSize[0].inlineSize;
-          this.style.setProperty('--canvas-size', canvasSize);
-          redrawCanvas(base.h);
-          repositionScale(base);
-        }
+    this.resizeObserver = new ResizeObserver(([entry]) => {
+      if (entry.contentBoxSize) {
+        canvasSize = entry.contentBoxSize[0].inlineSize;
+        this.style.setProperty('--canvas-size', canvasSize);
+        // redraw is expensive, so we wait longer than for the next animation frame
+        resizing && clearTimeout(resizing);
+        resizing = setTimeout(() => {
+          resizing = null;
+          this.set('redraw', true);
+        }, redrawTimeout);
+        repositionScale(base);
       }
     });
-    resizeObserver.observe(this);
 
     // move knob to a new position
     const moveKnob = (x, y) => {
@@ -161,14 +173,30 @@ define('color-graph', class extends UIElement {
     this.effect(() => {
       base = this.get('base');
       repositionScale(base);
-      this.set('hue', base.h);
+      (hue !== base.h) && this.set('redraw', true);
     });
 
-    // redraw canvas if hue changes
+    // redraw canvas after hue change or resize
     this.effect(() => {
-      const h = this.get('hue');
-      redrawCanvas(h);
+      this.get('visible') && !resizing && this.get('redraw') && redrawCanvas(base.h);
     });
+
+    // bind resize observer only when visible
+    // bind resize observer only when visible
+    this.effect(() => {
+      if (this.get('visible')) {
+        this.setAttribute('visible', '');
+        this.resizeObserver.observe(this);
+      } else {
+        this.removeAttribute('visible');
+        this.resizeObserver.unobserve(this);
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    this.intersectionObserver && this.intersectionObserver.disconnect();
+    this.resizeObserver && this.resizeObserver.disconnect();
   }
 
 });

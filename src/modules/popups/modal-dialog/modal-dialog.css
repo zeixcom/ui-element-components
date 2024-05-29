@@ -10,6 +10,7 @@ modal-dialog {
     padding: 0;
     background: none;
     cursor: pointer;
+    color: var(--color-text);
   }
 
   & dialog {
@@ -71,34 +72,8 @@ modal-dialog {
       }
     }
 
-    > form {
-      padding: 0 var(--space-l) var(--space-m);
-      overflow-y: auto;
-      --bgRGB: 240 240 240;
-      --bg: rgb(var(--bgRGB) / 100%);
-      --bgTrans: rgb(var(--bgRGB) / 0%);
-      --shadow: rgb(0 0 0 / 50%);
-    
-      background:
-        /* Shadow Cover TOP */
-        linear-gradient(var(--bg) 30%, var(--bgTrans)) center top,
-        
-        /* Shadow Cover BOTTOM */
-        linear-gradient(var(--bgTrans), var(--bg) 70%) center bottom,
-        
-        /* Shadow TOP */
-        radial-gradient(farthest-side at 50% 0, var(--shadow), rgb(0 0 0 / 0%)) center top,
-        
-        /* Shadow BOTTOM */
-        radial-gradient(farthest-side at 50% 100%, var(--shadow), rgba(0 0 0 / 0%)) center bottom;
-      
-      background-repeat: no-repeat;
-      background-size: 100% 3rem, 100% 3rem, 100% 1rem, 100% 1rem;
-      background-attachment: local, local, scroll, scroll;
-
-      .content {
-        container-type: inline-size;
-      }
+    & form[method="dialog"] {
+      padding: 0 var(--space-l) 0;
     }
 
     &::backdrop {

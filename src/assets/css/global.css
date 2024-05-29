@@ -266,21 +266,6 @@ td code {
   font-size: calc(0.95 * var(--font-size-m));
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  display: flex;
-  flex-direction: column;
-
-  & small {
-    order: -1;
-    font-weight: var(--font-weight-regular);
-  }
-}
-
 a {
   color: var(--color-primary);
 

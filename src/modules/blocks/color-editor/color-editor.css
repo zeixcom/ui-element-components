@@ -59,5 +59,9 @@ color-editor {
 
   color-editor {
     flex-direction: row;
+
+    .editor {
+      min-width: 400px; /* don't resize editor panel for larger screens */
+    }
   }
 }
