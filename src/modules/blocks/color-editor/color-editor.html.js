@@ -1,5 +1,6 @@
 import { html, nothing } from 'lit';
 
+import DynamicBackground from '../../../components/atoms/dynamic-background/dynamic-background.html.js';
 import ColorGraph from '../../../components/colors/color-graph/color-graph.html.js';
 import ColorSlider from '../../../components/colors/color-slider/color-slider.html.js';
 import ColorScale from '../../../components/colors/color-scale/color-scale.html.js';
@@ -16,8 +17,10 @@ export default ({ color, name, className }) => html`
     <div class="editor">
       ${InputField({ label: 'Name', id: 'name', value: name, required: true, className: 'name' })}
       <div class="graph">
-        ${ColorGraph({ color })}
-        ${ColorSlider({ label: 'Hue', color, axis: 'h', min: 0, max: 360 })}
+        ${DynamicBackground({ color, content: html`
+          ${ColorGraph({ color })}
+          ${ColorSlider({ label: 'Hue', color, axis: 'h', min: 0, max: 360 })}`
+        })}
       </div>
       <div class="scale">
         ${ColorScale({ color, name, size: 'medium' })}

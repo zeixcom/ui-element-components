@@ -12,13 +12,12 @@ color-slider {
   display: inline-block;
   width: var(--slider-width);
   height: var(--slider-height);
-  background-color: var(--color-background-alt);
   user-select: none;
   opacity: var(--opacity-transparent);
   transition: opacity var(--transition-medium) var(--easing-inout);
 
   &[visible] {
-    opacity: var(--opacity-opaque);
+    opacity: var(--opacity-solid);
   }
 
   & canvas {

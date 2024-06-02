@@ -18,6 +18,7 @@ color-editor {
 
     .graph {
       container-type: inline-size;
+      background-color: var(--color-background-alt);
     }
 
     & color-graph,

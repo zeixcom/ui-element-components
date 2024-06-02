@@ -45,6 +45,7 @@ define('color-editor', class extends UIElement {
     this.effect(() => {
       const base = this.get('base');
 
+      this.querySelector('dynamic-background').set('base', base);
       this.querySelector('color-graph').set('base', base);
       this.querySelector('color-slider').set('base', base);
       scale.set('base', base);

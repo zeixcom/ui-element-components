@@ -1,7 +1,7 @@
 input-field {
 
   &[value="0"] input {
-    color: color-mix(in srgb, var(--color-text) 40%, transparent);
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
   }
 
   &:focus-within {

@@ -10,6 +10,7 @@ export default {
     onCreateAccount: fn(),
   },
 };
+
 export const LoggedIn = {
   args: {
     user: {

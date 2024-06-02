@@ -123,17 +123,17 @@
 
 @media screen and (min-width: 45em) and (max-width: 75em) {
   :root {
-    --font-size-xs: clamp(0.7813rem, 0.1042vw + 0.7344rem, 0.8125rem);
-    --font-size-s: clamp(0.9375rem, 0.2083vw + 0.8438rem, 1rem);
-    --font-size-m: clamp(1.125rem, 0.4167vw + 0.9375rem, 1.25rem);
-    --font-size-l: clamp(1.3125rem, 0.8333vw + 0.9375rem, 1.5625rem);
-    --font-size-xl: clamp(1.5625rem, 1.4583vw + 0.9063rem, 2rem);
-    --font-size-xxl: clamp(1.875rem, 2.0833vw + 0.9375rem, 2.5rem);
-    --font-size-xxxl: clamp(2.25rem, 2.9167vw + 0.9375rem, 3.125rem);
+    --font-size-xs: clamp(0.7813rem, 0.0833vw + 0.7438rem, 0.8438rem);
+    --font-size-s: clamp(0.9375rem, 0.25vw + 0.825rem, 1.125rem);
+    --font-size-m: clamp(1.125rem, 0.5vw + 0.9rem, 1.5rem);
+    --font-size-l: clamp(1.3125rem, 0.9167vw + 0.9rem, 2rem);
+    --font-size-xl: clamp(1.5625rem, 1.6667vw + 0.8125rem, 2.8125rem);
+    --font-size-xxl: clamp(1.875rem, 2.5vw + 0.75rem, 3.75rem);
+    --font-size-xxxl: clamp(2.25rem, 3.6667vw + 0.6rem, 5rem);
   }
 }
 
-@media screen and (min-width: 75em) and (max-width: 125em) {
+@media screen and (min-width: 75em) {
   :root {
     --font-size-xs: clamp(0.8125rem, 0.0694vw + 0.7604rem, 0.8438rem);
     --font-size-s: clamp(1rem, 0.2778vw + 0.7917rem, 1.125rem);
