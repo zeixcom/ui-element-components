@@ -3,6 +3,7 @@ import InputField from './input-field.html';
 
 export default {
   title: 'forms/input-field',
+  tags: ['!autodocs'],
   render: (args) => InputField(args),
   argTypes: {
     type: {

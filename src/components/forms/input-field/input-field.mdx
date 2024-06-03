@@ -1,0 +1,115 @@
+import { Canvas, Meta, Controls, Source, Stories } from '@storybook/blocks';
+import * as InputFieldStories from './input-field.stories';
+
+<Meta of={InputFieldStories} />
+
+# Input Field
+
+Tag: `input-field`
+
+Input Field is a wrapper Web Component for `input` elements of type `text`, `number` or `password` with their associated labels, spinbutton controls (for `number`), validation and hint messages.
+
+It handles updates to `value` and `description` (hint message) attributes or reactive properties, provides basic form field validation through [ValidityState API](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState), and takes care of neccessary aria-attributes.
+
+Styles scoped to the custom element name provide consistent appeareance.
+
+<Canvas of={InputFieldStories.Empty} />
+
+## Server-Side Configuration
+
+<Controls />
+
+### Markup
+
+<Source />
+
+The following inner elements are required:
+- `label`
+- `input`
+- `p.error` if the user input can be invalid (`required`, `pattern`, `min`, `max`, `step` attributes are set or a custom validation is performed)
+
+JavaScript handling and CSS styling depends on the following classes in the inner HTML:
+- `.spinbutton`, `.increment`, `.decrement` for the spinbutton
+- `.error` for validation messages
+- `.description` for hint messages
+- `.row` and `.group` for layout purposes
+
+You may omit certain parts of the inner markup:
+- the `.row` wrapper is only neccessary if a spinbutton for `type="number"` needs to be placed next to the input
+- the `.description` is only neccessary if there is an initial hint message or it might be added during the lifetime of the component
+
+## Client-Side Reactivity
+
+### Attributes
+
+- `value` (observed): value of the input field, defaults to empty string
+- `description` (observed): hint message to guide the user input, optional
+- `integer`: boolean attribute to indicate the value should be parsed as integer, optional and only for `type="number"`; if present, a floating point value will be considered invalid
+
+### Reactive Properties
+
+As with all `UIElement` instances, you can interact with reactive properties through `has(key)`, `get(key)`, `set(key, value)` and `delete(key)` methods on the element and use them in `effect()` methods elsewhere.
+
+Used reactive properties:
+
+- `value`: `{string|number}` - current value of input field
+- `error`: `{string}` - current validation message
+- `description`: `{string}` - current hint message
+
+### Emitted Events
+
+- `value-change`: `{CustomEvent}` with the new value in `event.detail`
+
+### Methods
+
+- `clear()`: reset the input field to an empty value
+
+## Styling
+
+The recommended way to style input fields is to define global-level design tokens. These tokens can have different values according to screen size, user preference or context.
+
+Used CSS custom properties:
+
+### Colors
+
+- `--color-text`: regular text color
+- `--color-text-soft`: text color with reduced contrast for description
+- `--color-error`: alert color for validation message; will be mixed 50% with `--color-text` for better contrast
+- `--color-input`: background color for input field
+- `--color-background`: general background color, also used for disabled spinbutton
+- `--color-border`: border color for input field and spinbutton
+- `--color-secondary`: background color for secondary buttons, used for spinbutton
+- `--color-secondary-hover`: hover state background color for secondary buttons
+- `--color-secondary-active`: active state background color for secondary buttons
+
+### Spacings
+
+- `--space-xxs`: tiny space
+- `--space-xs`: extra small space
+- `--space-s`: small space
+
+### Font Sizes
+
+- `--font-size-xs`: extra small font size, used for validation and hint messages
+- `--font-size-s`: small font size, used for label and spinbutton
+- `--font-size-m`: medium font size, used for input
+
+### Line Heights
+
+- `--line-height-s`: dense line height, used for validation and hint messages and spinbutton
+
+### Opacity
+
+- `--opacity-transparent`: transparency, used to hide spinbuttons when the field has neighter focus nor is hovered
+- `--opacity-translucent`: reduced opacity, used to reduce visual prominence of disabled fields or parts of not currently focussed fields
+- `--opacity-dimmed`: slightly reduced opacity, used for label, prefix, suffix, and validation and hint messages when field has focus
+- `--opacity-solid`: full opacity, used for maximal contrast when field is enabled and has focus
+
+### Transition
+
+- `--transition-short`: short transition time, used when focus changes
+- `--easing-inout`: easing function, used when focus changes
+
+---
+
+<Stories />

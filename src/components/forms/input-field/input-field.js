@@ -6,7 +6,7 @@ define('input-field', class extends UIElement {
 
   attributeMapping = {
     value: v => {
-      if (this.isNumber) return this.parseNumber(v);
+      if (this.isNumber) return this.#parseNumber(v);
       return v;
     }
   };
@@ -26,12 +26,12 @@ define('input-field', class extends UIElement {
     const [step, min, max] = (() => {
       if (!this.isNumber || !spinbutton) return [];
       const getNumber = attr => {
-        const num = this.parseNumber(input[attr]);
+        const num = this.#parseNumber(input[attr]);
         if (isNumber(num) && !Number.isNaN(num)) return num;
       };
       // ensure value is a number in case attributeChangedCallback before connectedCallback
-      this.set('value', this.parseNumber(input.value));
-      const temp = this.parseNumber(spinbutton.dataset.step);
+      this.set('value', this.#parseNumber(input.value));
+      const temp = this.#parseNumber(spinbutton.dataset.step);
       return !Number.isNaN(temp) ? [temp, getNumber('min'), getNumber('max')] : [];
     })();
 
@@ -107,7 +107,7 @@ define('input-field', class extends UIElement {
   /**
    * Parse number from string
    */
-  parseNumber(v) {
+  #parseNumber(v) {
     return this.isInteger? parseInt(v, 10) : parseFloat(v);
   }
 
