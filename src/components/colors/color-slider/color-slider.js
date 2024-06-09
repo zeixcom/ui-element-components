@@ -2,6 +2,8 @@ import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { define, formatNumber } from '../../../assets/js/utils';
+import VisibilityObserver from '../../../assets/js/visibility-observer';
+import RedrawObserver from '../../../assets/js/redraw-observer';
 
 define('color-slider', class extends UIElement {
   static observedAttributes = ['color'];
@@ -14,12 +16,10 @@ define('color-slider', class extends UIElement {
     const thumb = this.querySelector('.thumb');
     const track = this.querySelector('canvas');
     const max = parseFloat(thumb.getAttribute('aria-valuemax'), 10) || 360;
-    let resizing;
-    this.set('visible', false);
-    this.set('redraw', true);
-    const redrawTimeout = 250; // milliseconds
     let trackWidth;
     const trackOffset = 20; // pixels
+    const redrawTimeout = 250; // milliseconds
+    this.visibilityObserver = new VisibilityObserver(this);
 
     // return formatted value text
     const getValueText = color => {
@@ -68,27 +68,14 @@ define('color-slider', class extends UIElement {
       this.querySelector('.thumb span').innerHTML = getValueText(color);
     };
 
-    // adjust to visibility changes
-    this.intersectionObserver = new IntersectionObserver(([entry]) => {
-      this.set('visible', entry.intersectionRatio > 0);
-    }).observe(this);
-
     // adjust to box size changes
-    this.resizeObserver = new ResizeObserver(([entry]) => {
-      if (entry.contentBoxSize) {
-        const sliderWidth = entry.contentBoxSize[0].inlineSize;
-        trackWidth = sliderWidth - trackOffset * 2;
-        this.style.setProperty('--slider-width', sliderWidth);
-        this.style.setProperty('--track-width', trackWidth);
-        // redraw is expensive, so we wait longer than for the next animation frame
-        resizing && clearTimeout(resizing);
-        resizing = setTimeout(() => {
-          resizing = null;
-          this.set('redraw', true);
-        }, redrawTimeout);
-        repositionThumb(base);
-      }
-    });
+    const resizeCallback = contentBoxSize => {
+      trackWidth = contentBoxSize.inlineSize - trackOffset * 2;
+      this.style.setProperty('--slider-width', contentBoxSize.inlineSize);
+      this.style.setProperty('--track-width', trackWidth);
+      repositionThumb(base);
+    };
+    this.redrawObserver = new RedrawObserver(this, resizeCallback, redrawTimeout);
 
     // move thumb to a new position
     const moveThumb = x => {
@@ -145,13 +132,14 @@ define('color-slider', class extends UIElement {
     // redraw slider track if color changes
     this.effect(() => {
       const shouldUpdateTrack = () => {
+        if (!this.get('visible')) return false;
         if (!base) return true;
         switch (axis) {
           case 'h': return (color.l!== base.l) || (color.c!== base.c);
           case 'l': return (color.c!== base.c) || (color.h!== base.h);
           case 'c': return (color.l!== base.l) || (color.h!== base.h);
         }
-      }
+      };
       
       const color = this.get('base');
       const updateTrack = shouldUpdateTrack();
@@ -162,18 +150,13 @@ define('color-slider', class extends UIElement {
 
     // redraw track after color change or resize
     this.effect(() => {
-      this.get('visible') && !resizing && this.get('redraw') && redrawTrack(base);
-    });
-
-    // bind resize observer only when visible
-    this.effect(() => {
-      this.get('visible') ? this.resizeObserver.observe(this) : this.resizeObserver.unobserve(this);
+      this.get('redraw') && redrawTrack(base);
     });
   }
 
   disconnectedCallback() {
-    this.intersectionObserver && this.intersectionObserver.disconnect();
-    this.resizeObserver && this.resizeObserver.disconnect();
+    this.visibilityObserver.disconnect();
+    this.redrawObserver.disconnect();
   }
 
 });

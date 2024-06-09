@@ -11,7 +11,7 @@ export default {
       options: ['text', 'number', 'password'],
       defaultValue: { summary: 'text' },
     },
-    length: {
+    width: {
       control: { type: 'select' },
       options: ['short', 'auto'],
       defaultValue: { summary: 'auto' },
@@ -90,7 +90,7 @@ export default {
   args: {
     label: 'Label',
     type: 'text',
-    length: 'auto',
+    width: 'auto',
     id: 'id',
     name: 'name',
     value: '',

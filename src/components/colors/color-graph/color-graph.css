@@ -6,7 +6,7 @@ color-graph {
   --canvas-size: 400px;
 
   position: relative;
-  display: inline-block;
+  display: block;
   flex-direction: column;
   width: var(--canvas-size);
   height: var(--canvas-size);
@@ -19,7 +19,6 @@ color-graph {
   }
 
   & canvas {
-    display: block;
     width: 100%;
     aspect-ratio: 1;
     user-select: none;

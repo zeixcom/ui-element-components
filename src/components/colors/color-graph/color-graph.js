@@ -2,6 +2,8 @@ import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
+import VisibilityObserver from '../../../assets/js/visibility-observer';
+import RedrawObserver from '../../../assets/js/redraw-observer';
 
 define('color-graph', class extends UIElement {
   static observedAttributes = ['color'];
@@ -11,9 +13,7 @@ define('color-graph', class extends UIElement {
     let canvasSize;
     let base = this.get('base');
     let hue;
-    let resizing;
-    this.set('visible', false);
-    this.set('redraw', true);
+    this.visibilityObserver = new VisibilityObserver(this);
     const redrawTimeout = 250; // milliseconds
     const knob = this.querySelector('.knob');
 
@@ -85,25 +85,13 @@ define('color-graph', class extends UIElement {
       for (let i = 1; i < 5; i++) setStepColor(`darken${i * 20}`, (5 - i) / 10);
     };
 
-    // adjust to visibility changes
-    this.intersectionObserver = new IntersectionObserver(([entry]) => {
-      this.set('visible', entry.intersectionRatio > 0);
-    }).observe(this);
-
     // adjust to box size changes
-    this.resizeObserver = new ResizeObserver(([entry]) => {
-      if (entry.contentBoxSize) {
-        canvasSize = entry.contentBoxSize[0].inlineSize;
-        this.style.setProperty('--canvas-size', canvasSize);
-        // redraw is expensive, so we wait longer than for the next animation frame
-        resizing && clearTimeout(resizing);
-        resizing = setTimeout(() => {
-          resizing = null;
-          this.set('redraw', true);
-        }, redrawTimeout);
-        repositionScale(base);
-      }
-    });
+    const resizeCallback = contentBoxSize => {
+      canvasSize = contentBoxSize.inlineSize;
+      this.style.setProperty('--canvas-size', canvasSize);
+      repositionScale(base);
+    };
+    this.redrawObserver = new RedrawObserver(this, resizeCallback, redrawTimeout);
 
     // move knob to a new position
     const moveKnob = (x, y) => {
@@ -173,23 +161,18 @@ define('color-graph', class extends UIElement {
     this.effect(() => {
       base = this.get('base');
       repositionScale(base);
-      (hue !== base.h) && this.set('redraw', true);
+      this.get('visible') && (hue !== base.h) && this.set('redraw', true);
     });
 
     // redraw canvas after hue change or resize
     this.effect(() => {
-      this.get('visible') && !resizing && this.get('redraw') && redrawCanvas(base.h);
-    });
-
-    // bind resize observer only when visible
-    this.effect(() => {
-      this.get('visible') ? this.resizeObserver.observe(this) : this.resizeObserver.unobserve(this);
+      this.get('redraw') && redrawCanvas(base.h);
     });
   }
 
   disconnectedCallback() {
-    this.intersectionObserver && this.intersectionObserver.disconnect();
-    this.resizeObserver && this.resizeObserver.disconnect();
+    this.visibilityObserver.disconnect();
+    this.redrawObserver.disconnect();
   }
 
 });

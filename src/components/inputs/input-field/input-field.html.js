@@ -6,6 +6,7 @@ import './input-field.js';
 export default ({
   label,
   type = 'text',
+  width = 'auto',
   id,
   name,
   value,
@@ -18,7 +19,6 @@ export default ({
   form,
   pattern,
   placeholder,
-  length = 'auto',
   prefix = '',
   suffix = '',
   error = '',
@@ -38,7 +38,7 @@ export default ({
 >
   <label for="${id}-input">${label}</label>
   <div class="row">
-    <div class="group ${length}">
+    <div class="group ${width}">
       ${prefix && html`<span>${prefix}</span>`}
       <input
         type=${type}
