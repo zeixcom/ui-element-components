@@ -1,5 +1,5 @@
 import DocsPage from './docs-page.html';
-import * as PageHeaderStories from '../../modules/sections/page-header/page-header.stories';
+import * as PageHeaderStories from '../../patterns/sections/page-header/page-header.stories';
 
 export default {
   title: 'pages/docs-page',

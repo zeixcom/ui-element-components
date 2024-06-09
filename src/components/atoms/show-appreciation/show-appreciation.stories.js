@@ -5,6 +5,9 @@ export default {
   title: 'atoms/show-appreciation',
   render: (args) => ShowAppreciation(args),
   argTypes: {
+    label: {
+      defaultValue: { summary: 'Appreciation' },
+    },
     emoji: {
       defaultValue: { summary: '💐' },
     },
@@ -13,20 +16,24 @@ export default {
     },
   },
   args: {
+    label: 'Appreciation',
     emoji: '💐',
     count: 0,
     onClick: fn()
   },
 };
 
-export const Default = {
+export const Base = {
   args: {},
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const el = canvas.getByLabelText(args.label);
     const button = canvas.getByRole('button');
 
     await step('Initial state', async () => {
       await expect(button).toHaveTextContent(`${args.emoji} ${args.count}`);
+      await expect(el).toHaveAccessibleName(args.label);
+      await expect(el.count, 'count property').toBe(args.count);
     });
 
     await step('Click on button', async () => {
@@ -34,6 +41,7 @@ export const Default = {
       await expect(args.onClick).toHaveBeenCalled();
       await new Promise(requestAnimationFrame);
       expect(button).toHaveTextContent(`${args.emoji} ${args.count + 1}`);
+      await expect(el.count, 'count property').toBe(args.count + 1);
     });
   },
 };

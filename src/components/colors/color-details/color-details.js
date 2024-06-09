@@ -1,21 +1,18 @@
-import UIElement from '@efflore/ui-element';
+import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn';
 import { define, replaceText, formatNumber } from '../../../assets/js/utils';
 
 define('color-details', class extends UIElement {
   static observedAttributes = ['color', 'name'];
-
-  attributeMapping = { color: v => converter('oklch')(v) };
+  attributeMap = new Map([['color', v => converter('oklch')(v)]]);
 
   connectedCallback() {
     const name = this.querySelector('.label strong');
-    !this.has('name') && this.set('name', name.textContent);
+    this.set('name', name.textContent, false);
 
     // update if name changes
-    this.effect(() => {
-      replaceText(name, this.get('name'));
-    });
+    this.effect(() => replaceText(name, this.get('name')));
 
     // update if color changes
     this.effect(() => {
@@ -31,7 +28,6 @@ define('color-details', class extends UIElement {
       setTextContent('.rgb', formatRgb(color));
       setTextContent('.hsl', formatHsl(color));
     });
-
   }
 
 });

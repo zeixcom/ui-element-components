@@ -3,7 +3,7 @@
 @import '../../components/colors/color-slider/color-slider.css';
 @import '../../components/colors/color-scale/color-scale.css';
 @import '../../components/colors/color-details/color-details.css';
-@import '../../components/forms/input-field/input-field.css';
-@import '../../modules/blocks/color-editor/color-editor.css';
-@import '../../modules/popups/modal-dialog/modal-dialog.css';
-@import '../../modules/apps/color-picker/color-picker.css';
+@import '../../components/inputs/input-field/input-field.css';
+@import '../../patterns/blocks/color-editor/color-editor.css';
+@import '../../patterns/popups/modal-dialog/modal-dialog.css';
+@import '../../patterns/apps/color-picker/color-picker.css';

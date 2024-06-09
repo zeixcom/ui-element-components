@@ -15,5 +15,5 @@ export default {
   },
 };
 
-export const Default = {
+export const Base = {
 };

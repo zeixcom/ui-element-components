@@ -1,16 +1,15 @@
-import UIElement from '@efflore/ui-element';
+import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatCss, formatHex } from 'culori/fn';
 import { define, replaceText, getStepColor } from '../../../assets/js/utils';
 
 define('color-scale', class extends UIElement {
   static observedAttributes = ['color', 'name'];
-
-  attributeMapping = { color: ['base', v => converter('oklch')(v)] };
+  attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
   connectedCallback() {
     const name = this.querySelector('.label strong');
-    !this.has('name') && this.set('name', name.textContent);
+    this.set('name', name.textContent, false);
 
     // update if name changes
     this.effect(() => {

@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import PageHeader from '../../modules/sections/page-header/page-header.html';
+import PageHeader from '../../patterns/sections/page-header/page-header.html';
 
 import './docs-page.css';
 
