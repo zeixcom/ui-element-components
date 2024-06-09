@@ -4,6 +4,7 @@ import { converter, inGamut, formatCss } from 'culori/fn';
 import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
 import VisibilityObserver from '../../../assets/js/visibility-observer';
 import RedrawObserver from '../../../assets/js/redraw-observer';
+import dragHandler from '../../../assets/js/drag-handler';
 
 define('color-graph', class extends UIElement {
   static observedAttributes = ['color'];
@@ -115,17 +116,13 @@ define('color-graph', class extends UIElement {
     };
     
     // handle dragging
-    knob.onpointerdown = e => {
-      const rect = this.getBoundingClientRect();
-      knob.setPointerCapture(e.pointerId);
-      knob.onpointermove = e => moveKnob(e.clientX - rect.left, e.clientY - rect.top);
-    
-      knob.onpointerup = () => {
-        knob.onpointermove = null;
-        knob.onpointerup = null;
-        triggerChange(base);
-      };
-    };
+    let dragBoundingBox;
+    dragHandler({
+      element: knob,
+      start: () => dragBoundingBox = this.getBoundingClientRect(),
+      move: e => moveKnob(e.clientX - dragBoundingBox.left, e.clientY - dragBoundingBox.top),
+      end: () => triggerChange(base),
+    });
 
     // handle arrow key events
     knob.onkeydown = e => {

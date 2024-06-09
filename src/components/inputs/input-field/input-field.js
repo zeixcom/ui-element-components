@@ -49,11 +49,26 @@ define('input-field', class extends UIElement {
       this.dispatchEvent(event);
     };
 
-    // handle input and click event changes
+    // handle input changes
     input.onchange = () => triggerChange(this.isNumber ? input.valueAsNumber : input.value);
+
     if (spinbutton) {
-      decrement && (decrement.onclick = e => triggerChange(v => nearestStep(v - (e.shiftKey ? step * 10 : step))));
-      increment && (increment.onclick = e => triggerChange(v => nearestStep(v + (e.shiftKey ? step * 10 : step))));
+      const stepDecrement = (bigStep = false) => triggerChange(v => nearestStep(v - (bigStep ? step * 10 : step)));
+      const stepIncrement = (bigStep = false) => triggerChange(v => nearestStep(v + (bigStep ? step * 10 : step)));
+
+      // handle spinbutton clicks
+      decrement && (decrement.onclick = e => stepDecrement(e.shiftKey));
+      increment && (increment.onclick = e => stepIncrement(e.shiftKey));
+
+      // handle arrow key events
+      input.onkeydown = e => {
+        if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
+          e.stopPropagation();
+          e.preventDefault();
+          (e.key === 'ArrowDown') && stepDecrement(e.shiftKey);
+          (e.key === 'ArrowUp') && stepIncrement(e.shiftKey);
+        }
+      }
     }
 
     // update value

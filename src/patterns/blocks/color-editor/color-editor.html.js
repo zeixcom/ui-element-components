@@ -28,7 +28,7 @@ export default ({ color, name, className }) => html`
           ${InputField({
             label: 'Lightness',
             type: 'number',
-            length: 'short',
+            width: 'short',
             id: 'l',
             value: 45.96,
             min: 0,
@@ -41,7 +41,7 @@ export default ({ color, name, className }) => html`
           ${InputField({
             label: 'Chroma',
             type: 'number',
-            length: 'short',
+            width: 'short',
             id: 'c',
             value: 0.2393,
             min: 0,
@@ -53,7 +53,7 @@ export default ({ color, name, className }) => html`
           ${InputField({
             label: 'Hue',
             type: 'number',
-            length: 'short',
+            width: 'short',
             id: 'h',
             value: 265.04,
             min: 0,

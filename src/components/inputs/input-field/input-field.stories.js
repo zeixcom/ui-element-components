@@ -160,7 +160,7 @@ export const WithSpinbutton = {
   args: {
     label: 'Integer',
     type: 'number',
-    length: 'short',
+    width: 'short',
     id:  'spinbutton',
     value: 42,
     min: 0,
@@ -247,7 +247,7 @@ export const WithPrefix = {
   args: {
     label: 'Price',
     type: 'number',
-    length: 'short',
+    width: 'short',
     id: 'prefix',
     value: '0',
     min: '0',
@@ -270,7 +270,7 @@ export const WithSuffix = {
   args: {
     label: 'Width',
     type: 'number',
-    length: 'short',
+    width: 'short',
     id: 'suffix',
     value: '16',
     min: '0',

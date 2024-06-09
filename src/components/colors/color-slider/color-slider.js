@@ -4,6 +4,7 @@ import { converter, inGamut, formatCss } from 'culori/fn';
 import { define, formatNumber } from '../../../assets/js/utils';
 import VisibilityObserver from '../../../assets/js/visibility-observer';
 import RedrawObserver from '../../../assets/js/redraw-observer';
+import dragHandler from '../../../assets/js/drag-handler';
 
 define('color-slider', class extends UIElement {
   static observedAttributes = ['color'];
@@ -94,17 +95,13 @@ define('color-slider', class extends UIElement {
     };
     
     // handle dragging
-    thumb.onpointerdown = e => {
-      const rect = track.getBoundingClientRect();
-      thumb.setPointerCapture(e.pointerId);
-      thumb.onpointermove = e => moveThumb((e.clientX - rect.left) / trackWidth);
-    
-      thumb.onpointerup = () => {
-        thumb.onpointermove = null;
-        thumb.onpointerup = null;
-        triggerChange({...base, [axis]: channel });
-      };
-    };
+    let dragBoundingBox;
+    dragHandler({
+      element: thumb,
+      start: () => dragBoundingBox = track.getBoundingClientRect(),
+      move: e => moveThumb((e.clientX - dragBoundingBox.left) / trackWidth),
+      end: () => triggerChange({...base, [axis]: channel })
+    });
 
     // handle arrow key events
     thumb.onkeydown = e => {
