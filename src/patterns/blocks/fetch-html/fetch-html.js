@@ -7,8 +7,7 @@ define('fetch-html', class extends UIElement {
   connectedCallback() {
 
     this.effect(() => {
-      const src = this.get('src');
-      fetch(src)
+      fetch(this.get('src'))
         .then(response => response.text())
         .then(html => {
           const shadow = this.shadowRoot || this.attachShadow({ mode: 'open' });

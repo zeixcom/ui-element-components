@@ -13,8 +13,11 @@ export default ({
   step = 1,
   min = 0,
   max,
-  decrementLabel = 'decrement',
-  incrementLabel = 'increment',
+  clearButton = false,
+  clearLabel = 'Clear',
+  spinButton = false,
+  decrementLabel = 'Decrement',
+  incrementLabel = 'Increment',
   autocomplete = 'off',
   form,
   pattern,
@@ -61,9 +64,12 @@ export default ({
         @input=${onInput}
         @change=${onChange}
       />
+      ${clearButton
+        ? html`<button type="button" class="clear${!value && ' hidden'}" aria-label=${clearLabel}>×</button>`
+        : nothing}
       ${suffix && html`<span>${suffix}</span>`}
     </div>
-    ${(type === 'number') && step ? html`<div class="spinbutton" data-step=${step}>
+    ${(type === 'number') && spinButton && step ? html`<div class="spinbutton" data-step=${step}>
       <button type="button" class="decrement" aria-label=${decrementLabel}>−</button>
       <button type="button" class="increment" aria-label=${incrementLabel}>+</button>
     </div>` : nothing}

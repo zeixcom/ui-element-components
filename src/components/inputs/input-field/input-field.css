@@ -57,11 +57,28 @@ input-field {
       width: 6rem;
     }
 
-    :first-child {
+    .clear {
+      border: 0;
+      border-radius: 50%;
+      color: var(--color-input);
+      width: var(--space-m);
+      height: var(--space-m);
+      line-height: 1.1;
+      align-self: center;
+      text-align: center;
+      padding: 0;
+      margin: 0 var(--space-xxs);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    & span:first-child {
       padding-left: var(--space-xs);
     }
 
-    :last-child {
+    & span:last-child {
       padding-right: var(--space-xs);
     }
   }

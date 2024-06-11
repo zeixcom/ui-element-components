@@ -9,10 +9,12 @@ define('input-field', class extends UIElement {
     const input = this.querySelector('input');
     this.isNumber = input && input.type === 'number';
     this.isInteger = this.hasAttribute('integer');
-    const [error, description, spinbutton, decrement, increment] = ['error', 'description', 'spinbutton', 'decrement', 'increment']
+    const [error, description, clearbutton, spinbutton, decrement, increment] =
+      ['error', 'description', 'clear', 'spinbutton', 'decrement', 'increment']
       .map(className => this.querySelector(`.${className}`));
     this.set('value', input.value, false);
     this.set('error', error.textContent, false);
+    this.set('empty', input.value === '');
     description?.textContent && this.set('description', description.textContent, false);
 
     const isNumber = num => typeof num === 'number';
@@ -51,6 +53,7 @@ define('input-field', class extends UIElement {
 
     // handle input changes
     input.onchange = () => triggerChange(this.isNumber ? input.valueAsNumber : input.value);
+    input.oninput = () => this.set('empty', input.value.length === 0);
 
     if (spinbutton) {
       const stepDecrement = (bigStep = false) => triggerChange(v => nearestStep(v - (bigStep ? step * 10 : step)));
@@ -87,13 +90,12 @@ define('input-field', class extends UIElement {
     // update error message and aria-invalid attribute
     this.effect(() => {
       const errorMsg = this.get('error');
-      const errorId = error.getAttribute('id');
       const invalidAttr = 'aria-invalid';
       const erorAttr = 'aria-errormessage';
       replaceText(error, errorMsg);
       if (errorMsg) {
         input.setAttribute(invalidAttr, 'true');
-        input.setAttribute(erorAttr, errorId);
+        input.setAttribute(erorAttr, error.getAttribute('id'));
       } else {
         input.setAttribute(invalidAttr, 'false');
         input.removeAttribute(erorAttr);
@@ -104,20 +106,18 @@ define('input-field', class extends UIElement {
     this.effect(() => {
       if (this.has('description')) {
         const descMsg = this.get('description');
-        const descId = description.getAttribute('id');
         const descAttr = 'aria-describedby';
         replaceText(description, descMsg);
-        descMsg ? input.setAttribute(descAttr, descId) : input.removeAttribute(descAttr);
+        descMsg ? input.setAttribute(descAttr, description.getAttribute('id')) : input.removeAttribute(descAttr);
       }
     });
 
-  }
+    // hide clear button if value is empty
+    if (clearbutton) {
+      clearbutton.onclick = () => this.clear();
+      this.effect(() => this.get('empty') ? clearbutton.classList.add('hidden') : clearbutton.classList.remove('hidden'));
+    }
 
-  /**
-   * Parse number from string
-   */
-  #parseNumber(v) {
-    return this.isInteger? parseInt(v, 10) : parseFloat(v);
   }
 
   /**
@@ -126,6 +126,14 @@ define('input-field', class extends UIElement {
   clear() {
     this.querySelector('input').value = '';
     this.set('value', '');
+    this.set('empty', true);
+  }
+
+  /**
+   * Parse number from string
+   */
+  #parseNumber(v) {
+    return this.isInteger? parseInt(v, 10) : parseFloat(v);
   }
 
 });

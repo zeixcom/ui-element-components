@@ -156,7 +156,36 @@ export const Prefilled = {
   }
 };
 
-export const WithSpinbutton = {
+export const WithClearButton = {
+  args: {
+    label: 'Text',
+    id: 'clearbutton',
+    value: '',
+    clearButton: true,
+    clearLabel: 'Clear',
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+
+    await step('Initial state', async () => {
+      await expect(input).toHaveValue(args.value);
+    });
+
+    await step('Change value', async () => {
+      await userEvent.type(input, 'Some text');
+      await expect(input).toHaveValue('Some text');
+      await expect(canvas.getByRole('button', { name: args.clearLabel })).toBeVisible();
+    });
+
+    await step('Clear value', async () => {
+      await userEvent.click(canvas.getByRole('button', { name: args.clearLabel }));
+      await expect(input).toHaveValue('');
+    });
+  }
+};
+
+export const WithSpinButton = {
   args: {
     label: 'Integer',
     type: 'number',
@@ -166,8 +195,9 @@ export const WithSpinbutton = {
     min: 0,
     max: 100,
     step: 1,
-    decrementLabel: 'decrement',
-    incrementLabel: 'increment',
+    spinButton: true,
+    decrementLabel: 'Decrement',
+    incrementLabel: 'Increment',
     integer: true,
   },
   play: async ({ args, canvasElement, step }) => {
@@ -252,8 +282,6 @@ export const WithPrefix = {
     value: '0',
     min: '0',
     step: '0.05',
-    decrementLabel: 'decrement',
-    incrementLabel: 'increment',
     prefix: 'USD',
   },
   play: async ({ args, canvasElement, step }) => {
@@ -275,8 +303,6 @@ export const WithSuffix = {
     value: '16',
     min: '0',
     step: '1',
-    decrementLabel: 'decrement',
-    incrementLabel: 'increment',
     suffix: 'px',
     integer: true,
   },

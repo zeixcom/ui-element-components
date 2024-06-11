@@ -5,7 +5,7 @@ export default {
   render: (args) => FetchHtml(args),
   argTypes: {},
   args: {
-    src: '/html/snippet.html',
+    src: '/fetch-html/snippet.html',
   },
 };
 
