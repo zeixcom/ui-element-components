@@ -95,6 +95,11 @@ input-field {
     height: 2rem;
     width: 100%;
     transition: color var(--transition-short) var(--easing-inout);
+
+    &::placeholder {
+      color: var(--color-text);
+      opacity: var(--opacity-translucent);
+    }
   }
 
   & input[type="number"] {

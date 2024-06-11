@@ -10,29 +10,28 @@ export default ({
   id,
   name,
   value,
+  autocomplete = 'off',
+  placeholder,
+  disabled = false,
+  readonly = false,
+  required = false,
+  minlength,
+  maxlength,
   step = 1,
   min = 0,
   max,
+  pattern,
   clearButton = false,
   clearLabel = 'Clear',
   spinButton = false,
   decrementLabel = 'Decrement',
   incrementLabel = 'Increment',
-  autocomplete = 'off',
-  form,
-  pattern,
-  placeholder,
   prefix = '',
   suffix = '',
   error = '',
   description = '',
-  disabled = false,
-  readonly = false,
-  required = false,
   integer = false,
   className,
-  onInput,
-  onChange,
 }) => html`
 <input-field
   value=${value || nothing}
@@ -48,12 +47,7 @@ export default ({
         id="${id}-input"
         name=${name || id}
         value=${value || nothing}
-        min=${(type === 'number') && (typeof min === 'number') ? min : nothing}
-        max=${(type === 'number') && (typeof max === 'number') ? max : nothing}
-        step=${(type === 'number') ? (integer ? step : 'any') : nothing}
         autocomplete=${autocomplete}
-        form=${form || nothing}
-        pattern=${pattern || nothing}
         placeholder=${placeholder || nothing}
         aria-invalid=${error ? 'true' : nothing}
         aria-errormessage=${error ? `${id}-error` : nothing}
@@ -61,8 +55,12 @@ export default ({
         ?disabled=${disabled}
         ?readonly=${readonly}
         ?required=${required}
-        @input=${onInput}
-        @change=${onChange}
+        minlength=${minlength || nothing}
+        maxlength=${maxlength || nothing}
+        min=${(type === 'number') && (typeof min === 'number') ? min : nothing}
+        max=${(type === 'number') && (typeof max === 'number') ? max : nothing}
+        step=${(type === 'number') ? (integer ? step : 'any') : nothing}
+        pattern=${pattern || nothing}
       />
       ${clearButton
         ? html`<button type="button" class="clear${!value && ' hidden'}" aria-label=${clearLabel}>×</button>`

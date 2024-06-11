@@ -1,4 +1,4 @@
-import { expect, fireEvent, fn, userEvent, within } from '@storybook/test';
+import { expect, fireEvent, userEvent, within } from '@storybook/test';
 import InputField from './input-field.html';
 
 export default {
@@ -7,53 +7,54 @@ export default {
   render: (args) => InputField(args),
   argTypes: {
     type: {
-      control: { type:'select' },
-      options: ['text', 'number', 'password'],
-      defaultValue: { summary: 'text' },
-    },
-    width: {
+      type: { name: 'string', required: true },
+      table: { category: 'input' },
       control: { type: 'select' },
-      options: ['short', 'auto'],
-      defaultValue: { summary: 'auto' },
-    },
-    id: {
-      defaultValue: { summary: 'id' },
-    },
-    value: {
-      defaultValue: { summary: '' },
-    },
-    disabled: {
-      control: 'boolean',
-      defaultValue: { summary: false },
-    },
-    readonly: {
-      control: 'boolean',
-      defaultValue: { summary: false },
-    },
-    required: {
-      control: 'boolean',
-      defaultValue: { summary: false },
+      options: ['text', 'number', 'password', 'search', 'email', 'url', 'tel'],
+      defaultValue: { summary: 'text' },
+      description: 'Type of input field',
     },
     integer: {
+      table: { category: 'input' },
       control: 'boolean',
       defaultValue: { summary: false },
-      if: { arg: 'type', eq: 'number' }
+      if: { arg: 'type', eq: 'number' },
+      description: 'Whether the input field should only accept integer values',
     },
-    min: {
-      control: { type: 'number' },
-      defaultValue: { summary: 0 },
-      if: { arg: 'type', eq: 'number' }
+    id: {
+      type: { name: 'string', required: true },
+      table: { category: 'input' },
+      defaultValue: { summary: 'id' },
+      description: 'ID attribute of the input field',
     },
-    max: {
-      control: { type: 'number' },
-      if: { arg: 'type', eq: 'number' }
+    name: {
+      type: { name: 'string', required: true },
+      table: { category: 'input' },
+      description: 'Name attribute of the input field',
     },
-    step: {
-      control: { type: 'number' },
-      defaultValue: { summary: 1 },
-      if: { arg: 'type', eq: 'number' }
+    value: {
+      table: { category: 'input' },
+      defaultValue: { summary: '' },
+      description: 'Value of the input field',
+    },
+    disabled: {
+      table: { category: 'input' },
+      control: 'boolean',
+      defaultValue: { summary: false },
+      description: 'Whether the input field is disabled',
+    },
+    readonly: {
+      table: { category: 'input' },
+      control: 'boolean',
+      defaultValue: { summary: false },
+      description: 'Whether the input field is readonly',
+    },
+    placeholder: {
+      table: { category: 'input' },
+      description: 'Placeholder text for the input field',
     },
     autocomplete: {
+      table: { category: 'input' },
       control: { type: 'select' },
       options: [
         'on', 'off',
@@ -75,30 +76,116 @@ export default {
         'webauthn'
       ],
       defaultValue: { summary: 'off' },
+      description: 'The value of the autocomplete attribute',
+    },
+    required: {
+      table: { category: 'validation' },
+      control: 'boolean',
+      defaultValue: { summary: false },
+      if: { arg:'readonly', eq: false },
+      description: 'Indicates that the input field is required',
+    },
+    minlength: {
+      table: { category: 'validation' },
+      control: { type: 'number' },
+      defaultValue: { summary: 0 },
+      description: 'The minimum number of characters allowed',
+    },
+    maxlength: {
+      table: { category: 'validation' },
+      control: { type: 'number' },
+      description: 'The maximum number of characters allowed',
+    },
+    min: {
+      table: { category: 'validation' },
+      control: { type: 'number' },
+      defaultValue: { summary: 0 },
+      if: { arg: 'type', eq: 'number' },
+      description: 'The minimum allowed value',
+    },
+    max: {
+      table: { category: 'validation' },
+      control: { type: 'number' },
+      if: { arg: 'type', eq: 'number' },
+      description: 'The maximum allowed value',
+    },
+    step: {
+      table: { category: 'validation' },
+      control: { type: 'number' },
+      defaultValue: { summary: 1 },
+      if: { arg: 'type', eq: 'number' },
+      description: 'The granularity that the value must adhere to',
+    },
+    pattern: {
+      table: { category: 'validation' },
+      description: 'A regular expression that the input value must match',
+    },
+    label: {
+      type: { name: 'string', required: true },
+      table: { category: 'field' },
+      control: { type: 'text', required: true },
+      description: 'The accessible name of the form field',
+    },
+    prefix: {
+      table: { category: 'field' },
+      description: 'Prefix to the input, e.g. a currency symbol',
+    },
+    suffix: {
+      table: { category: 'field' },
+      description: 'Suffix to the input, e.g. a unit of measurement',
+    },
+    error: {
+      table: { category: 'field' },
+      description: 'Error message for the form field linked to the input field with an aria-errormessage attribute',
+    },
+    description: {
+      table: { category: 'field' },
+      description: 'Helper text for the form field linked to the input field with an aria-describedby attribute',
+    },
+    className: {
+      table: { category: 'field' },
+      description: 'Class attribute on the custom element',
+    },
+    width: {
+      table: { category: 'field' },
+      control: { type: 'select' },
+      options: ['short', 'auto'],
+      defaultValue: { summary: 'auto' },
+      description: 'Set the width of the input field, short (about 6 characters) or auto (available width)',
     },
     clearButton: {
+      table: { category: 'field' },
       control: 'boolean',
       defaultValue: { summary: false },
+      description: 'Add a clear button to the input field (if not empty)',
     },
     clearLabel: {
+      table: { category: 'field' },
       control: { type: 'text' },
       defaultValue: { summary: 'Clear' },
-      if: { arg: 'clearButton', eq: true }
+      if: { arg: 'clearButton', eq: true },
+      description: 'The accessible name of the clear button',
     },
     spinButton: {
+      table: { category: 'field' },
       control: 'boolean',
       defaultValue: { summary: false },
-      if: { arg: 'type', eq: 'number' }
+      if: { arg: 'type', eq: 'number' },
+      description: 'Add a spin button to the number input field to increment / decrement the value',
     },
     decrementLabel: {
+      table: { category: 'field' },
       control: { type: 'text' },
       defaultValue: { summary: 'Decrement' },
-      if: { arg: 'spinButton', eq: true }
+      if: { arg: 'spinButton', eq: true },
+      description: 'The accessible name of the decrement button',
     },
     incrementLabel: {
+      table: { category: 'field' },
       control: { type: 'text' },
       defaultValue: { summary: 'Increment' },
-      if: { arg: 'spinButton', eq: true }
+      if: { arg: 'spinButton', eq: true },
+      description: 'The accessible name of the increment button',
     },
   },
   args: {
@@ -108,24 +195,24 @@ export default {
     id: 'id',
     name: 'name',
     value: '',
+    placeholder: '',
+    disabled: false,
+    readonly: false,
+    required: false,
+    minlength: '',
+    maxlength: '',
+    pattern: '',
     clearButton: false,
     clearLabel: 'Clear',
     spinButton: false,
     decrementLabel: 'Decrement',
     incrementLabel: 'Increment',
     autocomplete: 'off',
-    form: '',
-    pattern: '',
     prefix: '',
     suffix: '',
     error: '',
     description: '',
-    disabled: false,
-    readonly: false,
-    required: false,
     className: '',
-    onInput: fn(),
-    onChange: fn(),
   },
 };
 
@@ -211,13 +298,13 @@ export const WithSpinButton = {
     width: 'short',
     id:  'spinbutton',
     value: 42,
+    integer: true,
     min: 0,
     max: 100,
     step: 1,
     spinButton: true,
     decrementLabel: 'Decrement',
     incrementLabel: 'Increment',
-    integer: true,
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -352,20 +439,47 @@ export const Password = {
   }
 };
 
-export const WithDescription = {
+export const NewPassword = {
   args: {
-    description: 'Description',
-    id: 'description',
+    label: 'Enter a new password',
+    type: 'password',
+    id: 'new-password',
+    value: '',
+    autocomplete: 'new-password',
+    minlength: 6,
+    description: 'Minimum 6 characters',
   },
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByText('', { selector: 'input-field' });
-    const input = canvas.getByRole('textbox');
+    // input type='password' has no role, see: https://github.com/w3c/aria/issues/935
+    const input = canvas.getByText('', { selector: 'input' });
     const description = canvas.getByText(args.description);
 
     await step('Initial state', async () => {
+      await expect(input).toHaveAttribute('autocomplete', `${args.autocomplete}`);
+      await expect(input).toHaveAttribute('minlength', `${args.minlength}`);
       await expect(description).toBeVisible();
       await expect(input).toHaveAccessibleDescription(args.description);
+    });
+
+    await step('Valid password', async () => {
+      const user = userEvent.setup();
+      await user.type(input, 'password');
+      await user.tab();
+      await new Promise(requestAnimationFrame);
+      await expect(input).toBeValid();
+    });
+
+    await step('Too short password', async () => {
+      const user = userEvent.setup();
+      await user.clear(input);
+      await user.type(input, 'pass');
+      await user.tab();
+      await new Promise(requestAnimationFrame);
+      // test does not work, because validity.tooShort needs user interaction, see: https://bugzilla.mozilla.org/show_bug.cgi?id=613019
+      // await expect(input).toBeInvalid();
+      // await expect(input).toHaveAccessibleErrorMessage(input.validationMessage);
     });
 
     await step('Changed description from outside', async () => {

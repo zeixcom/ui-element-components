@@ -56,7 +56,10 @@ define('input-field', class extends UIElement {
     input.oninput = () => this.set('empty', input.value.length === 0);
 
     // handle clear button click
-    clearbutton && (clearbutton.onclick = () => this.clear());
+    clearbutton && (clearbutton.onclick = () => {
+      this.clear();
+      input.focus();
+    });
 
     if (spinbutton) {
       const stepDecrement = (bigStep = false) => triggerChange(v => nearestStep(v - (bigStep ? step * 10 : step)));
@@ -117,9 +120,7 @@ define('input-field', class extends UIElement {
 
     // hide clear button if value is empty
     this.effect(() => {
-      (clearbutton && this.get('empty'))
-        ? clearbutton.classList.add('hidden')
-        : clearbutton.classList.remove('hidden');
+      clearbutton && (this.get('empty') ? clearbutton.classList.add('hidden') : clearbutton.classList.remove('hidden'));
     });
 
   }
