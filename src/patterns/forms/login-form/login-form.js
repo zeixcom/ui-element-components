@@ -32,7 +32,7 @@ define('login-form', class extends UIElement {
 
     // derive disabled state of submit button from whether the input fields are empty
     this.effect(() => {
-      this.querySelector('.login').set('disabled', !usernameField.get('value') || !passwordField.get('value'));
+      this.querySelector('.login').set('disabled', usernameField.get('empty') || passwordField.get('empty'));
     });
 
     this.effect(() => {

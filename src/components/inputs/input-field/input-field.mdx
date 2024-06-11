@@ -7,7 +7,7 @@ import * as InputFieldStories from './input-field.stories';
 
 Tag: `input-field`
 
-Input Field is a wrapper Web Component for `input` elements of type `text`, `number` or `password` with their associated labels, spinbutton controls (for `number`), validation and hint messages.
+Input Field is a wrapper Web Component for `input` elements of type `text`, `number` or `password` with their associated labels, spin button controls (for `number`), validation and hint messages.
 
 It handles updates to `value` and `description` (hint message) attributes or reactive states, provides basic form field validation through [ValidityState API](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState), and takes care of neccessary aria-attributes.
 
@@ -29,13 +29,14 @@ The following inner elements are required:
 - `p.error` if the user input can be invalid (`required`, `pattern`, `min`, `max`, `step` attributes are set or a custom validation is performed)
 
 JavaScript handling and CSS styling depends on the following classes in the inner HTML:
-- `.spinbutton`, `.increment`, `.decrement` for the spinbutton
+- `.clear` for clear button
+- `.spinbutton`, `.increment`, `.decrement` for the spin button
 - `.error` for validation messages
 - `.description` for hint messages
 - `.row` and `.group` for layout purposes
 
 You may omit certain parts of the inner markup:
-- the `.row` wrapper is only neccessary if a spinbutton for `type="number"` needs to be placed next to the input
+- the `.row` wrapper is only neccessary if a clear or spin button needs to be placed next to the input
 - the `.description` is only neccessary if there is an initial hint message or it might be added during the lifetime of the component
 
 ## Client-Side Reactivity
@@ -55,6 +56,7 @@ Used reactive states:
 - `value`: `{string|number}` - current value of input field
 - `error`: `{string}` - current validation message
 - `description`: `{string}` - current hint message
+- `empty`: `{boolean}` - whether input field is currently empty
 
 ### Emitted Events
 
@@ -76,9 +78,9 @@ Used CSS custom properties:
 - `--color-text-soft`: text color with reduced contrast for description
 - `--color-error`: alert color for validation message; will be mixed 50% with `--color-text` for better contrast
 - `--color-input`: background color for input field
-- `--color-background`: general background color, also used for disabled spinbutton
-- `--color-border`: border color for input field and spinbutton
-- `--color-secondary`: background color for secondary buttons, used for spinbutton
+- `--color-background`: general background color, also used for disabled spin button
+- `--color-border`: border color for input field and spin button
+- `--color-secondary`: background color for secondary buttons, used for spin button
 - `--color-secondary-hover`: hover state background color for secondary buttons
 - `--color-secondary-active`: active state background color for secondary buttons
 
@@ -91,16 +93,16 @@ Used CSS custom properties:
 ### Font Sizes
 
 - `--font-size-xs`: extra small font size, used for validation and hint messages
-- `--font-size-s`: small font size, used for label and spinbutton
+- `--font-size-s`: small font size, used for label and spin button
 - `--font-size-m`: medium font size, used for input
 
 ### Line Heights
 
-- `--line-height-s`: dense line height, used for validation and hint messages and spinbutton
+- `--line-height-s`: dense line height, used for validation and hint messages and spin button
 
 ### Opacity
 
-- `--opacity-transparent`: transparency, used to hide spinbuttons when the field has neighter focus nor is hovered
+- `--opacity-transparent`: transparency, used to hide spin buttons when the field has neighter focus nor is hovered
 - `--opacity-translucent`: reduced opacity, used to reduce visual prominence of disabled fields or parts of not currently focussed fields
 - `--opacity-dimmed`: slightly reduced opacity, used for label, prefix, suffix, and validation and hint messages when field has focus
 - `--opacity-solid`: full opacity, used for maximal contrast when field is enabled and has focus

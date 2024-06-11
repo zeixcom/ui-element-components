@@ -76,15 +76,29 @@ export default {
       ],
       defaultValue: { summary: 'off' },
     },
+    clearButton: {
+      control: 'boolean',
+      defaultValue: { summary: false },
+    },
+    clearLabel: {
+      control: { type: 'text' },
+      defaultValue: { summary: 'Clear' },
+      if: { arg: 'clearButton', eq: true }
+    },
+    spinButton: {
+      control: 'boolean',
+      defaultValue: { summary: false },
+      if: { arg: 'type', eq: 'number' }
+    },
     decrementLabel: {
       control: { type: 'text' },
-      defaultValue: { summary: 'decrement' },
-      if: { arg: 'type', eq: 'number' }
+      defaultValue: { summary: 'Decrement' },
+      if: { arg: 'spinButton', eq: true }
     },
     incrementLabel: {
       control: { type: 'text' },
-      defaultValue: { summary: 'increment' },
-      if: { arg: 'type', eq: 'number' }
+      defaultValue: { summary: 'Increment' },
+      if: { arg: 'spinButton', eq: true }
     },
   },
   args: {
@@ -94,6 +108,11 @@ export default {
     id: 'id',
     name: 'name',
     value: '',
+    clearButton: false,
+    clearLabel: 'Clear',
+    spinButton: false,
+    decrementLabel: 'Decrement',
+    incrementLabel: 'Increment',
     autocomplete: 'off',
     form: '',
     pattern: '',

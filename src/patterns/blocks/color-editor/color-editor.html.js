@@ -34,6 +34,7 @@ export default ({ color, name, className }) => html`
             min: 0,
             max: 100,
             step: 0.25,
+            spinButton: true,
             suffix: '%',
             required: true,
             className: 'lightness'
@@ -47,6 +48,7 @@ export default ({ color, name, className }) => html`
             min: 0,
             max: 0.4,
             step: 0.001,
+            spinButton: true,
             required: true,
             className: 'chroma'
           })}
@@ -59,6 +61,7 @@ export default ({ color, name, className }) => html`
             min: 0,
             max: 360,
             step: 1,
+            spinButton: true,
             suffix: '°',
             required: true,
             className: 'hue'

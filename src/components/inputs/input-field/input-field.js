@@ -19,7 +19,7 @@ define('input-field', class extends UIElement {
 
     const isNumber = num => typeof num === 'number';
 
-    // setup spinbutton with step and min/max attributes
+    // setup spin button with step and min/max attributes
     const [step, min, max] = (() => {
       if (!this.isNumber || !spinbutton) return [];
       const getNumber = attr => {
@@ -55,11 +55,14 @@ define('input-field', class extends UIElement {
     input.onchange = () => triggerChange(this.isNumber ? input.valueAsNumber : input.value);
     input.oninput = () => this.set('empty', input.value.length === 0);
 
+    // handle clear button click
+    clearbutton && (clearbutton.onclick = () => this.clear());
+
     if (spinbutton) {
       const stepDecrement = (bigStep = false) => triggerChange(v => nearestStep(v - (bigStep ? step * 10 : step)));
       const stepIncrement = (bigStep = false) => triggerChange(v => nearestStep(v + (bigStep ? step * 10 : step)));
 
-      // handle spinbutton clicks
+      // handle spin button clicks
       decrement && (decrement.onclick = e => stepDecrement(e.shiftKey));
       increment && (increment.onclick = e => stepIncrement(e.shiftKey));
 
@@ -113,10 +116,11 @@ define('input-field', class extends UIElement {
     });
 
     // hide clear button if value is empty
-    if (clearbutton) {
-      clearbutton.onclick = () => this.clear();
-      this.effect(() => this.get('empty') ? clearbutton.classList.add('hidden') : clearbutton.classList.remove('hidden'));
-    }
+    this.effect(() => {
+      (clearbutton && this.get('empty'))
+        ? clearbutton.classList.add('hidden')
+        : clearbutton.classList.remove('hidden');
+    });
 
   }
 
