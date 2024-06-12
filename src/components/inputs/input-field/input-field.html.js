@@ -21,6 +21,7 @@ export default ({
   min = 0,
   max,
   pattern,
+  validate,
   clearButton = false,
   clearLabel = 'Clear',
   spinButton = false,
@@ -30,12 +31,14 @@ export default ({
   suffix = '',
   error = '',
   description = '',
+  remainingCount,
   integer = false,
   className,
 }) => html`
 <input-field
   value=${value || nothing}
   ?integer=${type === 'number' && integer}
+  validate=${validate || nothing}
   class=${className || nothing}
 >
   <label for="${id}-input">${label}</label>
@@ -73,5 +76,5 @@ export default ({
     </div>` : nothing}
   </div>
   <p id="${id}-error" class="error" aria-live="assertive">${error}</p>
-  <p id="${id}-description" class="description" aria-live="polite">${description}</p>
+  <p id="${id}-description" class="description" aria-live="polite" data-remaining=${remainingCount || nothing}>${description}</p>
 </input-field>`;

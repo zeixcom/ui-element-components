@@ -30,7 +30,7 @@ export default {
     name: {
       type: { name: 'string', required: true },
       table: { category: 'input' },
-      description: 'Name attribute of the input field',
+      description: 'Name attribute of the input field; will fall back to ID if not provided',
     },
     value: {
       table: { category: 'input' },
@@ -120,10 +120,15 @@ export default {
       table: { category: 'validation' },
       description: 'A regular expression that the input value must match',
     },
+    validate: {
+      table: { category: 'validation' },
+      control: { type: 'text' },
+      description: 'URL to server-side validation endpoint; GET request with the input field name and value as a query parameter; empty response is considered valid, otherwise it will setCustomValidity() to the response body',
+    },
     label: {
       type: { name: 'string', required: true },
       table: { category: 'field' },
-      control: { type: 'text', required: true },
+      control: { type: 'text' },
       description: 'The accessible name of the form field',
     },
     prefix: {
@@ -141,6 +146,13 @@ export default {
     description: {
       table: { category: 'field' },
       description: 'Helper text for the form field linked to the input field with an aria-describedby attribute',
+    },
+    remainingCount: {
+      table: { category: 'field' },
+      control: { type: 'text' },
+      defaultValue: { summary: '${x} characters remaining' },
+      if: { arg: 'maxlength' },
+      description: 'Live-updating helper text indidating the number of remaining characters allowed',
     },
     className: {
       table: { category: 'field' },
@@ -202,6 +214,7 @@ export default {
     minlength: '',
     maxlength: '',
     pattern: '',
+    validate: '',
     clearButton: false,
     clearLabel: 'Clear',
     spinButton: false,
@@ -212,6 +225,7 @@ export default {
     suffix: '',
     error: '',
     description: '',
+    remainingCount: '${x} characters remaining',
     className: '',
   },
 };
@@ -441,7 +455,7 @@ export const Password = {
 
 export const NewPassword = {
   args: {
-    label: 'Enter a new password',
+    label: 'New password',
     type: 'password',
     id: 'new-password',
     value: '',
@@ -463,24 +477,25 @@ export const NewPassword = {
       await expect(input).toHaveAccessibleDescription(args.description);
     });
 
-    await step('Valid password', async () => {
-      const user = userEvent.setup();
-      await user.type(input, 'password');
-      await user.tab();
+    /**
+     * The following tests cannot performed programmatically, because checkValidity() only returns false after a user input.
+     * See: https://stackoverflow.com/questions/66896018/html-input-checkvalidity-always-returns-true-even-with-minlength-violations
+     *
+    await step('Too short password', async () => {
+      await userEvent.type(input, 'pass');
+      await userEvent.tab();
       await new Promise(requestAnimationFrame);
-      await expect(input).toBeValid();
+      await expect(input).toBeInvalid();
+      await expect(input).toHaveAccessibleErrorMessage(input.validationMessage);
     });
 
-    await step('Too short password', async () => {
-      const user = userEvent.setup();
-      await user.clear(input);
-      await user.type(input, 'pass');
-      await user.tab();
+    await step('Valid password', async () => {
+      await userEvent.clear(input);
+      await userEvent.type(input, 'password');
+      await userEvent.tab();
       await new Promise(requestAnimationFrame);
-      // test does not work, because validity.tooShort needs user interaction, see: https://bugzilla.mozilla.org/show_bug.cgi?id=613019
-      // await expect(input).toBeInvalid();
-      // await expect(input).toHaveAccessibleErrorMessage(input.validationMessage);
-    });
+      await expect(input).toBeValid();
+    }); */
 
     await step('Changed description from outside', async () => {
       field.set('description', 'Changed description');
@@ -490,10 +505,41 @@ export const NewPassword = {
   }
 };
 
+export const RemainingCharacters = {
+  args: {
+    label: 'Pseudonym',
+    type: 'text',
+    id:'remaining-characters',
+    value: '',
+    maxlength: 20,
+    description: 'Maximum 20 characters',
+    remainingCount: '${x} characters remaining',
+  },
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByText('', { selector: 'input-field' });
+    const input = canvas.getByText('', { selector: 'input' });
+    const description = canvas.getByText(args.description);
+
+    await step('Initial state', async () => {
+      await expect(input).toHaveAttribute('maxlength', `${args.maxlength}`);
+      await expect(description).toBeVisible();
+      await expect(input).toHaveAccessibleDescription(args.description);
+    });
+
+    await step('Changed description from inside', async () => {
+      await userEvent.type(input, 'avatar2024');
+      await new Promise(requestAnimationFrame);
+      await expect(input).toHaveAccessibleDescription(args.remainingCount.replace(/\${x}/, args.maxlength - 10));
+    });
+  },
+}
+
 export const Disabled = {
   args: {
     disabled: true,
     id: 'disabled',
+    value: 'Disabled value',
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -509,6 +555,7 @@ export const Readonly = {
   args: {
     readonly: true,
     id: 'readonly',
+    value: 'Read-only value',
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -550,3 +597,28 @@ export const Required = {
     });
   }
 };
+
+export const ServerValidation = {
+  args: {
+    label: 'Username',
+    id: 'server-validation',
+    validate: '/input-field/validate.html',
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+
+    await step('Initial state', async () => {
+      await expect(input).toBeValid();
+    });
+
+    await step('Trigger server-side validation', async () => {
+      await userEvent.type(input, 'avatar2024');
+      await userEvent.tab();
+      await new Promise(requestAnimationFrame);
+      await expect(input).toHaveValue('avatar2024');
+      await expect(input).toBeInvalid();
+      await expect(input).toHaveAccessibleErrorMessage('Error from server-side validation: Username already taken');
+    });
+  }
+}

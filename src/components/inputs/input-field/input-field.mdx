@@ -32,7 +32,7 @@ JavaScript handling and CSS styling depends on the following classes in the inne
 - `.clear` for clear button
 - `.spinbutton`, `.increment`, `.decrement` for the spin button
 - `.error` for validation messages
-- `.description` for hint messages
+- `.description` for hint messages and remaining count (if `maxlength` on input and `data-remaining` on description are set)
 - `.row` and `.group` for layout purposes
 
 You may omit certain parts of the inner markup:
@@ -46,6 +46,7 @@ You may omit certain parts of the inner markup:
 - `value` (observed): value of the input field, defaults to empty string
 - `description` (observed): hint message to guide the user input, optional
 - `integer`: boolean attribute to indicate the value should be parsed as integer, optional and only for `type="number"`; if present, a floating point value will be considered invalid
+- `validate`: URL to server-side endpoint to validate this input field; `GET` request, `?name=${name}&value=${value}` will be appended to the URL; response will populate `setCustomValidity()` 
 
 ### Reactive States
 

@@ -16,6 +16,7 @@ define('input-field', class extends UIElement {
     this.set('error', error.textContent, false);
     this.set('empty', input.value === '');
     description?.textContent && this.set('description', description.textContent, false);
+    const remainingCount = input.maxLength && description?.dataset.remaining;
 
     const isNumber = num => typeof num === 'number';
 
@@ -53,7 +54,10 @@ define('input-field', class extends UIElement {
 
     // handle input changes
     input.onchange = () => triggerChange(this.isNumber ? input.valueAsNumber : input.value);
-    input.oninput = () => this.set('empty', input.value.length === 0);
+    input.oninput = () => {
+      this.set('empty', input.value.length === 0);
+      remainingCount && this.set('description', description.dataset.remaining.replace('${x}', input.maxLength - input.value.length));
+    };
 
     // handle clear button click
     clearbutton && (clearbutton.onclick = () => {
@@ -83,11 +87,23 @@ define('input-field', class extends UIElement {
     // update value
     this.effect(() => {
       const value = this.get('value');
+      const validate = this.getAttribute('validate');
+      if (value && validate) {
+        // validate input value against a server-side endpoint
+        fetch(`${validate}?name=${input.name}value=${input.value}`)
+          .then(response => response.text())
+          .then(text => {
+            input.setCustomValidity(text);
+            this.set('error', text);
+          })
+          .catch(error => console.error(error));
+      }
       if (this.isNumber && !isNumber(value)) { // ensure value is a number if it is not already a number
         return this.set('value', this.#parseNumber(value)); // effect will be called again with numeric value
       }
       if (this.isNumber && !Number.isNaN(value)) { // change value only if it is a valid number
         input.value = value;
+        // update spin button disabled state
         step && decrement && (decrement.disabled = (isNumber(min) && (value - step < min)));
         step && increment && (increment.disabled = (isNumber(max) && (value + step > max)));
       }
