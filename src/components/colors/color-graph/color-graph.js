@@ -22,7 +22,6 @@ define('color-graph', class extends UIElement {
     const redrawCanvas = h => {
       const inP3Gamut = inGamut('p3');
       const inRGBGamut = inGamut('rgb');
-
       const getColorFromPosition = (x, y) => {
         const l = 1 - (y / canvasSize);
         const c = x / (2.5 * canvasSize);
@@ -38,26 +37,30 @@ define('color-graph', class extends UIElement {
       this.setAttribute('visible', '');
       this.set('redraw', false);
       hue = h;
-      const canvas = this.querySelector('canvas');
-      const ctx = canvas.getContext('2d', { colorSpace: 'display-p3' });
-      ctx.clearRect(0, 0, 400, 400);
       if (!canvasSize) {
         canvasSize = this.getBoundingClientRect().width;
         this.style.setProperty('--canvas-size', canvasSize);
       }
+      const canvas = this.querySelector('canvas');
       canvas.setAttribute('width', canvasSize);
       canvas.setAttribute('height', canvasSize);
+      // const start = performance.now();
+      const ctx = canvas.getContext('bitmaprenderer', { colorSpace: 'display-p3' });
+      const offscreen = new OffscreenCanvas(canvasSize, canvasSize);
+      const offscreenCtx = offscreen.getContext('2d', { colorSpace: 'display-p3' });
       for (let y = 0; y < canvasSize; y++) {
         for (let x = 0; x < canvasSize; x++) {
           const bgColor = getColorFromPosition(x, y);
           if (bgColor) {
-            ctx.fillStyle = formatCss(bgColor);
-            ctx.fillRect(x, y, 1, 1);
+            offscreenCtx.fillStyle = formatCss(bgColor);
+            offscreenCtx.fillRect(x, y, 1, 1);
           } else {
             x = canvasSize;
           }
         }
       }
+      ctx.transferFromImageBitmap(offscreen.transferToImageBitmap());
+      // console.log(`time to draw canvas: ${performance.now() - start}ms`);
     };
 
     // reposition knob and scale if color changes
