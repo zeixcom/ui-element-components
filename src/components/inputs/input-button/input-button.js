@@ -1,7 +1,7 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define, replaceText } from '../../../assets/js/utils';
+import { updateText } from '../../../assets/js/dom-update';
 
-define('input-button', class extends UIElement {
+class InputButton extends UIElement {
   static observedAttributes = ['disabled'];
   attributeMap = new Map([['disabled', 'boolean']]);
 
@@ -21,13 +21,13 @@ define('input-button', class extends UIElement {
     });
 
     // effect to update the label
-    this.effect(() => {
-      replaceText(button, this.get('label'));
-    });
+    this.effect(() => updateText(button, this.get('label')));
 
     // effect to update type and size via className
     this.effect(() => {
       button.className = `${this.get('variant')} ${this.get('size')}`;
     });
   }
-});
+}
+
+InputButton.define('input-button');

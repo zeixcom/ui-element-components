@@ -1,9 +1,10 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn';
-import { define, replaceText, formatNumber } from '../../../assets/js/utils';
+import { formatNumber } from '../../../assets/js/utils';
+import { updateText } from '../../../assets/js/dom-update';
 
-define('color-details', class extends UIElement {
+class ColorDetails extends UIElement {
   static observedAttributes = ['color', 'name'];
   attributeMap = new Map([['color', v => converter('oklch')(v)]]);
 
@@ -12,7 +13,7 @@ define('color-details', class extends UIElement {
     this.set('name', name.textContent, false);
 
     // update if name changes
-    this.effect(() => replaceText(name, this.get('name')));
+    this.effect(() => updateText(name, this.get('name')));
 
     // update if color changes
     this.effect(() => {
@@ -20,7 +21,7 @@ define('color-details', class extends UIElement {
       const setTextContent = (selector, value) => this.querySelector(selector).textContent = value;
 
       this.style.setProperty('--color-swatch', formatCss(color));
-      replaceText(this.querySelector('.value'), formatHex(color));
+      updateText(this.querySelector('.value'), formatHex(color));
       setTextContent('.lightness', `${formatNumber(color.l * 100)}%`);
       setTextContent('.chroma', formatNumber(color.c, 4));
       setTextContent('.hue', `${formatNumber(color.h)}°`);
@@ -30,4 +31,6 @@ define('color-details', class extends UIElement {
     });
   }
 
-});
+}
+
+ColorDetails.define('color-details');

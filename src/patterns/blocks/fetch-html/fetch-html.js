@@ -1,15 +1,14 @@
 import UIElement from '../../../assets/js/ui-element.js';
-import { define } from '../../../assets/js/utils.js';
 
-define('fetch-html', class extends UIElement {
+class FetchHTML extends UIElement {
   static observedAttributes = ['src'];
 
   connectedCallback() {
 
-    this.effect(() => {
-      fetch(this.get('src'))
-        .then(response => response.text())
-        .then(html => {
+    this.effect(async () => {
+      await fetch(this.get('src'))
+        .then(async response => {
+          const html = await response.text();
           const shadow = this.shadowRoot || this.attachShadow({ mode: 'open' });
           shadow.innerHTML = html;
           shadow.querySelectorAll('script').forEach(script => {
@@ -23,4 +22,6 @@ define('fetch-html', class extends UIElement {
         .catch(error => console.error(error));
     });
   }
-});
+}
+
+FetchHTML.define('fetch-html');

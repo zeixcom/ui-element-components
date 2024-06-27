@@ -1,12 +1,12 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
-import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
+import { formatNumber, getStepColor } from '../../../assets/js/utils';
 import VisibilityObserver from '../../../assets/js/visibility-observer';
 import RedrawObserver from '../../../assets/js/redraw-observer';
 import dragHandler from '../../../assets/js/drag-handler';
 
-define('color-graph', class extends UIElement {
+class ColorGraph extends UIElement {
   static observedAttributes = ['color'];
   attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
@@ -45,21 +45,22 @@ define('color-graph', class extends UIElement {
       canvas.setAttribute('width', canvasSize);
       canvas.setAttribute('height', canvasSize);
       // const start = performance.now();
-      const ctx = canvas.getContext('bitmaprenderer', { colorSpace: 'display-p3' });
-      const offscreen = new OffscreenCanvas(canvasSize, canvasSize);
-      const offscreenCtx = offscreen.getContext('2d', { colorSpace: 'display-p3' });
+      // const ctx = canvas.getContext('bitmaprenderer', { colorSpace: 'display-p3' });
+      // const offscreen = new OffscreenCanvas(canvasSize, canvasSize);
+      // const offscreenCtx = offscreen.getContext('2d', { colorSpace: 'display-p3' });
+      const ctx = canvas.getContext('2d', { colorSpace: 'display-p3' });
       for (let y = 0; y < canvasSize; y++) {
         for (let x = 0; x < canvasSize; x++) {
           const bgColor = getColorFromPosition(x, y);
           if (bgColor) {
-            offscreenCtx.fillStyle = formatCss(bgColor);
-            offscreenCtx.fillRect(x, y, 1, 1);
+            ctx.fillStyle = formatCss(bgColor);
+            ctx.fillRect(x, y, 1, 1);
           } else {
             x = canvasSize;
           }
         }
       }
-      ctx.transferFromImageBitmap(offscreen.transferToImageBitmap());
+      // ctx.transferFromImageBitmap(offscreen.transferToImageBitmap());
       // console.log(`time to draw canvas: ${performance.now() - start}ms`);
     };
 
@@ -175,4 +176,6 @@ define('color-graph', class extends UIElement {
     this.redrawObserver.disconnect();
   }
 
-});
+}
+
+ColorGraph.define('color-graph');

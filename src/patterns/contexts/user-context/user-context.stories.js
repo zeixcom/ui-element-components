@@ -1,5 +1,3 @@
-import { html } from 'lit';
-
 import HelloWorld from '../../../components/atoms/hello-world/hello-world.html';
 import LoginForm from '../../forms/login-form/login-form.html';
 
@@ -19,13 +17,13 @@ export default {
     },
   },
   args: {
-    content: html`
-      ${HelloWorld({ greeting: 'Hello', name: 'World' })}
-      ${LoginForm({
+    content: [
+      HelloWorld({ greeting: 'Hello', name: 'World' }),
+      LoginForm({
         onLoginSubmit: e => console.log('Login', e.detail),
         onLogoutClick: () => console.log('Logout'),
-      })}
-    `,
+      }),
+    ],
     loggedIn: false,
     displayName: undefined,
   },

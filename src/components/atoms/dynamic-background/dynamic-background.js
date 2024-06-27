@@ -1,9 +1,9 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatCss } from 'culori/fn';
-import { define, getStepColor } from '../../../assets/js/utils';
+import { getStepColor } from '../../../assets/js/utils';
 
-define('dynamic-background', class extends UIElement {
+class DynamicBackground extends UIElement {
   static observedAttributes = ['color'];
   attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
@@ -75,4 +75,6 @@ define('dynamic-background', class extends UIElement {
       }
     });
   }
-});
+}
+
+DynamicBackground.define('dynamic-background');

@@ -1,7 +1,7 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define, replaceText } from '../../../assets/js/utils';
+import { updateText } from '../../../assets/js/dom-update';
 
-define('show-appreciation', class extends UIElement {
+class ShowAppreciation extends UIElement {
   #count = Symbol();
 
   connectedCallback() {
@@ -10,10 +10,12 @@ define('show-appreciation', class extends UIElement {
     
     this.querySelector('button').onclick = () => this.set(this.#count, v => ++v);
 
-    this.effect(() => replaceText(count, this.get(this.#count)));
+    this.effect(() => updateText(count, this.get(this.#count)));
   }
 
   get count() {
     return this.get(this.#count);
   }
-});
+}
+
+ShowAppreciation.define('show-appreciation');

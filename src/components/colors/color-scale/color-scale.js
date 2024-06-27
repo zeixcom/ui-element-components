@@ -1,9 +1,9 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatCss, formatHex } from 'culori/fn';
-import { define, replaceText, getStepColor } from '../../../assets/js/utils';
-
-define('color-scale', class extends UIElement {
+import { getStepColor } from '../../../assets/js/utils';
+import { updateText } from '../../../assets/js/dom-update';
+class ColorScale extends UIElement {
   static observedAttributes = ['color', 'name'];
   attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
@@ -12,15 +12,13 @@ define('color-scale', class extends UIElement {
     this.set('name', name.textContent, false);
 
     // update if name changes
-    this.effect(() => {
-      replaceText(name, this.get('name'));
-    });
+    this.effect(() => updateText(name, this.get('name')));
 
     // update if base color changes
     this.effect(() => {
       const base = this.get('base');
 
-      replaceText(this.querySelector('.label small'), formatHex(base));
+      updateText(this.querySelector('.label small'), formatHex(base));
       this.style.setProperty('--color-base', formatCss(base));
       for (let i = 4; i > 0; i--) {
         this.style.setProperty(`--color-lighten${i * 20}`, formatCss(getStepColor(base, (5 + i) / 10)));
@@ -39,4 +37,6 @@ define('color-scale', class extends UIElement {
       }
     });
   }
-});
+}
+
+ColorScale.define('color-scale');

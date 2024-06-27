@@ -1,3 +1,7 @@
+importScripts('https://unpkg.com/culori@^3.0.0/dist/culori.esm.js');
+
+const { inGamut, formatCss } = culori;
+
 let canvas;
 let canvasSize;
 let ctx;

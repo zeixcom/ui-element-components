@@ -1,9 +1,9 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
-import { define, formatNumber, getStepColor } from '../../../assets/js/utils';
+import { formatNumber, getStepColor } from '../../../assets/js/utils';
 
-define('color-editor', class extends UIElement {
+class ColorEditor extends UIElement {
   static observedAttributes = ['color'];
   attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
@@ -73,4 +73,6 @@ define('color-editor', class extends UIElement {
       this.querySelector('code-block').set('code', code);
     });
   }
-});
+}
+
+ColorEditor.define('color-editor');

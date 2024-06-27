@@ -13,21 +13,8 @@
  */
 const isFunction = fn => typeof fn === 'function';
 
-/**
- * Call a function if it is a function; otherwise return the fallback value
- * 
- * @param {any} fn - variable to check if it is a function
- * @param {Array} [args=[]] - arguments to pass to `fn.call()`; defaults to empty array (called with null `this` without arguments)
- * @param {any} [fallback=fn] - value to return if the supplied function is not a function; defaults to the not-a-function first parameter
- * @returns {any} value returned by the supplied function if it is a function; otherwise returns the fallback value
- */
-const maybeCall = (fn, args = [], fallback = fn) => isFunction(fn) ? fn.call(...args) : fallback;
-
 // hold the currently active effect
-let computing;
-
-// set up an empty WeakMap to hold the watched states mapped to their targets
-const watcher = new WeakMap();
+let active;
 
 /**
  * Define a state and return an object duck-typing Signal.State instances
@@ -38,39 +25,42 @@ const watcher = new WeakMap();
  * @see https://github.com/tc39/proposal-signals/
  */
 const cause = value => {
-  const getPending = (/** @type {import("./types").State<any>} */ state) => {
-    !watcher.has(state) && watcher.set(state, new Set());
-    return watcher.get(state);
+  const sources = new WeakMap();
+  const targets = (/** @type {import("./types").Signal<any>} */ signal) => {
+    !sources.has(signal) && sources.set(signal, new Set());
+    return sources.get(signal);
   };
   const state = {
     get: () => {
-      computing && getPending(state).add(computing);
+      active && targets(state).add(active);
       return value;
     },
     set: (/** @type {any} */ updater) => {
       const old = value;
-      value = maybeCall(updater, [state, old], updater);
-      !Object.is(value, old) && getPending(state).forEach((/** @type {import("./types").Computed<any>} */ computed) => computed.get());
+      value = isFunction(updater) ? updater(old) : updater;
+      if (!Object.is(value, old)) {
+        for (const target of targets(state)) target.get();
+      }
     }
   };
   return state;
 };
 
 /**
- * Define a derived state and return an object duck-typing Signal.Computed instances
+ * Define a derived signal and return an object duck-typing Signal.Computed instances
  * 
  * @since 0.4.0
  * @param {() => any} fn - computation function to be called
- * @returns {import("./types").Computed<any>} state object with `get` method
+ * @returns {import("./types").Computed<any>} signal object with `get` method
  * @see https://github.com/tc39/proposal-signals/
  */
 const derive = fn => {
   const computed = {
     get: () => {
-      const prev = computing;
-      computing = computed;
+      const prev = active;
+      active = computed;
       const value = fn();
-      computing = prev;
+      active = prev;
       return value;
     }
   };
@@ -84,6 +74,7 @@ const derive = fn => {
  * 
  * @class
  * @extends HTMLElement
+ * @type {import("./types").UIElement}
  */
 export default class extends HTMLElement {
 
@@ -129,7 +120,8 @@ export default class extends HTMLElement {
         integer: (/** @type {string} */ v) => parseInt(v, 10),
         number: (/** @type {string} */ v) => parseFloat(v),
       };
-      this.set(key, maybeCall(isFunction(type) ? type : parser[type], [this, value, old], value));
+      const fn = isFunction(type) ? type : parser[type];
+      this.set(key, fn ? fn(value, old) : value);
     }
   }
 
@@ -165,15 +157,13 @@ export default class extends HTMLElement {
    */
   set(key, value, update = true) {
     if (this.#state.has(key)) {
-      update && maybeCall(this.#state.get(key).set, [this.#state.get(key), value])
+      const state = this.#state.get(key);
+      update && isFunction(state.set) && state.set(value);
     } else {
-      this.#state.set(key, isFunction(value) ? derive(value) : cause(value));
-      !Object.prototype.hasOwnProperty.call(this, key) && Object.defineProperty(this, key, {
-        get: () => this.#state.get(key)?.get(),
-        set: (/** @type {any} */ value) => this.set(key, value),
-        configurable: true,
-        enumerable: true,
-      });
+      const state = (typeof value === 'object') && isFunction(value?.get)
+        ? value
+        : isFunction(value) ? derive(value) : cause(value);
+      this.#state.set(key, state);
     }
   }
 
@@ -182,11 +172,27 @@ export default class extends HTMLElement {
    * 
    * @since 0.4.0
    * @param {PropertyKey} key - state to be deleted
-   * @returns {boolean} `true` if the state existed and was deleted; `false` if the state if ignored
+   * @returns {boolean} `true` if the state existed and was deleted; `false` if ignored
    */
   delete(key) {
-    delete this[key];
     return this.#state.delete(key);
+  }
+
+  /**
+   * Pass states to a child element
+   * 
+   * @since 0.5.0
+   * @param {import("./types").UIElement} element - child element to pass the states to
+   * @param {Map<PropertyKey, PropertyKey | (() => any)>} [states] - set of states to be passed
+   * @param {CustomElementRegistry} [registry=customElements] - custom element registry to be used; defaults to `customElements`
+   */
+  pass(element, states, registry = customElements) {
+    (async () => {
+      await registry.whenDefined(element.localName);
+      for (const [key, source] of states) {
+        element.set(key, isFunction(source) ? { get: source } : this.#state.get(source));
+      }
+    })();
   }
 
   /**
@@ -196,7 +202,11 @@ export default class extends HTMLElement {
    * @param {() => (() => void) | void} fn - callback function to be executed when a state changes
    */
   effect(fn) {
-    requestAnimationFrame(() => derive(fn).get());  // wait for the next animation frame to bundle DOM updates
+    // wait for the next animation frame to bundle DOM updates
+    requestAnimationFrame(() => {
+      const cleanup = derive(fn).get();
+      isFunction(cleanup) && cleanup();
+    });
   }
 
 }

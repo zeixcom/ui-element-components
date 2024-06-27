@@ -1,8 +1,7 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define } from '../../../assets/js/utils';
 import { ContextConsumer } from '../../../assets/js/context-controller';
 
-define('login-form', class extends UIElement {
+class LoginForm extends UIElement {
   static observedContexts = ['logged-in'];
 
   connectedCallback() {
@@ -16,7 +15,7 @@ define('login-form', class extends UIElement {
     // event listener for 'submit' event on form
     this.onsubmit = async e => {
       e.preventDefault();
-      await 1000; // TODO do real auth work here instead
+      await new Promise(resolve => setTimeout(resolve, 1000)); // TODO do real auth work here instead
       this.set('logged-in', true);
       const event = new CustomEvent('user-login', { bubbles: true, detail: usernameField.get('value') });
       this.dispatchEvent(event);
@@ -37,13 +36,8 @@ define('login-form', class extends UIElement {
 
     this.effect(() => {
       const loggedIn = this.get('logged-in');
-      if (loggedIn) {
-        form.classList.add('hidden');
-        logoutButton.classList.remove('hidden');
-      } else {
-        form.classList.remove('hidden');
-        logoutButton.classList.add('hidden');
-      }
+      form.classList.toggle('hidden', !loggedIn);
+      logoutButton.classList.toggle('hidden', loggedIn);
     });
   }
 
@@ -51,4 +45,6 @@ define('login-form', class extends UIElement {
     this.contextConsumer.disconnect();
   }
 
-});
+}
+
+LoginForm.define('login-form');

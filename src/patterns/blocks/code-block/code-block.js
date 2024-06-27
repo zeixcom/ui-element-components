@@ -1,8 +1,7 @@
 import UIElement from '../../../assets/js/ui-element';
 import Prism from 'prismjs';
-import { define } from '../../../assets/js/utils';
 
-define('code-block', class extends UIElement {
+class CodeBlock extends UIElement {
   static observedAttributes = ['collapsed'];
   attributeMap = new Map([['collapsed', 'boolean']]);
 
@@ -61,4 +60,6 @@ define('code-block', class extends UIElement {
     
   }
 
-});
+}
+
+CodeBlock.define('code-block');

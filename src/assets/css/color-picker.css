@@ -5,5 +5,5 @@
 @import '../../components/colors/color-details/color-details.css';
 @import '../../components/inputs/input-field/input-field.css';
 @import '../../patterns/blocks/color-editor/color-editor.css';
-@import '../../patterns/popups/modal-dialog/modal-dialog.css';
+@import '../../patterns/overlays/modal-dialog/modal-dialog.css';
 @import '../../patterns/apps/color-picker/color-picker.css';

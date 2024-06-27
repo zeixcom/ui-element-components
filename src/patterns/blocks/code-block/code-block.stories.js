@@ -33,23 +33,17 @@ export default {
     code: `import UIElement from '../../../assets/js/ui-element';
 import Prism from 'prismjs';
 
-define('code-block', class extends UIElement {
+class CodeBlock extends UIElement {
   static observedAttributes = ['collapsed'];
-
-  attributeMapping = { collapsed: 'boolean' };
+  attributeMap = new Map([['collapsed', 'boolean']]);
 
   connectedCallback() {
     const language = this.getAttribute('language') || 'html';
-    const content = this.querySelector('code');
     const copyButton = this.querySelector('.copy');
     const overlay = this.querySelector('.overlay');
-    !this.has('collapsed') && this.set('collapsed', false);
-
-    // apply syntax highlighting while preserving Lit's marker nodes in Storybook
-    const code = document.createElement('code');
-    code.innerHTML = Prism.highlight(content.textContent.trim(), Prism.languages[language], language);
-    Array.from(content.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
-    Array.from(code.childNodes).forEach(node => content.appendChild(node));
+    const content = this.querySelector('code');
+    this.set('code', content.textContent.trim(), false);
+    this.set('collapsed', false, false);
 
     // copy to clipboard
     copyButton.onclick = async () => {
@@ -80,19 +74,27 @@ define('code-block', class extends UIElement {
     };
 
     // expand
-    overlay.onclick = () => {
-      this.set('collapsed', false);
-    };
+    overlay.onclick = () => this.set('collapsed', false);
+
+    // update code
+    this.effect(() => {
+      // apply syntax highlighting while preserving Lit's marker nodes in Storybook
+      const code = document.createElement('code');
+      code.innerHTML = Prism.highlight(this.get('code'), Prism.languages[language], language);
+      Array.from(content.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
+      Array.from(code.childNodes).forEach(node => content.appendChild(node));
+    });
 
     // update collapsed attribute
     this.effect(() => {
-      const collapsed = this.get('collapsed');
-      collapsed ? this.setAttribute('collapsed', '') : this.removeAttribute('collapsed');
+      this.get('collapsed')? this.setAttribute('collapsed', '') : this.removeAttribute('collapsed');
     });
     
   }
 
-});`,
+}
+
+CodeBlock.define('code-block');`,
     file: 'code-block.js',
     collapsed: false,
     copyLabel: 'Copy',
@@ -130,6 +132,15 @@ export const Collapsed = {
     text-transform: uppercase;
   }
 
+  & pre {
+    color: var(--color-gray-10);
+    background: var(--color-gray-90);
+    padding: var(--space-s);
+    margin: var(--space-xs) 0;
+    overflow: auto;
+    border-radius: var(--space-xs);
+  }
+
   .copy {
     position: absolute;
     right: var(--space-s);
@@ -145,7 +156,7 @@ export const Collapsed = {
     overflow: hidden;
 
     &::after {
-      content: " ";
+      content: '';
       display: block;
       position: absolute;
       bottom: 0;

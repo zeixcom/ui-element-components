@@ -1,13 +1,12 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define } from '../../../assets/js/utils';
 
-define('scroll-area', class extends UIElement {
+class ScrollArea extends UIElement {
 
   connectedCallback() {
     this.set('visible', false);
     this.set('overflow', false);
     let scrolling;
-    const threshold = 0.999;
+    const threshold = 0.999; // ignore rounding errors because of fraction pixels
     const orientation = this.getAttribute('orientation');
     const overflowClass = 'overflow';
     const overflowStartClass = 'overflow-start';
@@ -19,7 +18,7 @@ define('scroll-area', class extends UIElement {
         this.set('visible', false);
       } else {
         this.set('visible', true);
-        this.set('overflow', entry.intersectionRatio < threshold); // ignore rounding errors because of fraction pixels
+        this.set('overflow', entry.intersectionRatio < threshold);
       }
     }, { root: this, threshold: [0, threshold] }).observe(content);
 
@@ -37,8 +36,8 @@ define('scroll-area', class extends UIElement {
       scrolling && cancelAnimationFrame(scrolling);
       scrolling = requestAnimationFrame(() => {
         scrolling = null;
-        (overflowingAtStart(e.target))? this.classList.add(overflowStartClass) : this.classList.remove(overflowStartClass);
-        (overflowingAtEnd(e.target))? this.classList.add(overflowEndClass) : this.classList.remove(overflowEndClass);
+        this.classList.toggle(overflowStartClass, overflowingAtStart(e.target));
+        this.classList.toggle(overflowEndClass, overflowingAtEnd(e.target));
       });
     };
 
@@ -57,4 +56,6 @@ define('scroll-area', class extends UIElement {
   disconnectedCallback() {
     this.intersectionObserver && this.intersectionObserver.disconnect();
   }
-});
+}
+
+ScrollArea.define('scroll-area');

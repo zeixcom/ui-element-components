@@ -1,3 +1,10 @@
+/**
+ * @name ContextController
+ * @version 0.5.0
+ */
+
+/* === Internal variables and functions to the module === */
+
 const CONTEXT_REQUEST = 'context-request';
 
 /**
@@ -8,22 +15,28 @@ const CONTEXT_REQUEST = 'context-request';
  */
 const isFunction = fn => typeof fn === 'function';
 
+/* === Exported context event class === */
+
 /**
  * Class for context-request events
  * 
  * taken from https://github.com/blikblum/wc-context/blob/master/core.js
  * 
- * @copyright Luiz Américo Pereira Câmara aka blikblum
- * @license MIT
+ * (c) Luiz Américo Pereira Câmara aka blikblum, MIT License
  * 
  * @class ContextRequestEvent
  * @extends {Event}
  * 
- * @property {string} context - context key
- * @property {function} callback - callback function
+ * @property {PropertyKey} context - context key
+ * @property {import("../types").ContextRequestEventCallback} callback - callback function for value getter and unsubscribe function
  * @property {boolean} [subscribe=false] - whether to subscribe to context changes
  */
 export class ContextRequestEvent extends Event {
+  /**
+   * @param {PropertyKey} context - context key
+   * @param {import("../types").ContextRequestEventCallback} callback - callback for value getter and unsubscribe function
+   * @param {boolean} [subscribe=false] - whether to subscribe to context changes
+   */
   constructor(context, callback, subscribe = false) {
     super(CONTEXT_REQUEST, { bubbles: true, cancelable: true, composed: true });
     this.context = context;
@@ -32,26 +45,37 @@ export class ContextRequestEvent extends Event {
   }
 }
 
+/* === Exported context provider class === */
+
+/**
+ * Class for Context Providers
+ * 
+ * @since 0.3.0
+ */
 export class ContextProvider {
   #consumedContexts = new Map();
 
   /**
    * Connect a UIElement instance to provide context
    * 
-   * @param {import("./types").UIElement} el - UIElement instance to provide context
+   * @param {import("../types").UIElement} element - UIElement instance to provide context
    */
-  constructor(el) {
-    this.host = el;
+  constructor(element) {
+    this.host = element;
+    this.hostPrototype = Object.getPrototypeOf(element);
 
     // add event listeners for context-request
     this.host.addEventListener(CONTEXT_REQUEST, this.#onContextRequest.bind(this));
 
     // set up effects for provided contexts
-    this.host.constructor.providedContexts.forEach(context => {
+    this.hostPrototype.providedContexts?.forEach((/** @type {PropertyKey} */ context) => {
       this.host.effect(() => {
         const value = this.host.get(context);
         if (this.#consumedContexts.has(context)) {
-          this.#consumedContexts.get(context).forEach((callback, target) => callback(
+          this.#consumedContexts.get(context).forEach((
+            /** @type {import("../types").ContextRequestEventCallback} */ callback,
+            /** @type {import("../types").UIElement} */ target
+          ) => callback(
             value,
             () => this.#consumedContexts.get(context).delete(target),
           ));
@@ -77,7 +101,7 @@ export class ContextProvider {
    */
   #onContextRequest(e) {
     const { target, context, callback, subscribe } = e;
-    if (!this.host.constructor.providedContexts?.includes(context) || !isFunction(callback)) return;
+    if (!this.hostPrototype.providedContexts?.includes(context) || !isFunction(callback)) return;
     e.stopPropagation();
     const value = this.host.get(context);
     if (subscribe) {
@@ -91,21 +115,29 @@ export class ContextProvider {
   }
 }
 
+/* === Exported context consumer class === */
+
+/**
+ * Class for Context Consumers
+ * 
+ * @since 0.3.0
+ */
 export class ContextConsumer {
   #registeredContexts = new Map();
 
   /**
    * Connect UIElement instance to consume context
    * 
-   * @param {import("./types").UIElement} el - UIElement instance to consume context
+   * @param {import("../types").UIElement} element - UIElement instance to consume context
    */
-  constructor(el) {
-    this.host = el;
+  constructor(element) {
+    this.host = element;
+    this.hostPrototype = Object.getPrototypeOf(element);
 
     // register observed contexts
     requestAnimationFrame(() => {
-      this.host.constructor.observedContexts.forEach(context => {
-        const callback = (value, unsubscribe) => {
+      this.hostPrototype.observedContexts?.forEach((/** @type {PropertyKey} */ context) => {
+        const callback = (/** @type {import("../types").Signal} */ value, /** @type {() => void} */ unsubscribe) => {
           this.#registeredContexts.set(context, unsubscribe);
           const input = this.host.contextMap?.get(context);
           const [key, fn] = Array.isArray(input) ? input : [context, input];

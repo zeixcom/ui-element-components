@@ -1,8 +1,8 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define, replaceText } from '../../../assets/js/utils';
 import { ContextConsumer } from '../../../assets/js/context-controller';
+import { updateText } from '../../../assets/js/dom-update';
 
-define('hello-world', class extends UIElement {
+class HelloWorld extends UIElement {
   static observedContexts = ['display-name'];
 
   connectedCallback() {
@@ -11,13 +11,12 @@ define('hello-world', class extends UIElement {
     this.set('display-name', unknown);
     this.contextConsumer = new ContextConsumer(this);
 
-    this.effect(() => {
-      const providedName = this.get('display-name');
-      replaceText(name, providedName || unknown);
-    });
+    this.effect(() => updateText(name, this.get('display-name') || unknown));
   }
 
   disconnectedCallback() {
     this.contextConsumer.disconnect();
   }
-});
+}
+
+HelloWorld.define('hello-world');

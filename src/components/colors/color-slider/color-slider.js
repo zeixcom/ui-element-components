@@ -1,12 +1,12 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
-import { define, formatNumber } from '../../../assets/js/utils';
+import { formatNumber } from '../../../assets/js/utils';
 import VisibilityObserver from '../../../assets/js/visibility-observer';
 import RedrawObserver from '../../../assets/js/redraw-observer';
 import dragHandler from '../../../assets/js/drag-handler';
 
-define('color-slider', class extends UIElement {
+class ColorSlider extends UIElement {
   static observedAttributes = ['color'];
   attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
@@ -156,4 +156,6 @@ define('color-slider', class extends UIElement {
     this.redrawObserver.disconnect();
   }
 
-});
+}
+
+ColorSlider.define('color-slider');

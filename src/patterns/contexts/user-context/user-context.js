@@ -1,8 +1,7 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define } from '../../../assets/js/utils';
 import { ContextProvider } from '../../../assets/js/context-controller';
 
-define('user-context', class extends UIElement {
+class UserContext extends UIElement {
   static providedContexts = ['logged-in', 'display-name'];
 
   connectedCallback() {
@@ -25,4 +24,6 @@ define('user-context', class extends UIElement {
   disconnectedCallback() {
     this.contextProvider.disconnect();
   }
-});
+}
+
+UserContext.define('user-context');

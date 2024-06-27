@@ -1,4 +1,4 @@
-import { expect, fireEvent, userEvent, within } from '@storybook/test';
+import { expect, fireEvent, userEvent, waitFor, within } from '@storybook/test';
 import InputField from './input-field.html';
 
 export default {
@@ -604,7 +604,7 @@ export const ServerValidation = {
     id: 'server-validation',
     validate: '/input-field/validate.html',
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole('textbox');
 
@@ -615,8 +615,10 @@ export const ServerValidation = {
     await step('Trigger server-side validation', async () => {
       await userEvent.type(input, 'avatar2024');
       await userEvent.tab();
-      await new Promise(requestAnimationFrame);
       await expect(input).toHaveValue('avatar2024');
+      await new Promise(requestAnimationFrame);
+      await fetch(`${args.validate}?username=avatar2024`);
+      await new Promise(requestAnimationFrame);
       await expect(input).toBeInvalid();
       await expect(input).toHaveAccessibleErrorMessage('Error from server-side validation: Username already taken');
     });

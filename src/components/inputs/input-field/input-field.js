@@ -1,10 +1,10 @@
 import UIElement from '../../../assets/js/ui-element';
-import { replaceText } from '../../../assets/js/utils';
+import { updateText } from '../../../assets/js/dom-update';
 
 // check if value is a number
 const isNumber = num => typeof num === 'number';
 
-(class extends UIElement {
+class InputField extends UIElement {
   static observedAttributes = ['value', 'description'];
   attributeMap = new Map([['value', v => this.isNumber ? this.#parseNumber(v) : v]]);
 
@@ -12,86 +12,46 @@ const isNumber = num => typeof num === 'number';
     this.input = this.querySelector('input');
     this.isNumber = this.input && this.input.type === 'number';
     this.isInteger = this.hasAttribute('integer');
-    const [error, description, clearbutton] = ['error', 'description', 'clear'].map(className => this.querySelector(`.${className}`));
-    const remainingCount = this.input.maxLength && description?.dataset.remaining;
 
     // set default states
     this.set('value', this.isNumber ? this.input.valueAsNumber : this.input.value, false);
-    this.set('error', error.textContent, false);
-    this.set('empty', this.input.value.length === 0);
-    description && this.set('description', description.textContent, false);
+    this.set('length', this.input.value.length);
+    this.set('empty', this.get('length') === 0);
 
-    // setup spin button
+    // setup sub elements
+    this.#setupErrorMessage();
+    this.#setupDescription();
     this.#setupSpinButton();
+    this.#setupClearButton();
 
     // handle input changes
     this.input.onchange = () => this.#triggerChange(this.isNumber ? this.input.valueAsNumber : this.input.value);
-    this.input.oninput = () => {
-      this.empty = (this.input.value.length === 0);
-      remainingCount && (this.description = description.dataset.remaining.replace('${x}', this.input.maxLength - String(this.input.value).length));
-    };
-
-    // handle clear button click
-    clearbutton && (clearbutton.onclick = () => {
-      this.clear();
-      this.input.focus();
-    });
+    this.input.oninput = () => this.set('length', this.input.value.length);
 
     // update value
-    this.effect(() => {
-      const value = this.value;
+    this.effect(async () => {
+      const value = this.get('value');
       const validate = this.getAttribute('validate');
       if (value && validate) {
         // validate input value against a server-side endpoint
-        fetch(`${validate}?name=${this.input.name}value=${this.input.value}`)
-          .then(response => response.text())
-          .then(text => {
+        await fetch(`${validate}?name=${this.input.name}value=${this.input.value}`)
+          .then(async response => {
+            const text = await response.text();
             this.input.setCustomValidity(text);
-            this.error = text;
+            this.set('error', text);
           })
-          .catch(error => console.error(error));
+          .catch(err => console.error(err));
       }
       if (this.isNumber && !isNumber(value)) { // ensure value is a number if it is not already a number
-        return (this.value = this.#parseNumber(value)); // effect will be called again with numeric value
+        return this.set('value', this.#parseNumber(value)); // effect will be called again with numeric value
       }
       if (this.isNumber && !Number.isNaN(value)) { // change value only if it is a valid number
         this.input.value = value;
       }
     });
 
-    // update error message and aria-invalid attribute
-    this.effect(() => {
-      const errorMsg = this.error;
-      const invalidAttr = 'aria-invalid';
-      const erorAttr = 'aria-errormessage';
-      replaceText(error, errorMsg);
-      if (errorMsg) {
-        this.input.setAttribute(invalidAttr, 'true');
-        this.input.setAttribute(erorAttr, error.getAttribute('id'));
-      } else {
-        this.input.setAttribute(invalidAttr, 'false');
-        this.input.removeAttribute(erorAttr);
-      }
-    });
-
-    // update description message and aria-describedby attribute
-    this.effect(() => {
-      if (this.has('description')) {
-        const descMsg = this.description;
-        const descAttr = 'aria-describedby';
-        replaceText(description, descMsg);
-        descMsg
-          ? this.input.setAttribute(descAttr, description.getAttribute('id'))
-          : this.input.removeAttribute(descAttr);
-      }
-    });
-
-    // hide clear button if value is empty
-    this.effect(() => {
-      clearbutton && (this.empty
-        ? clearbutton.classList.add('hidden')
-        : clearbutton.classList.remove('hidden'));
-    });
+    // update empty state
+    this.effect(() => this.set('empty', this.get('length') === 0));
 
   }
 
@@ -100,8 +60,8 @@ const isNumber = num => typeof num === 'number';
    */
   clear() {
     this.input.value = '';
-    this.value = '';
-    this.empty = true;
+    this.set('value', '');
+    this.set('length', 0);
   }
 
   /**
@@ -122,13 +82,66 @@ const isNumber = num => typeof num === 'number';
    * @param {number|string|function} value - value to set
    */
   #triggerChange = value => {
-    this.value = value;
-    const newValue = (typeof value === 'function') ? this.value : value;
+    this.set('value', value);
+    const newValue = (typeof value === 'function') ? this.get('value') : value;
     (this.input.value !== String(newValue)) && (value = newValue);
-    this.error = this.input.validationMessage;
+    this.set('error', this.input.validationMessage);
     const event = new CustomEvent('value-change', { detail: newValue, bubbles: true });
     this.dispatchEvent(event);
   };
+
+  /**
+   * Setup error message
+   * 
+   * @private
+   */
+  #setupErrorMessage() {
+    const error = this.querySelector('.error');
+    this.set('error', error.textContent, false);
+
+    // update error message and aria-invalid attribute
+    this.effect(() => {
+      const errorMsg = this.get('error');
+      const invalidAttr = 'aria-invalid';
+      const errorAttr = 'aria-errormessage';
+      updateText(error, errorMsg);
+      if (errorMsg) {
+        this.input.setAttribute(invalidAttr, 'true');
+        this.input.setAttribute(errorAttr, error.getAttribute('id'));
+      } else {
+        this.input.setAttribute(invalidAttr, 'false');
+        this.input.removeAttribute(errorAttr);
+      }
+    });
+  }
+
+  /**
+   * Setup description
+   * 
+   * @private
+   */
+  #setupDescription() {
+    const description = this.querySelector('.description');
+    if (!description) return;
+
+    this.set('description', description.textContent, false);
+    const remainingMessage = this.input.maxLength && description.dataset.remaining;
+
+    // update description message and aria-describedby attribute
+    this.effect(() => {
+      const descMsg = this.get('description');
+      const descAttr = 'aria-describedby';
+      updateText(description, descMsg);
+      descMsg
+        ? this.input.setAttribute(descAttr, description.getAttribute('id'))
+        : this.input.removeAttribute(descAttr);
+    });
+
+    // update remaing count message
+    remainingMessage && this.effect(() => {
+      this.set('description', remainingMessage.replace('${x}', this.input.maxLength - this.get('length')));
+    });
+  }
 
   /**
    * Setup spin button
@@ -185,10 +198,34 @@ const isNumber = num => typeof num === 'number';
 
     // update spin button disabled state
     this.effect(() => {
-      const value = this.value;
+      const value = this.get('value');
       step && decrement && (decrement.disabled = (isNumber(min) && (value - step < min)));
       step && increment && (increment.disabled = (isNumber(max) && (value + step > max)));
     });
   }
 
-}).define('input-field');
+  /**
+   * Setup clear button
+   * 
+   * @private
+   */
+  #setupClearButton() {
+    const clearbutton = this.querySelector(`.clear`);
+
+    // handle clear button click
+    clearbutton && (clearbutton.onclick = () => {
+      this.clear();
+      this.input.focus();
+    });
+
+    // hide clear button if value is empty
+    this.effect(() => {
+      clearbutton && (this.get('empty')
+        ? clearbutton.classList.add('hidden')
+        : clearbutton.classList.remove('hidden'));
+    });
+  }
+
+}
+
+InputField.define('input-field');

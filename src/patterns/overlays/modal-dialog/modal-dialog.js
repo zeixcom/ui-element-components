@@ -1,7 +1,6 @@
 import UIElement from '../../../assets/js/ui-element';
-import { define } from '../../../assets/js/utils';
 
-define('modal-dialog', class extends UIElement {
+class ModalDialog extends UIElement {
   scrollLockClass = 'scroll-lock';
   scrollTop = 0;
 
@@ -34,4 +33,6 @@ define('modal-dialog', class extends UIElement {
     document.body.style.top = null;
     this.dialog.close();
   }
-});
+}
+
+ModalDialog.define('modal-dialog');

@@ -1,9 +1,9 @@
 import UIElement from '../../../assets/js/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
-import { define, replaceText } from '../../../assets/js/utils';
+import { updateText } from '../../../assets/js/dom-update';
 
-define('color-picker', class extends UIElement {
+class ColorPicker extends UIElement {
   static observedAttributes = ['color', 'name'];
   attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
 
@@ -60,7 +60,7 @@ define('color-picker', class extends UIElement {
 
       scale.set('base', base);
       editor.set('base', base);
-      color && replaceText(color, formatHex(base));
+      color && updateText(color, formatHex(base));
     });
 
     this.effect(() => {
@@ -68,7 +68,9 @@ define('color-picker', class extends UIElement {
 
       scale.set('name', label);
       editor.set('name', label);
-      name && replaceText(name, label);
+      name && updateText(name, label);
     });
   }
-});
+}
+
+ColorPicker.define('color-picker');
