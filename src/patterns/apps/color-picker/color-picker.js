@@ -1,11 +1,11 @@
-import UIElement from '../../../assets/js/ui-element';
+import UIElement from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
-import { updateText } from '../../../assets/js/dom-update';
+import { setText } from '../../../assets/js/dom-utils';
 
 class ColorPicker extends UIElement {
   static observedAttributes = ['color', 'name'];
-  attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
+  attributeMap = { color: ['base', v => converter('oklch')(v)] };
 
   /* constructor() {
     super();
@@ -60,7 +60,7 @@ class ColorPicker extends UIElement {
 
       scale.set('base', base);
       editor.set('base', base);
-      color && updateText(color, formatHex(base));
+      color && setText(color, formatHex(base));
     });
 
     this.effect(() => {
@@ -68,7 +68,7 @@ class ColorPicker extends UIElement {
 
       scale.set('name', label);
       editor.set('name', label);
-      name && updateText(name, label);
+      name && setText(name, label);
     });
   }
 }

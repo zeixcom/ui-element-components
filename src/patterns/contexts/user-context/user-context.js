@@ -1,4 +1,4 @@
-import UIElement from '../../../assets/js/ui-element';
+import UIElement from '@efflore/ui-element';
 import { ContextProvider } from '../../../assets/js/context-controller';
 
 class UserContext extends UIElement {

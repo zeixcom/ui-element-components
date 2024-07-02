@@ -1,4 +1,4 @@
-import UIElement from '../../../assets/js/ui-element.js';
+import UIElement from '@efflore/ui-element';
 
 class FetchHTML extends UIElement {
   static observedAttributes = ['src'];

@@ -1,6 +1,6 @@
-import UIElement from '../../../assets/js/ui-element';
+import UIElement from '@efflore/ui-element';
 import { ContextConsumer } from '../../../assets/js/context-controller';
-import { updateText } from '../../../assets/js/dom-update';
+import { setText } from '../../../assets/js/dom-utils';
 
 class HelloWorld extends UIElement {
   static observedContexts = ['display-name'];
@@ -11,7 +11,7 @@ class HelloWorld extends UIElement {
     this.set('display-name', unknown);
     this.contextConsumer = new ContextConsumer(this);
 
-    this.effect(() => updateText(name, this.get('display-name') || unknown));
+    this.effect(() => setText(name, this.get('display-name') || unknown));
   }
 
   disconnectedCallback() {

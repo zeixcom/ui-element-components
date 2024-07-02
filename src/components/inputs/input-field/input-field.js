@@ -1,12 +1,12 @@
-import UIElement from '../../../assets/js/ui-element';
-import { updateText } from '../../../assets/js/dom-update';
+import UIElement from '@efflore/ui-element';
+import { setText } from '../../../assets/js/dom-utils';
 
 // check if value is a number
 const isNumber = num => typeof num === 'number';
 
 class InputField extends UIElement {
   static observedAttributes = ['value', 'description'];
-  attributeMap = new Map([['value', v => this.isNumber ? this.#parseNumber(v) : v]]);
+  attributeMap = { value: v => this.isNumber ? this.#parseNumber(v) : v };
 
   connectedCallback() {
     this.input = this.querySelector('input');
@@ -104,7 +104,7 @@ class InputField extends UIElement {
       const errorMsg = this.get('error');
       const invalidAttr = 'aria-invalid';
       const errorAttr = 'aria-errormessage';
-      updateText(error, errorMsg);
+      setText(error, errorMsg);
       if (errorMsg) {
         this.input.setAttribute(invalidAttr, 'true');
         this.input.setAttribute(errorAttr, error.getAttribute('id'));
@@ -131,7 +131,7 @@ class InputField extends UIElement {
     this.effect(() => {
       const descMsg = this.get('description');
       const descAttr = 'aria-describedby';
-      updateText(description, descMsg);
+      setText(description, descMsg);
       descMsg
         ? this.input.setAttribute(descAttr, description.getAttribute('id'))
         : this.input.removeAttribute(descAttr);

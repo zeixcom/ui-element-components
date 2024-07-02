@@ -1,4 +1,4 @@
-import UIElement from '../../../assets/js/ui-element';
+import UIElement from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { formatNumber } from '../../../assets/js/utils';
@@ -8,7 +8,7 @@ import dragHandler from '../../../assets/js/drag-handler';
 
 class ColorSlider extends UIElement {
   static observedAttributes = ['color'];
-  attributeMap = new Map([['color', ['base', v => converter('oklch')(v)]]]);
+  attributeMap = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
     let base;

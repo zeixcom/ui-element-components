@@ -1,9 +1,9 @@
-import UIElement from '../../../assets/js/ui-element';
+import UIElement from '@efflore/ui-element';
 import Prism from 'prismjs';
 
 class CodeBlock extends UIElement {
   static observedAttributes = ['collapsed'];
-  attributeMap = new Map([['collapsed', 'boolean']]);
+  attributeMap = { collapsed: 'boolean' };
 
   connectedCallback() {
     const language = this.getAttribute('language') || 'html';

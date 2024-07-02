@@ -1,18 +1,4 @@
 /**
- * Define a custom element class and register it with the browser
- * 
- * @param {string} tag 
- * @param {HTMLElement} el 
- */
-export const define = (tag, el) => {
-  try {
-    customElements.get(tag) || customElements.define(tag, el);
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-/**
  * Format a number with a given number of maximum fraction digits
  * 
  * @param {number} number input number

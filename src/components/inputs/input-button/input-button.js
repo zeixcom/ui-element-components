@@ -1,9 +1,9 @@
-import UIElement from '../../../assets/js/ui-element';
-import { updateText } from '../../../assets/js/dom-update';
+import UIElement from '@efflore/ui-element';
+import { setText } from '../../../assets/js/dom-utils';
 
 class InputButton extends UIElement {
   static observedAttributes = ['disabled'];
-  attributeMap = new Map([['disabled', 'boolean']]);
+  attributeMap = {disabled: 'boolean' };
 
   connectedCallback() {
     const button = this.querySelector('button');
@@ -21,7 +21,7 @@ class InputButton extends UIElement {
     });
 
     // effect to update the label
-    this.effect(() => updateText(button, this.get('label')));
+    this.effect(() => setText(button, this.get('label')));
 
     // effect to update type and size via className
     this.effect(() => {

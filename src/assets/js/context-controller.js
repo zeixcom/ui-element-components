@@ -75,10 +75,7 @@ export class ContextProvider {
           this.#consumedContexts.get(context).forEach((
             /** @type {import("../types").ContextRequestEventCallback} */ callback,
             /** @type {import("../types").UIElement} */ target
-          ) => callback(
-            value,
-            () => this.#consumedContexts.get(context).delete(target),
-          ));
+          ) => callback(value, () => this.#consumedContexts.get(context).delete(target)));
         }
       });
     });
@@ -137,9 +134,9 @@ export class ContextConsumer {
     // register observed contexts
     requestAnimationFrame(() => {
       this.hostPrototype.observedContexts?.forEach((/** @type {PropertyKey} */ context) => {
-        const callback = (/** @type {import("../types").Signal} */ value, /** @type {() => void} */ unsubscribe) => {
+        const callback = (/** @type {{ (): any; set?: (value: any) => any; }} */ value, /** @type {() => void} */ unsubscribe) => {
           this.#registeredContexts.set(context, unsubscribe);
-          const input = this.host.contextMap?.get(context);
+          const input = this.host.contextMap[context];
           const [key, fn] = Array.isArray(input) ? input : [context, input];
           this.host.set(key, isFunction(fn) ? fn(value) : value);
         };

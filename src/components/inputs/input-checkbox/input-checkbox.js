@@ -1,8 +1,8 @@
-import UIElement from '../../../assets/js/ui-element';
+import UIElement from '@efflore/ui-element';
 
 class InputCheckbox extends UIElement {
   static observedAttributes = ['checked'];
-  attributeMap = new Map([['checked', 'boolean']]);
+  attributeMap = { checked: 'boolean' };
 
   connectedCallback() {
     this.set('checked', this.querySelector('input').checked, false);

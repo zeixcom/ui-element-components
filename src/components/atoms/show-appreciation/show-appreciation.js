@@ -1,5 +1,5 @@
-import UIElement from '../../../assets/js/ui-element';
-import { updateText } from '../../../assets/js/dom-update';
+import UIElement from '@efflore/ui-element';
+import { setText } from '../../../assets/js/dom-utils';
 
 class ShowAppreciation extends UIElement {
   #count = Symbol();
@@ -10,7 +10,7 @@ class ShowAppreciation extends UIElement {
     
     this.querySelector('button').onclick = () => this.set(this.#count, v => ++v);
 
-    this.effect(() => updateText(count, this.get(this.#count)));
+    this.effect(() => setText(count, this.get(this.#count)));
   }
 
   get count() {
