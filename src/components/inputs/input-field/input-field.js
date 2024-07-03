@@ -1,5 +1,5 @@
 import UIElement from '@efflore/ui-element';
-import { setText } from '../../../assets/js/dom-utils';
+import { setText, setProp, setAttr, setClass } from '../../../assets/js/dom-utils';
 
 // check if value is a number
 const isNumber = num => typeof num === 'number';
@@ -16,7 +16,9 @@ class InputField extends UIElement {
     // set default states
     this.set('value', this.isNumber ? this.input.valueAsNumber : this.input.value, false);
     this.set('length', this.input.value.length);
-    this.set('empty', this.get('length') === 0);
+    
+    // derived states
+    this.set('empty', () => this.get('length') === 0);
 
     // setup sub elements
     this.#setupErrorMessage();
@@ -49,10 +51,6 @@ class InputField extends UIElement {
         this.input.value = value;
       }
     });
-
-    // update empty state
-    this.effect(() => this.set('empty', this.get('length') === 0));
-
   }
 
   /**
@@ -100,18 +98,11 @@ class InputField extends UIElement {
     this.set('error', error.textContent, false);
 
     // update error message and aria-invalid attribute
-    this.effect(() => {
+    this.effect(queue => {
       const errorMsg = this.get('error');
-      const invalidAttr = 'aria-invalid';
-      const errorAttr = 'aria-errormessage';
-      setText(error, errorMsg);
-      if (errorMsg) {
-        this.input.setAttribute(invalidAttr, 'true');
-        this.input.setAttribute(errorAttr, error.getAttribute('id'));
-      } else {
-        this.input.setAttribute(invalidAttr, 'false');
-        this.input.removeAttribute(errorAttr);
-      }
+      queue(error, setText).add([errorMsg]);
+      queue(this.input, setAttr).add(['aria-invalid', errorMsg ? 'true' : 'false']);
+      queue(this.input, setAttr).add(['aria-errormessage', errorMsg ? error.getAttribute('id') : undefined]);
     });
   }
 
@@ -122,24 +113,26 @@ class InputField extends UIElement {
    */
   #setupDescription() {
     const description = this.querySelector('.description');
-    if (!description) return;
+    if (!description) return; // no description, so skip
 
-    this.set('description', description.textContent, false);
-    const remainingMessage = this.input.maxLength && description.dataset.remaining;
+    // set default description message
+    const defaultDescription = description.textContent;
+    this.set('description', defaultDescription, false);
 
     // update description message and aria-describedby attribute
-    this.effect(() => {
-      const descMsg = this.get('description');
-      const descAttr = 'aria-describedby';
-      setText(description, descMsg);
-      descMsg
-        ? this.input.setAttribute(descAttr, description.getAttribute('id'))
-        : this.input.removeAttribute(descAttr);
+    this.effect(queue => {
+      const descMsg = this.get('description')
+      queue(description, setText).add([descMsg]);
+      queue(this.input, setAttr).add(['aria-describedby', descMsg ? description.getAttribute('id') : undefined]);
     });
 
     // update remaing count message
+    const remainingMessage = this.input.maxLength && description.dataset.remaining;
     remainingMessage && this.effect(() => {
-      this.set('description', remainingMessage.replace('${x}', this.input.maxLength - this.get('length')));
+      const length = this.get('length');
+      this.set('description', length > 0
+        ? remainingMessage.replace('${x}', this.input.maxLength - length)
+        : defaultDescription);
     });
   }
 
@@ -150,7 +143,7 @@ class InputField extends UIElement {
    */
   #setupSpinButton() {
     const [spinbutton, decrement, increment] = ['spinbutton', 'decrement', 'increment'].map(className => this.querySelector(`.${className}`));
-    if (!this.isNumber || !spinbutton) return;
+    if (!this.isNumber || !spinbutton) return; // no spin button, so skip
 
     const getNumber = attr => {
       const num = this.#parseNumber(this.input[attr]);
@@ -197,10 +190,10 @@ class InputField extends UIElement {
     }
 
     // update spin button disabled state
-    this.effect(() => {
+    step && this.effect(queue => {
       const value = this.get('value');
-      step && decrement && (decrement.disabled = (isNumber(min) && (value - step < min)));
-      step && increment && (increment.disabled = (isNumber(max) && (value + step > max)));
+      queue(decrement, setProp).add(['disabled', isNumber(min) && (value - step < min)]);
+      queue(increment, setProp).add(['disabled', isNumber(max) && (value + step > max)]);
     });
   }
 
@@ -211,19 +204,16 @@ class InputField extends UIElement {
    */
   #setupClearButton() {
     const clearbutton = this.querySelector(`.clear`);
+    if (!clearbutton) return; // no clear button, so skip
 
     // handle clear button click
-    clearbutton && (clearbutton.onclick = () => {
+    clearbutton.onclick = () => {
       this.clear();
       this.input.focus();
-    });
+    };
 
     // hide clear button if value is empty
-    this.effect(() => {
-      clearbutton && (this.get('empty')
-        ? clearbutton.classList.add('hidden')
-        : clearbutton.classList.remove('hidden'));
-    });
+    this.effect(queue => queue(clearbutton, setClass).add(['hidden', this.get('empty')]));
   }
 
 }
