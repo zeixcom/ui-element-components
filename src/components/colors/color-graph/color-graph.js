@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { formatNumber, getStepColor } from '../../../assets/js/utils';
@@ -159,14 +159,14 @@ class ColorGraph extends UIElement {
     }
 
     // reclaculate if base color changes
-    this.effect(() => {
+    effect(() => {
       base = this.get('base');
       repositionScale(base);
       this.get('visible') && (hue !== base.h) && this.set('redraw', true);
     });
 
     // redraw canvas after hue change or resize
-    this.effect(() => {
+    effect(() => {
       this.get('redraw') && redrawCanvas(base.h);
     });
   }

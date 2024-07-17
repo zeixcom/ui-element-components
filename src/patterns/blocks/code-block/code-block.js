@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect  } from '@efflore/ui-element';
 import Prism from 'prismjs';
 
 class CodeBlock extends UIElement {
@@ -45,7 +45,7 @@ class CodeBlock extends UIElement {
     overlay.onclick = () => this.set('collapsed', false);
 
     // update code
-    this.effect(() => {
+    effect(() => {
       // apply syntax highlighting while preserving Lit's marker nodes in Storybook
       const code = document.createElement('code');
       code.innerHTML = Prism.highlight(this.get('code'), Prism.languages[language], language);
@@ -54,7 +54,7 @@ class CodeBlock extends UIElement {
     });
 
     // update collapsed attribute
-    this.effect(() => {
+    effect(() => {
       this.get('collapsed')? this.setAttribute('collapsed', '') : this.removeAttribute('collapsed');
     });
     

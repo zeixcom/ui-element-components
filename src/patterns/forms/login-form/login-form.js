@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import { ContextConsumer } from '../../../assets/js/context-controller';
 
 class LoginForm extends UIElement {
@@ -30,11 +30,11 @@ class LoginForm extends UIElement {
     };
 
     // derive disabled state of submit button from whether the input fields are empty
-    this.effect(() => {
+    effect(() => {
       this.querySelector('.login').set('disabled', usernameField.get('empty') || passwordField.get('empty'));
     });
 
-    this.effect(() => {
+    effect(() => {
       const loggedIn = this.get('logged-in');
       form.classList.toggle('hidden', !loggedIn);
       logoutButton.classList.toggle('hidden', loggedIn);

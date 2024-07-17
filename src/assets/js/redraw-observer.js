@@ -1,3 +1,5 @@
+import { effect } from '@efflore/ui-element';
+
 const VISIBILITY_STATE = 'visible';
 const REDRAW_STATE = 'redraw';
 
@@ -18,7 +20,7 @@ export default class RedrawObserver {
       }
     });
 
-    el.effect(() => {
+    effect(() => {
       if (el.get(VISIBILITY_STATE)) {
         this.observer.observe(el);
         el.set(REDRAW_STATE, true);

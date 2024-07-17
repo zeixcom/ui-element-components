@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import { setText, setProp, setAttr, setClass } from '../../../assets/js/dom-utils';
 
 // check if value is a number
@@ -31,7 +31,7 @@ class InputField extends UIElement {
     this.input.oninput = () => this.set('length', this.input.value.length);
 
     // update value
-    this.effect(async () => {
+    effect(async () => {
       const value = this.get('value');
       const validate = this.getAttribute('validate');
       if (value && validate) {
@@ -98,11 +98,11 @@ class InputField extends UIElement {
     this.set('error', error.textContent, false);
 
     // update error message and aria-invalid attribute
-    this.effect(queue => {
+    effect(enqueue => {
       const errorMsg = this.get('error');
-      queue(error, setText).add([errorMsg]);
-      queue(this.input, setAttr).add(['aria-invalid', errorMsg ? 'true' : 'false']);
-      queue(this.input, setAttr).add(['aria-errormessage', errorMsg ? error.getAttribute('id') : undefined]);
+      enqueue(error, () => error.setText(errorMsg));
+      enqueue(this.input, () => this.input.setAttr('aria-invalid', errorMsg ? 'true' : 'false'));
+      enqueue(this.input, () => this.input.setAttr('aria-errormessage', errorMsg ? error.getAttribute('id') : undefined));
     });
   }
 
@@ -120,15 +120,15 @@ class InputField extends UIElement {
     this.set('description', defaultDescription, false);
 
     // update description message and aria-describedby attribute
-    this.effect(queue => {
+    effect(enqueue => {
       const descMsg = this.get('description')
-      queue(description, setText).add([descMsg]);
-      queue(this.input, setAttr).add(['aria-describedby', descMsg ? description.getAttribute('id') : undefined]);
+      enqueue(description, () => description.setText(descMsg));
+      enqueue(this.input, () => this.input.setAttr('aria-describedby', descMsg ? description.getAttribute('id') : undefined));
     });
 
     // update remaing count message
     const remainingMessage = this.input.maxLength && description.dataset.remaining;
-    remainingMessage && this.effect(() => {
+    remainingMessage && effect(() => {
       const length = this.get('length');
       this.set('description', length > 0
         ? remainingMessage.replace('${x}', this.input.maxLength - length)
@@ -190,10 +190,10 @@ class InputField extends UIElement {
     }
 
     // update spin button disabled state
-    step && this.effect(queue => {
+    step && effect(enqueue => {
       const value = this.get('value');
-      queue(decrement, setProp).add(['disabled', isNumber(min) && (value - step < min)]);
-      queue(increment, setProp).add(['disabled', isNumber(max) && (value + step > max)]);
+      enqueue(decrement, () => decrement.setProp('disabled', isNumber(min) && (value - step < min)));
+      enqueue(increment, () => increment.setProp('disabled', isNumber(max) && (value + step > max)));
     });
   }
 
@@ -213,7 +213,7 @@ class InputField extends UIElement {
     };
 
     // hide clear button if value is empty
-    this.effect(queue => queue(clearbutton, setClass).add(['hidden', this.get('empty')]));
+    effect(enqueue => enqueue(clearbutton, () => clearbutton.setClass('hidden', this.get('empty'))));
   }
 
 }

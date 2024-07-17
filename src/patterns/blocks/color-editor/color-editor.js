@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
 import { formatNumber, getStepColor } from '../../../assets/js/utils';
@@ -33,7 +33,7 @@ class ColorEditor extends UIElement {
     });
 
     // update if name changes
-    this.effect(() => {
+    effect(() => {
       const name = this.get('name');
 
       scale.set('name', name);
@@ -41,7 +41,7 @@ class ColorEditor extends UIElement {
     });
 
     // update if base color changes
-    this.effect(() => {
+    effect(() => {
       const base = this.get('base');
 
       this.querySelector('dynamic-background').set('base', base);
@@ -61,7 +61,7 @@ class ColorEditor extends UIElement {
     });
 
     // update css custom properties if base color or name changes
-    this.effect(() => {
+    effect(() => {
       const base = this.get('base');
       const name = this.get('name').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 

@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import { setText } from '../../../assets/js/dom-utils';
 
 class InputButton extends UIElement {
@@ -14,17 +14,17 @@ class InputButton extends UIElement {
     this.set('size', classList[1] || 'medium', false);
 
     // effect to update the disabled state
-    this.effect(() => {
+    effect(() => {
       const disabled = this.get('disabled');
       button.disabled = disabled;
       disabled ? this.setAttribute('disabled', '') : this.removeAttribute('disabled');
     });
 
     // effect to update the label
-    this.effect(() => setText(button, this.get('label')));
+    effect(() => setText(button, this.get('label')));
 
     // effect to update type and size via className
-    this.effect(() => {
+    effect(() => {
       button.className = `${this.get('variant')} ${this.get('size')}`;
     });
   }

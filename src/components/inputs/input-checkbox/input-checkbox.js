@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 
 class InputCheckbox extends UIElement {
   static observedAttributes = ['checked'];
@@ -11,7 +11,7 @@ class InputCheckbox extends UIElement {
     this.onchange = e => this.set('checked', e.target.checked);
 
     // effect to update the checked attribute on the element
-    this.effect(() => this.get('checked') ? this.setAttribute('checked', '') : this.removeAttribute('checked'));
+    effect(() => this.get('checked') ? this.setAttribute('checked', '') : this.removeAttribute('checked'));
   }
 }
 

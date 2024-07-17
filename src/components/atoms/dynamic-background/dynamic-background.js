@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatCss } from 'culori/fn';
 import { getStepColor } from '../../../assets/js/utils';
@@ -57,7 +57,7 @@ class DynamicBackground extends UIElement {
     }
 
     // update if base color changes
-    this.effect(() => {
+    effect(() => {
       const base = this.get('base');
 
       const [one, two, three, four, five] = this.shadowRoot.querySelectorAll('gradient-bubble');

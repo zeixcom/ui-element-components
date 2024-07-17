@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn';
 import { formatNumber } from '../../../assets/js/utils';
@@ -13,10 +13,10 @@ class ColorDetails extends UIElement {
     this.set('name', name.textContent, false);
 
     // update if name changes
-    this.effect(() => setText(name, this.get('name')));
+    effect(() => setText(name, this.get('name')));
 
     // update if color changes
-    this.effect(() => {
+    effect(() => {
       const color = this.get('color');
       const setTextContent = (selector, value) => this.querySelector(selector).textContent = value;
 

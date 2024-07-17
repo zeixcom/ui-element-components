@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
 import { setText } from '../../../assets/js/dom-utils';
@@ -55,7 +55,7 @@ class ColorPicker extends UIElement {
       this.set('name', e.detail);
     });
 
-    this.effect(() => {
+    effect(() => {
       const base = this.get('base');
 
       scale.set('base', base);
@@ -63,7 +63,7 @@ class ColorPicker extends UIElement {
       color && setText(color, formatHex(base));
     });
 
-    this.effect(() => {
+    effect(() => {
       const label = this.get('name');
 
       scale.set('name', label);

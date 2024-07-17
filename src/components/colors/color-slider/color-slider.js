@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { formatNumber } from '../../../assets/js/utils';
@@ -127,7 +127,7 @@ class ColorSlider extends UIElement {
     }
 
     // redraw slider track if color changes
-    this.effect(() => {
+    effect(() => {
       const shouldUpdateTrack = () => {
         if (!this.get('visible')) return false;
         if (!base) return true;
@@ -146,7 +146,7 @@ class ColorSlider extends UIElement {
     });
 
     // redraw track after color change or resize
-    this.effect(() => {
+    effect(() => {
       this.get('redraw') && redrawTrack(base);
     });
   }

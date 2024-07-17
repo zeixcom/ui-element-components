@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import UIElement, { effect } from '@efflore/ui-element';
 
 class ScrollArea extends UIElement {
 
@@ -41,7 +41,7 @@ class ScrollArea extends UIElement {
       });
     };
 
-    this.effect(() => {
+    effect(() => {
       const overflow = this.get('overflow');
       if (this.get('visible') && overflow) {
         this.addEventListener('scroll', onScroll);
