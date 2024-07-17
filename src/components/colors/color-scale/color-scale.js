@@ -1,18 +1,18 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
 import 'culori/css';
 import { converter, formatCss, formatHex } from 'culori/fn';
 import { getStepColor } from '../../../assets/js/utils';
-import { setText } from '../../../assets/js/dom-utils';
 class ColorScale extends UIElement {
   static observedAttributes = ['color', 'name'];
   attributeMap = { color: ['base', v => converter('oklch')(v)] };
 
   connectedCallback() {
-    const name = this.querySelector('.label strong');
-    this.set('name', name.textContent, false);
+    const ref = uiRef(this);
+    const name = ref.first('.label strong');
+    this.set('name', name.text.get(), false);
 
     // update if name changes
-    effect(() => setText(name, this.get('name')));
+    effect(q => q(name(), text.set(this.get('name'))));
 
     // update if base color changes
     effect(() => {

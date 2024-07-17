@@ -1,5 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
-import { setText } from '../../../assets/js/dom-utils';
+import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
 
 class InputButton extends UIElement {
   static observedAttributes = ['disabled'];
@@ -21,7 +20,7 @@ class InputButton extends UIElement {
     });
 
     // effect to update the label
-    effect(() => setText(button, this.get('label')));
+    effect(q => q(button, uiRef(button).text.set(this.get('label'))));
 
     // effect to update type and size via className
     effect(() => {

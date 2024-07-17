@@ -1,16 +1,15 @@
-import UIElement, { effect } from '@efflore/ui-element';
-import { setText } from '../../../assets/js/dom-utils';
+import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
 
 class ShowAppreciation extends UIElement {
   #count = Symbol();
 
   connectedCallback() {
-    const count = this.querySelector('.count');
-    this.set(this.#count, parseInt(this.getAttribute('count') || count.textContent, 10), false);
+    const count = uiRef(this).first('.count');
+    this.set(this.#count, parseInt(this.getAttribute('count') || count.text.get(), 10), false);
     
     this.querySelector('button').onclick = () => this.set(this.#count, v => ++v);
 
-    effect(() => setText(count, this.get(this.#count)));
+    effect(enqueue => enqueue(count(), count.text.set(this.get(this.#count))));
   }
 
   get count() {

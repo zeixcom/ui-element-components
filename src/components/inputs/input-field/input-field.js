@@ -1,5 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
-import { setText, setProp, setAttr, setClass } from '../../../assets/js/dom-utils';
+import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
 
 // check if value is a number
 const isNumber = num => typeof num === 'number';

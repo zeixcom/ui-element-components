@@ -1,21 +1,14 @@
-import UIElement, { effect } from '@efflore/ui-element';
-import { ContextConsumer } from '../../../assets/js/context-controller';
-import { setText } from '../../../assets/js/dom-utils';
+import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
 
 class HelloWorld extends UIElement {
-  static observedContexts = ['display-name'];
+  static consumedContexts = ['display-name'];
 
   connectedCallback() {
-    const name = this.querySelector('span');
-    const unknown = name.textContent;
+    const name = uiRef(this).first('span');
+    const unknown = name.text.get();
     this.set('display-name', unknown);
-    this.contextConsumer = new ContextConsumer(this);
 
-    effect(() => setText(name, this.get('display-name') || unknown));
-  }
-
-  disconnectedCallback() {
-    this.contextConsumer.disconnect();
+    effect(enqueue => enqueue(name(), name.text.set(this.get('display-name') || unknown)));
   }
 }
 

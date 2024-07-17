@@ -1,7 +1,6 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
-import { setText } from '../../../assets/js/dom-utils';
 
 class ColorPicker extends UIElement {
   static observedAttributes = ['color', 'name'];
@@ -41,11 +40,11 @@ class ColorPicker extends UIElement {
   } */
 
   connectedCallback() {
-    const root = this.shadowRoot || this;
-    const scale = root.querySelector('color-scale');
-    const editor = root.querySelector('color-editor');
-    const name = root.querySelector('modal-dialog > button > .label strong');
-    const color = root.querySelector('modal-dialog > button > .label small');
+    const ref = uiRef(this);
+    const scale = ref.first('color-scale');
+    const editor = ref.first('color-editor');
+    const name = ref.first('modal-dialog > button > .label strong');
+    const color = ref.first('modal-dialog > button > .label small');
 
     this.addEventListener('color-change', e => {
       this.set('base', e.detail);
@@ -55,20 +54,20 @@ class ColorPicker extends UIElement {
       this.set('name', e.detail);
     });
 
-    effect(() => {
+    effect(q => {
       const base = this.get('base');
 
-      scale.set('base', base);
-      editor.set('base', base);
-      color && setText(color, formatHex(base));
+      scale().set('base', base);
+      editor().set('base', base);
+      color && q(color(), color.text.set(formatHex(base)));
     });
 
     effect(() => {
       const label = this.get('name');
 
-      scale.set('name', label);
-      editor.set('name', label);
-      name && setText(name, label);
+      scale().set('name', label);
+      editor().set('name', label);
+      name && q(name(), name.text.set(label));
     });
   }
 }
