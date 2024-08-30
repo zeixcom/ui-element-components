@@ -1,20 +1,17 @@
-import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
+import { UIElement, on, setText } from '@efflore/ui-element'
 
 class ShowAppreciation extends UIElement {
-  #count = Symbol();
+  #count = Symbol()
 
   connectedCallback() {
-    const count = uiRef(this).first('.count');
-    this.set(this.#count, parseInt(this.getAttribute('count') || count.text.get(), 10), false);
-    
-    this.querySelector('button').onclick = () => this.set(this.#count, v => ++v);
-
-    effect(enqueue => enqueue(count(), count.text.set(this.get(this.#count))));
+    this.set(this.#count, parseInt(this.getAttribute('count'), 10))
+    this.first('.count').map(setText(this.#count))
+    this.first('button').map(on('click', () => this.set(this.#count, v => ++v)))
   }
 
   get count() {
-    return this.get(this.#count);
+    return this.get(this.#count)
   }
 }
 
-ShowAppreciation.define('show-appreciation');
+ShowAppreciation.define('show-appreciation')

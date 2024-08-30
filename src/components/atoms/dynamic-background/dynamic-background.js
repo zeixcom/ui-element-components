@@ -1,11 +1,11 @@
-import UIElement, { effect } from '@efflore/ui-element';
-import 'culori/css';
-import { converter, formatCss } from 'culori/fn';
-import { getStepColor } from '../../../assets/js/utils';
+import { UIElement, effect } from '@efflore/ui-element'
+import 'culori/css'
+import { converter, formatCss } from 'culori/fn'
+import { getStepColor } from '../../../assets/js/utils'
 
 class DynamicBackground extends UIElement {
-  static observedAttributes = ['color'];
-  attributeMap = { color: ['base', v => converter('oklch')(v)] };
+  static observedAttributes = ['color']
+  static attributeMap = { color: converter('oklch') }
 
   constructor() {
     super();
