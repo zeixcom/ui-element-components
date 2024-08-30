@@ -4,8 +4,10 @@ import { converter, formatCss } from 'culori/fn'
 import { getStepColor } from '../../../assets/js/utils'
 
 class DynamicBackground extends UIElement {
-  static observedAttributes = ['color']
-  static attributeMap = { color: converter('oklch') }
+	static observedAttributes = ['color']
+	static attributeMap = {
+		color: v => v.map(converter('oklch'))
+	}
 
   constructor() {
     super();
@@ -58,7 +60,7 @@ class DynamicBackground extends UIElement {
 
     // update if base color changes
     effect(() => {
-      const base = this.get('base');
+      const base = this.get('color');
 
       const [one, two, three, four, five] = this.shadowRoot.querySelectorAll('gradient-bubble');
       five.style.setProperty('--color-bubble', formatCss(base));

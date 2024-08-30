@@ -1,4 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect } from '@efflore/ui-element';
 
 class FetchHTML extends UIElement {
   static observedAttributes = ['src'];

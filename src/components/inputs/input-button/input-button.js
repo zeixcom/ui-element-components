@@ -1,32 +1,29 @@
-import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
+import { UIElement, asBoolean, setText, setProperty } from '@efflore/ui-element';
 
 class InputButton extends UIElement {
-  static observedAttributes = ['disabled'];
-  attributeMap = {disabled: 'boolean' };
+	static observedAttributes = ['disabled'];
+	static attributeMap = {
+		disabled: asBoolean
+	}
 
-  connectedCallback() {
-    const button = this.querySelector('button');
-    this.set('label', button.textContent, false);
-    this.set('disabled', button.disabled, false);
-    const classList = button.classList;
-    this.set('variant', classList[0] || 'secondary', false);
-    this.set('size', classList[1] || 'medium', false);
+	connectedCallback() {
+		const button = this.first('button')
+		if (!button[0]) return
+		
+		// state defaults
+		const classList = button[0].target.classList
+		this.set('variant', classList[0] || 'secondary', false);
+		this.set('size', classList[1] || 'medium', false);
 
-    // effect to update the disabled state
-    effect(() => {
-      const disabled = this.get('disabled');
-      button.disabled = disabled;
-      disabled ? this.setAttribute('disabled', '') : this.removeAttribute('disabled');
-    });
+		// derived state
+		this.set('className', () => `${this.get('variant')} ${this.get('size')}`)
 
-    // effect to update the label
-    effect(q => q(button, uiRef(button).text.set(this.get('label'))));
-
-    // effect to update type and size via className
-    effect(() => {
-      button.className = `${this.get('variant')} ${this.get('size')}`;
-    });
-  }
+		// effects
+		button
+			.map(setText('label'))
+			.map(setProperty('className'))
+			.map(setProperty('disabled'))
+	}
 }
 
 InputButton.define('input-button');

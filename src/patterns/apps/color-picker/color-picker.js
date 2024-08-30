@@ -1,10 +1,12 @@
-import { UIElement, effect, uiRef } from '../../../assets/js/ui-component';
+import { UIElement, effect, uiRef } from '@efflore/ui-element';
 import 'culori/css';
-import { converter, formatHex } from 'culori/fn';
+import { converter, formatHex } from 'culori/fn'
 
 class ColorPicker extends UIElement {
-  static observedAttributes = ['color', 'name'];
-  attributeMap = { color: ['base', v => converter('oklch')(v)] };
+	static observedAttributes = ['color', 'name']
+	static attributeMap = {
+		color: v => v.map(converter('oklch'))
+	}
 
   /* constructor() {
     super();
@@ -47,7 +49,7 @@ class ColorPicker extends UIElement {
     const color = ref.first('modal-dialog > button > .label small');
 
     this.addEventListener('color-change', e => {
-      this.set('base', e.detail);
+      this.set('color', e.detail);
     });
 
     this.addEventListener('value-change', e => {
@@ -55,10 +57,10 @@ class ColorPicker extends UIElement {
     });
 
     effect(q => {
-      const base = this.get('base');
+      const base = this.get('color');
 
-      scale().set('base', base);
-      editor().set('base', base);
+      scale().set('color', base);
+      editor().set('color', base);
       color && q(color(), color.text.set(formatHex(base)));
     });
 

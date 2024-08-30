@@ -1,4 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect } from '@efflore/ui-element';
 import { ContextConsumer } from '../../../assets/js/context-controller';
 
 class LoginForm extends UIElement {

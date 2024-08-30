@@ -1,4 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { formatNumber } from '../../../assets/js/utils';
@@ -7,8 +7,10 @@ import RedrawObserver from '../../../assets/js/redraw-observer';
 import dragHandler from '../../../assets/js/drag-handler';
 
 class ColorSlider extends UIElement {
-  static observedAttributes = ['color'];
-  attributeMap = { color: ['base', v => converter('oklch')(v)] };
+	static observedAttributes = ['color']
+	static attributeMap = {
+		color: v => v.map(converter('oklch'))
+	}
 
   connectedCallback() {
     let base;
@@ -87,7 +89,7 @@ class ColorSlider extends UIElement {
 
     // trigger color-change event to commit the color change
     const triggerChange = color => {
-      this.set('base', color);
+      this.set('color', color);
       thumb.setAttribute('aria-valuenow', color[axis]);
       thumb.setAttribute('aria-valuetext', getValueText(color));
       const event = new CustomEvent('color-change', { detail: color, bubbles: true });
@@ -138,7 +140,7 @@ class ColorSlider extends UIElement {
         }
       };
       
-      const color = this.get('base');
+      const color = this.get('color');
       const updateTrack = shouldUpdateTrack();
       base = color;
       repositionThumb(color);

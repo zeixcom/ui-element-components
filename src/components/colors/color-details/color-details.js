@@ -1,13 +1,13 @@
-import { UIElement } from '@efflore/ui-element'
+import { UIElement, setText } from '@efflore/ui-element'
 import 'culori/css'
 import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn'
 import { formatNumber } from '../../../assets/js/utils'
 
 class ColorDetails extends UIElement {
-  static observedAttributes = ['color', 'name']
-  static attributeMap = {
-    color: v => converter('oklch')(v)
-  }
+	static observedAttributes = ['color', 'name']
+	static attributeMap = {
+		color: v => v.map(converter('oklch'))
+	}
 
   connectedCallback() {
     this.first('.label strong').map(setText('name'))

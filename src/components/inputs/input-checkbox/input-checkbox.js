@@ -1,4 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect } from '@efflore/ui-element';
 
 class InputCheckbox extends UIElement {
   static observedAttributes = ['checked'];

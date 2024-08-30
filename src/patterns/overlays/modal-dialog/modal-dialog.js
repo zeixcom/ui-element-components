@@ -1,4 +1,4 @@
-import UIElement from '@efflore/ui-element';
+import { UIElement } from '@efflore/ui-element';
 
 class ModalDialog extends UIElement {
   scrollLockClass = 'scroll-lock';

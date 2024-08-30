@@ -1,11 +1,13 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn';
 import { formatNumber, getStepColor } from '../../../assets/js/utils';
 
 class ColorEditor extends UIElement {
-  static observedAttributes = ['color'];
-  attributeMap = { color: ['base', v => converter('oklch')(v)] };
+	static observedAttributes = ['color'];
+	static attributeMap = {
+		color: v => v.map(converter('oklch'))
+	}
 
   connectedCallback() {
     const scale = this.querySelector('color-scale');
@@ -13,7 +15,7 @@ class ColorEditor extends UIElement {
 
     // handle color-change event from color-graph or color-slider
     this.addEventListener('color-change', e => {
-      this.set('base', e.detail);
+      this.set('color', e.detail);
     });
 
     // handle value-change event from input-field
@@ -24,9 +26,9 @@ class ColorEditor extends UIElement {
         this.set('name', e.detail);
       } else {
         e.stopPropagation(); // only color-change event should bubble up
-        const color = {...this.get('base')};
+        const color = {...this.get('color')};
         color[comp] = comp === 'l' ? value / 100 : value;
-        this.set('base', color);
+        this.set('color', color);
         const event = new CustomEvent('color-change', { detail: color, bubbles: true });
         this.dispatchEvent(event);
       }
@@ -42,12 +44,12 @@ class ColorEditor extends UIElement {
 
     // update if base color changes
     effect(() => {
-      const base = this.get('base');
+      const base = this.get('color');
 
-      this.querySelector('dynamic-background').set('base', base);
-      this.querySelector('color-graph').set('base', base);
-      this.querySelector('color-slider').set('base', base);
-      scale.set('base', base);
+      this.querySelector('dynamic-background').set('color', base);
+      this.querySelector('color-graph').set('color', base);
+      this.querySelector('color-slider').set('color', base);
+      scale.set('color', base);
       this.querySelector('input-field.lightness').set('value', formatNumber(base.l * 100));
       this.querySelector('input-field.chroma').set('value', formatNumber(base.c, 4));
       this.querySelector('input-field.hue').set('value', formatNumber(base.h));
@@ -62,7 +64,7 @@ class ColorEditor extends UIElement {
 
     // update css custom properties if base color or name changes
     effect(() => {
-      const base = this.get('base');
+      const base = this.get('color');
       const name = this.get('name').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
       let code = '';

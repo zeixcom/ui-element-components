@@ -1,4 +1,4 @@
-import UIElement, { effect } from '@efflore/ui-element';
+import { UIElement, effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, inGamut, formatCss } from 'culori/fn';
 import { formatNumber, getStepColor } from '../../../assets/js/utils';
@@ -7,12 +7,14 @@ import RedrawObserver from '../../../assets/js/redraw-observer';
 import dragHandler from '../../../assets/js/drag-handler';
 
 class ColorGraph extends UIElement {
-  static observedAttributes = ['color'];
-  attributeMap = { color: ['base', v => converter('oklch')(v)] };
+	static observedAttributes = ['color']
+	static attributeMap = {
+		color: converter('oklch')
+	}
 
   connectedCallback() {
     let canvasSize;
-    let base = this.get('base');
+    let base = this.get('color');
     let hue;
     this.visibilityObserver = new VisibilityObserver(this);
     const redrawTimeout = 250; // milliseconds
@@ -114,7 +116,7 @@ class ColorGraph extends UIElement {
 
     // trigger color-change event to commit the color change
     const triggerChange = color => {
-      this.set('base', color);
+      this.set('color', color);
       const event = new CustomEvent('color-change', { detail: color, bubbles: true });
       this.dispatchEvent(event);
     };
@@ -160,7 +162,7 @@ class ColorGraph extends UIElement {
 
     // reclaculate if base color changes
     effect(() => {
-      base = this.get('base');
+      base = this.get('color');
       repositionScale(base);
       this.get('visible') && (hue !== base.h) && this.set('redraw', true);
     });
