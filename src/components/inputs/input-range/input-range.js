@@ -1,11 +1,10 @@
-import { UIElement } from '@efflore/ui-element';
+import { UIElement, on } from '@efflore/ui-element'
 class InputRange extends UIElement {
 
-  connectedCallback() {
-    const input = this.querySelector('input');
-    const [error, description] = ['error', 'description'].map(className => this.querySelector(`.${className}`));
-    input.onchange = () => this.set('value', input.value);
-  }
+	connectedCallback() {
+		this.first('input')
+			.map(on('change', e => this.set('value', e.target.value)))
+	}
 }
 
-InputRange.define('input-range');
+InputRange.define('input-range')

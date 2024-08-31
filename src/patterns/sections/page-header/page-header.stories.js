@@ -1,22 +1,23 @@
-import { fn } from '@storybook/test';
-import PageHeader from './page-header.html';
+import { fn } from '@storybook/test'
+
+import PageHeader from './page-header.html'
 
 export default {
-  title: 'sections/page-header',
-  render: (args) => PageHeader(args),
-  args: {
-    onLogin: fn(),
-    onLogout: fn(),
-    onCreateAccount: fn(),
-  },
-};
+	title: 'sections/page-header',
+	render: PageHeader,
+	args: {
+		onLogin: fn(),
+		onLogout: fn(),
+		onCreateAccount: fn(),
+	},
+}
 
 export const LoggedIn = {
-  args: {
-    user: {
-      name: 'Jane Doe',
-    },
-  },
-};
+	args: {
+		user: {
+			name: 'Jane Doe',
+		},
+	},
+}
 
-export const LoggedOut = {};
+export const LoggedOut = {}

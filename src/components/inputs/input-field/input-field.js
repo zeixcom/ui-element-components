@@ -130,7 +130,7 @@ class InputField extends UIElement {
 					? remainingMessage.replace('${x}', maxLength - length)
 					: defaultDescription
 			}
-		    : defaultDescription
+			: defaultDescription
 		)
 		this.set('aria-describedby', () => this.get('description')
 			? description[0].target.id
@@ -161,7 +161,7 @@ class InputField extends UIElement {
 		// bring value to nearest step
 		const nearestStep = v => {
 			const steps = Math.round((max - min) / step)
-			let zerone = Math.round((v - min) * steps / (max - min)) / steps // bring to 0-1 range    
+			let zerone = Math.round((v - min) * steps / (max - min)) / steps // bring to 0-1 range
 			zerone = Math.min(Math.max(zerone, 0), 1) // keep in range in case value is off limits
 			const value = zerone * (max - min) + min
 			return this.isInteger ? Math.round(value) : value

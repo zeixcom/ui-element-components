@@ -1,18 +1,18 @@
-import { UIElement, effect } from '@efflore/ui-element';
+import { UIElement, asBoolean, on, setProperty, toggleAttribute } from '@efflore/ui-element'
 
 class InputCheckbox extends UIElement {
-  static observedAttributes = ['checked'];
-  attributeMap = { checked: 'boolean' };
+	static observedAttributes = ['checked']
+	static attributeMap = {
+		checked: asBoolean,
+	}
 
-  connectedCallback() {
-    this.set('checked', this.querySelector('input').checked, false);
-    
-    // event listener for 'change' event on input[type="checkbox"]
-    this.onchange = e => this.set('checked', e.target.checked);
-
-    // effect to update the checked attribute on the element
-    effect(() => this.get('checked') ? this.setAttribute('checked', '') : this.removeAttribute('checked'));
-  }
+	connectedCallback() {
+		this.first('input')
+			.map(on('change', e => this.set('checked', Boolean(e.target.checked))))
+			.map(setProperty('checked'))
+		this.self
+			.map(toggleAttribute('checked'))
+	}
 }
 
-InputCheckbox.define('input-checkbox');
+InputCheckbox.define('input-checkbox')

@@ -1,4 +1,4 @@
-import { UIElement, effect, uiRef } from '@efflore/ui-element';
+import { UIElement, on, setText, effect } from '@efflore/ui-element';
 import 'culori/css';
 import { converter, formatHex } from 'culori/fn'
 
@@ -42,36 +42,33 @@ class ColorPicker extends UIElement {
   } */
 
   connectedCallback() {
-    const ref = uiRef(this);
-    const scale = ref.first('color-scale');
-    const editor = ref.first('color-editor');
-    const name = ref.first('modal-dialog > button > .label strong');
-    const color = ref.first('modal-dialog > button > .label small');
+    const scale = this.querySelector('color-scale')
+    const editor = this.querySelector('color-editor')
+    const name = this.first('modal-dialog > button > .label strong')
+    const color = this.first('modal-dialog > button > .label small')
 
-    this.addEventListener('color-change', e => {
-      this.set('color', e.detail);
-    });
+	// derived states
+	this.set('hex', () => formatHex(this.get('color')))
 
-    this.addEventListener('value-change', e => {
-      this.set('name', e.detail);
-    });
+	// event listeners
+	this.self
+		.map(on('color-change', e => this.set('color', e.detail)))
+		.map(on('value-change', e => this.set('name', e.detail)))
 
-    effect(q => {
-      const base = this.get('color');
-
-      scale().set('color', base);
-      editor().set('color', base);
-      color && q(color(), color.text.set(formatHex(base)));
-    });
-
+	// effects
+	color.forEach(setText('hex'))
+	name.forEach(setText('name'))
     effect(() => {
-      const label = this.get('name');
-
-      scale().set('name', label);
-      editor().set('name', label);
-      name && q(name(), name.text.set(label));
-    });
+      const base = this.get('color')
+      scale.set('color', base)
+      editor.set('color', base)
+    })
+    effect(() => {
+      const label = this.get('name')
+      scale.set('name', label)
+      editor.set('name', label)
+    })
   }
 }
 
-ColorPicker.define('color-picker');
+ColorPicker.define('color-picker')

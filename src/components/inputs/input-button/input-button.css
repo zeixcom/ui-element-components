@@ -1,96 +1,96 @@
 input-button {
-  display: inline-block;
-  flex-grow: 0;
+	display: inline-block;
+	flex-grow: 0;
 
-  & button {
-    height: var(--input-height);
-    min-width: var(--input-height);
-    border: 1px solid var(--color-border);
-    border-radius: var(--space-xs);
-    background-color: var(--color-secondary);
-    color: var(--color-text);
-    padding: 0 var(--space-s);
-    cursor: pointer;
-    font-size: var(--font-size-s);
-    line-height: var(--line-height-s);
-    opacity: var(--opacity-dimmed);
-    transition: all var(--transition-shorter) var(--easing-inout);
+	& button {
+		height: var(--input-height);
+		min-width: var(--input-height);
+		border: 1px solid var(--color-border);
+		border-radius: var(--space-xs);
+		background-color: var(--color-secondary);
+		color: var(--color-text);
+		padding: 0 var(--space-s);
+		cursor: pointer;
+		font-size: var(--font-size-s);
+		line-height: var(--line-height-s);
+		opacity: var(--opacity-dimmed);
+		transition: all var(--transition-shorter) var(--easing-inout);
 
-    &:not(:disabled):active {
-      background-color: var(--color-secondary-active);
-    }
+		&:not(:disabled):active {
+			background-color: var(--color-secondary-active);
+		}
 
-    &.primary {
-      color: var(--color-text-inverted);
-      background-color: var(--color-primary);
-      border-color: var(--color-primary-active);
-      opacity: var(--opacity-solid);
+		&.primary {
+			color: var(--color-text-inverted);
+			background-color: var(--color-primary);
+			border-color: var(--color-primary-active);
+			opacity: var(--opacity-solid);
 
-      &:not(:disabled):active {
-        background-color: var(--color-primary-active);
-      }
-    }
+			&:not(:disabled):active {
+				background-color: var(--color-primary-active);
+			}
+		}
 
-    &.error {
-      color: var(--color-text-inverted);
-      background-color: var(--color-error);
-      border-color: var(--color-error-active);
-      opacity: var(--opacity-solid);
+		&.destructive {
+			color: var(--color-text-inverted);
+			background-color: var(--color-error);
+			border-color: var(--color-error-active);
+			opacity: var(--opacity-solid);
 
-      &:not(:disabled):active {
-        background-color: var(--color-error-active);
-      }
-    }
+			&:not(:disabled):active {
+				background-color: var(--color-error-active);
+			}
+		}
 
-    &.success {
-      color: var(--color-text-inverted);
-      background-color: var(--color-success);
-      border-color: var(--color-success-active);
-      opacity: var(--opacity-solid);
+		&.constructive {
+			color: var(--color-text-inverted);
+			background-color: var(--color-success);
+			border-color: var(--color-success-active);
+			opacity: var(--opacity-solid);
 
-      &:not(:disabled):active {
-        background-color: var(--color-success-active);
-      }
-    }
+			&:not(:disabled):active {
+				background-color: var(--color-success-active);
+			}
+		}
 
-    &.small {
-      --input-height: var(--space-l);
-      font-size: var(--font-size-xs);
-      padding-inline: var(--space-xs);
-    }
+		&.small {
+			--input-height: var(--space-l);
+			font-size: var(--font-size-xs);
+			padding-inline: var(--space-xs);
+		}
 
-    &.large {
-      --input-height: var(--space-xl);
-      font-size: var(--font-size-m);
-      padding-inline: var(--space-m);
-    }
+		&.large {
+			--input-height: var(--space-xl);
+			font-size: var(--font-size-m);
+			padding-inline: var(--space-m);
+		}
 
-    &:disabled {
-      cursor: revert;
-      opacity: var(--opacity-translucent);
-    }
-  }
+		&:disabled {
+			cursor: revert;
+			opacity: var(--opacity-translucent);
+		}
+	}
 }
 
 @media (hover: hover) {
 
-  input-button {
+	input-button {
 
-    & button:not(:disabled):hover {
-      background-color: var(--color-secondary-hover);
-      opacity: var(--opacity-solid);
-    }
+		& button:not(:disabled):hover {
+			background-color: var(--color-secondary-hover);
+			opacity: var(--opacity-solid);
+		}
 
-    & button.primary:not(:disabled):hover {
-      background-color: var(--color-primary-hover);
-    }
+		& button.primary:not(:disabled):hover {
+			background-color: var(--color-primary-hover);
+		}
 
-    & button.error:not(:disabled):hover {
-      background-color: var(--color-error-hover);
-    }
+		& button.error:not(:disabled):hover {
+			background-color: var(--color-error-hover);
+		}
 
-    & button.success:not(:disabled):hover {
-      background-color: var(--color-success-hover);
-    }
-  }
+		& button.success:not(:disabled):hover {
+			background-color: var(--color-success-hover);
+		}
+	}
 }
