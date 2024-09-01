@@ -1,10 +1,11 @@
-import { UIElement, effect } from '@efflore/ui-element'
+import { UIElement, on, effect } from '@efflore/ui-element'
 import 'culori/css'
 import { converter, formatCss } from 'culori/fn'
 import { getStepColor } from '../../../assets/js/utils'
 
 class DynamicBackground extends UIElement {
 	static observedAttributes = ['color']
+	static consumedContexts = ['dark-mode']
 	static attributeMap = {
 		color: v => v.map(converter('oklch'))
 	}
@@ -32,7 +33,7 @@ class DynamicBackground extends UIElement {
 	}
 
 	connectedCallback() {
-		const pointerBubble = this.first('gradient-bubble[move="pointer"]')
+		const pointerBubble = this.querySelector('gradient-bubble[move="pointer"]')
 		if (pointerBubble) {
 			let posX = 0
 			let posY = 0
@@ -44,35 +45,30 @@ class DynamicBackground extends UIElement {
 				posY += (pointerY - posY) / 20
 				pointerBubble.style.transform = `translate(${Math.round(posX)}px, ${Math.round(posY)}px)`
 				requestAnimationFrame(move)
-			};
+			}
 			move()
-			
-			const onPointerMove = e => {
+
+			this.self.forEach(on('pointermove', e => {
 				const rect = this.getBoundingClientRect()
 				pointerX = e.clientX - rect.left
 				pointerY = e.clientY - rect.top
-			}
-
-			this.addEventListener('pointermove', onPointerMove)
+			}))
 		}
 
 		// update if base color changes
-		effect(() => {
-			const base = this.get('color');
-
-			const [one, two, three, four, five] = this.shadowRoot.querySelectorAll('gradient-bubble');
-			five.style.setProperty('--color-bubble', formatCss(base));
-			if (matchMedia('(prefers-color-scheme: dark)').matches) {
-				one.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.1)));
-				two.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.2)));
-				three.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.3)));
-				four.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.4)));
-			} else {
-				one.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.9)));
-				two.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.8)));
-				three.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.7)));
-				four.style.setProperty('--color-bubble', formatCss(getStepColor(base, 0.6)));
+		effect(enqueue => {
+			const base = this.get('color')
+			const dark = this.get('dark-mode')
+			const prop = '--color-bubble'
+			const bubbles = this.shadowRoot.querySelectorAll('gradient-bubble')
+			for (let i = 0; i < 4; i++) {
+				enqueue(bubbles[i], `s-${prop}`, el => () =>
+					el.style.setProperty(prop, formatCss(getStepColor(base, (dark ? 1 + i : 9 - i) / 10)))
+				)
 			}
+			enqueue(bubbles[4], `s-${prop}`, el => () =>
+				el.style.setProperty(prop, formatCss(base))
+			)
 		})
 	}
 }
