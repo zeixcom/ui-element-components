@@ -14,7 +14,7 @@ class ColorDetails extends UIElement {
 		// derived states
 		this.set('css', () => `--color-swatch: ${formatCss(this.get('color'))}`)
 		this.set('hex', () => formatHex(this.get('color')))
-	    this.set('rgb', () => formatRgb(this.get('color')))
+		this.set('rgb', () => formatRgb(this.get('color')))
 		this.set('hsl', () => formatHsl(this.get('color')))
 		this.set('lightness', () => `${formatNumber(this.get('color').l * 100)}%`)
 		this.set('chroma', () => formatNumber(this.get('color').c, 4))

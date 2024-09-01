@@ -1,0 +1,21 @@
+media-inspect {
+	display: block;
+
+	& dl {
+		margin: 0 0 var(--space-s);
+		display: inline-grid;
+		grid-template-rows: auto auto;
+		gap: var(--space-xxs) var(--space-xs);
+	}
+
+	& dt {
+		color: var(--color-text-soft);
+		font-weight: var(--font-weight-regular);
+		font-size: var(--font-size-s);
+		text-align: right;
+	}
+
+	& dd {
+		font-size: var(--font-size-s);
+	}
+}

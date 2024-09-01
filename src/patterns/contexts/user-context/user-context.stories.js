@@ -1,3 +1,5 @@
+// import { html } from 'lit'
+
 import UserContext from './user-context.html'
 
 import HelloWorld from '../../../components/atoms/hello-world/hello-world.html'
@@ -11,18 +13,23 @@ export default {
 			control: { type: 'boolean' },
 			defaultValue: { summary: false },
 		},
-			displayName: {
+		displayName: {
 			control: { type: 'text' },
 			defaultValue: { summary: 'Jane Doe' },
 		},
 	},
 	args: {
+		/* content: html`${HelloWorld({ greeting: 'Hello', name: 'World' })}
+			${LoginForm({
+				onLoginSubmit: e => console.log('Login'),
+				onLogoutClick: () => console.log('Logout'),
+			})}`, */
 		content: [
 			HelloWorld({ greeting: 'Hello', name: 'World' }),
 			LoginForm({
-				onLoginSubmit: e => console.log('Login', e.detail),
+				onLoginSubmit: () => console.log('Login'),
 				onLogoutClick: () => console.log('Logout'),
-			}),
+			})
 		],
 		loggedIn: false,
 		displayName: undefined,

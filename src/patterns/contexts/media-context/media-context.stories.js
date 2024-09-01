@@ -1,35 +1,20 @@
 import MediaContext from './media-context.html'
 
+import MediaInspect from '../../../components/atoms/media-inspect/media-inspect.html'
+
 export default {
 	title: 'contexts/media-context',
 	render: MediaContext,
-	argTypes: {
-		loggedIn: {
-			control: { type: 'boolean' },
-			defaultValue: { summary: false },
-		},
-			displayName: {
-			control: { type: 'text' },
-			defaultValue: { summary: 'Jane Doe' },
-		},
-	},
+	argTypes: {},
 	args: {
-		content: [],
+		sm: '32em',
+		md: '48em',
+		lg: '72em',
+		xl: '108em',
+		content: MediaInspect(),
 	},
 }
 
-export const ReducedMotion = {
-	args: {},
-}
-
-export const DarkMode = {
-	args: {},
-}
-
-export const ScreenViewport = {
-	args: {},
-}
-
-export const ScreenOrientation = {
+export const WithMediaInspect = {
 	args: {},
 }

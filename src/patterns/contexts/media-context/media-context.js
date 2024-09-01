@@ -1,4 +1,4 @@
-import { UIElement } from '@efflore/ui-element'
+import { UIElement, maybe } from '@efflore/ui-element'
 
 const VIEWPORT_XS = 'xs'
 const VIEWPORT_SM = 'sm'
@@ -8,42 +8,25 @@ const VIEWPORT_XL = 'xl'
 const ORIENTATION_LANDSCAPE = 'landscape'
 const ORIENTATION_PORTRAIT = 'portrait'
 
-class UserContext extends UIElement {
+class MediaContext extends UIElement {
 	static providedContexts = ['reduced-motion', 'dark-mode', 'screen-viewport', 'screen-orientation']
 
 	connectedCallback() {
 		super.connectedCallback()
 
 		const getBreakpoints = () => {
-			const defaultBreakpoints = {
-				sm: '32em',  // 512px
-				md: '48em',  // 768px
-				lg: '72em',  // 1152px
-				xl: '108em', // 1728px
+			const parseBreakpoint = breakpoint => {
+				const attr = this.getAttribute(breakpoint)?.trim()
+				if (!attr) return null
+				const unit = attr.match(/em$/) ? 'em' : 'px'
+				const value = maybe(parseFloat(attr)).filter(Number.isFinite)[0]
+				return value ? value + unit : null
 			}
-			const validateBreakpoints = parsedBreakpoints => {
-				const validBreakpointKeys = [VIEWPORT_SM, VIEWPORT_MD, VIEWPORT_LG, VIEWPORT_XL]
-				if (!validBreakpointKeys.every(breakpoint => breakpoint in parsedBreakpoints))
-					throw new Error('Not all required breakpoints provided')
-				for (const breakpoint in parsedBreakpoints) {
-					if (!validBreakpointKeys.includes(breakpoint))
-						continue
-                    if (typeof parsedBreakpoints[breakpoint] !== 'string' || parsedBreakpoints[breakpoint].trim() === '')
-						throw new Error(`Empty breakpoint value for key: ${breakpoint}`)
-					const unit = parsedBreakpoints[breakpoint].match(/em$/)? 'em' : 'px'
-					const value = parseFloat(parsedBreakpoints[breakpoint].trim())
-					if (!Number.isFinite(value) || value <= 0)
-						throw new Error(`Invalid breakpoint value for key: ${breakpoint}: ${value + unit} is not a valid number or unit`)
-					parsedBreakpoints[breakpoint] = value + unit
-				}
-				return parsedBreakpoints
-			}
-			try {
-				return validateBreakpoints(JSON.parse(this.getAttribute('breakpoints')))
-			} catch (error) {
-				console.error('Invalid breakpoints attribute, falling back to defaults', error)
-				return defaultBreakpoints
-			}
+			const sm = parseBreakpoint(VIEWPORT_SM) || '32em'
+			const md = parseBreakpoint(VIEWPORT_MD) || '48em'
+			const lg = parseBreakpoint(VIEWPORT_LG) || '72em'
+			const xl = parseBreakpoint(VIEWPORT_XL) || '108em'
+			return { sm, md, lg, xl }
 		}
 		const breakpoints = getBreakpoints()
 
@@ -72,12 +55,12 @@ class UserContext extends UIElement {
 		// event listeners
 		reducedMotion.onchange = e => this.set('reduced-motion', e.matches)
         darkMode.onchange = e => this.set('dark-mode', e.matches)
-		screenSmall.onchange = e => this.set('screen-viewport', getViewport())
-		screenMedium.onchange = e => this.set('screen-viewport', getViewport())
-		screenLarge.onchange = e => this.set('screen-viewport', getViewport())
-		screenXLarge.onchange = e => this.set('screen-viewport', getViewport())
+		screenSmall.onchange = () => this.set('screen-viewport', getViewport())
+		screenMedium.onchange = () => this.set('screen-viewport', getViewport())
+		screenLarge.onchange = () => this.set('screen-viewport', getViewport())
+		screenXLarge.onchange = () => this.set('screen-viewport', getViewport())
         screenOrientation.onchange = e => this.set('screen-orientation', e.matches ? ORIENTATION_LANDSCAPE : ORIENTATION_PORTRAIT)
 	}
 }
 
-UserContext.define('user-context')
+MediaContext.define('media-context')

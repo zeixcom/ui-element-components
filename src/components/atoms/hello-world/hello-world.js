@@ -4,7 +4,9 @@ class HelloWorld extends UIElement {
 	static consumedContexts = ['display-name']
 
 	connectedCallback() {
-		this.first('span').map(setText(this.get('display-name')))
+		super.connectedCallback()
+		
+		this.first('span').map(setText('display-name'))
 	}
 }
 
