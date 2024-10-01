@@ -12,5 +12,4 @@ class InputButton extends UIElement {
 			.map(setProperty('disabled'))
 	}
 }
-
 InputButton.define('input-button')

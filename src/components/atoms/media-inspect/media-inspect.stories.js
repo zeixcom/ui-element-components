@@ -4,7 +4,12 @@ export default {
 	title: 'atoms/media-inspect',
 	render: MediaInspect,
 	argTypes: {},
-	args: {},
+	args: {
+		motion: 'User prefers reduced motion',
+        theme: 'User prefers dark color scheme',
+        viewport: 'User screen viewport is',
+        orientation: 'User screen orientation is',
+	},
 }
 
 export const Base = {}

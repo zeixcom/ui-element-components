@@ -11,10 +11,13 @@ export default {
 		md: '48em',
 		lg: '72em',
 		xl: '108em',
-		content: MediaInspect(),
+		content: MediaInspect({
+			motion: 'User prefers reduced motion',
+			theme: 'User prefers dark color scheme',
+			viewport: 'User screen viewport is',
+			orientation: 'User screen orientation is',
+		}),
 	},
 }
 
-export const WithMediaInspect = {
-	args: {},
-}
+export const WithMediaInspect = {}

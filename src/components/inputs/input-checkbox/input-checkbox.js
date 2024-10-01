@@ -14,5 +14,4 @@ class InputCheckbox extends UIElement {
 			.map(toggleAttribute('checked'))
 	}
 }
-
 InputCheckbox.define('input-checkbox')

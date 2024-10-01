@@ -1,4 +1,4 @@
-import { html } from 'lit'
+import { html, nothing } from 'lit'
 
 import './input-checkbox.css'
 import './input-checkbox.js'
@@ -7,7 +7,7 @@ export default ({ label, checked = false, className, onChange }) => html`
 <input-checkbox ?checked=${checked} class=${className}>
 	<label>
 		<input
-			class="visually-hidden"
+			class=${className ? 'visually-hidden' : nothing }
 			type="checkbox"
 			?checked=${checked}
 			@change=${onChange}

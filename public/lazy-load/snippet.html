@@ -42,7 +42,7 @@
   customElements.get('shake-hands') || customElements.define('shake-hands', class extends HTMLElement {
     connectedCallback() {
       const countEl = this.querySelector('.count');
-      let count = parseInt(this.getAttribute('count') || countEl.textContent, 10);
+      let count = parseInt(countEl.textContent, 10);
       
       this.querySelector('button').onclick = () => {
         count++;
@@ -51,4 +51,4 @@
     }
   });
 </script>
-<p>Now try to change the <code>src</code> attribute on the <code>fetch-html</code> component to <code>/fetch-html/snippet2.html</code> and see what happens.</p>
+<p>Now try to change the <code>src</code> attribute on the <code>lazy-load</code> component to <code>/lazy-load/snippet2.html</code> and see what happens.</p>

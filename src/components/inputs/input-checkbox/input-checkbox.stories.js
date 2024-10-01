@@ -60,3 +60,16 @@ export const Checked = {
 		checked: true,
 	},
 }
+
+export const Todo = {
+	args: {
+        className: 'todo',
+    },
+}
+
+export const Done = {
+	args: {
+        checked: true,
+        className: 'todo',
+    },
+}

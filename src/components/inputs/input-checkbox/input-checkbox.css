@@ -2,6 +2,10 @@ input-checkbox {
 	flex-grow: 1;
 
 	& label {
+		font-size: var(--font-size-s);
+	}
+
+	&.todo label {
 		display: flex;
 		gap: var(--space-s);
 		line-height: var(--input-height);
@@ -11,6 +15,7 @@ input-checkbox {
 			display: inline-block;
 			box-sizing: border-box;
 			content: '';
+			font-size: var(--font-size-l);
 			text-align: center;
 			width: var(--input-height);
 			height: var(--input-height);
@@ -24,7 +29,7 @@ input-checkbox {
 		}
 	}
 
-	&[checked] label {
+	&.todo[checked] label {
 		opacity: var(--opacity-translucent);
 
 		& span {
@@ -35,6 +40,7 @@ input-checkbox {
 			color: var(--color-text-inverted);
 			background-color: var(--color-success);
 			border-color: var(--color-success-active);
+			text-shadow: 0 0 var(--space-xs) var(--color-success-active);
 			content: '✓';
 		}
 
@@ -46,7 +52,7 @@ input-checkbox {
 
 @media (hover: hover) {
 
-	input-checkbox {
+	input-checkbox.todo {
 
 		& label:hover::before {
 			background-color: var(--color-secondary-hover);

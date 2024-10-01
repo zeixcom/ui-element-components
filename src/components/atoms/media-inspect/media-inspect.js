@@ -1,15 +1,14 @@
 import { UIElement, setText } from '@efflore/ui-element'
 
 class MediaInspect extends UIElement {
-	static consumedContexts = ['reduced-motion', 'dark-mode', 'screen-viewport', 'screen-orientation']
+	static consumedContexts = ['media-motion', 'media-theme', 'media-viewport', 'media-orientation']
 
 	connectedCallback() {
 		super.connectedCallback()
 
-		for (const context of MediaInspect.consumedContexts) {
+		MediaInspect.consumedContexts.forEach(context => {
 			this.first(`.${context}`).map(setText(context))
-		}
+		})
 	}
 }
-
 MediaInspect.define('media-inspect')

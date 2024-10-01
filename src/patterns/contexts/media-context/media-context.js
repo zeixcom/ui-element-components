@@ -8,8 +8,12 @@ const VIEWPORT_XL = 'xl'
 const ORIENTATION_LANDSCAPE = 'landscape'
 const ORIENTATION_PORTRAIT = 'portrait'
 
+const MEDIA_MOTION = 'media-motion'
+const MEDIA_THEME = 'media-theme'
+const MEDIA_VIEWPORT = 'media-viewport'
+const MEDIA_ORIENTATION = 'media-orientation'
 class MediaContext extends UIElement {
-	static providedContexts = ['reduced-motion', 'dark-mode', 'screen-viewport', 'screen-orientation']
+	static providedContexts = [MEDIA_MOTION, MEDIA_THEME, MEDIA_VIEWPORT, MEDIA_ORIENTATION]
 
 	connectedCallback() {
 		super.connectedCallback()
@@ -47,20 +51,17 @@ class MediaContext extends UIElement {
 		}
 
 		// set initial values
-		this.set('reduced-motion', reducedMotion.matches)
-		this.set('dark-mode', darkMode.matches)
-		this.set('screen-viewport', getViewport())
-		this.set('screen-orientation', screenOrientation.matches ? ORIENTATION_LANDSCAPE : ORIENTATION_PORTRAIT)
+		this.set(MEDIA_MOTION, reducedMotion.matches)
+		this.set(MEDIA_THEME, darkMode.matches)
+		this.set(MEDIA_VIEWPORT, getViewport())
+		this.set(MEDIA_ORIENTATION, screenOrientation.matches ? ORIENTATION_LANDSCAPE : ORIENTATION_PORTRAIT)
 
 		// event listeners
-		reducedMotion.onchange = e => this.set('reduced-motion', e.matches)
-        darkMode.onchange = e => this.set('dark-mode', e.matches)
-		screenSmall.onchange = () => this.set('screen-viewport', getViewport())
-		screenMedium.onchange = () => this.set('screen-viewport', getViewport())
-		screenLarge.onchange = () => this.set('screen-viewport', getViewport())
-		screenXLarge.onchange = () => this.set('screen-viewport', getViewport())
-        screenOrientation.onchange = e => this.set('screen-orientation', e.matches ? ORIENTATION_LANDSCAPE : ORIENTATION_PORTRAIT)
+		reducedMotion.onchange = e => this.set(MEDIA_MOTION, e.matches)
+        darkMode.onchange = e => this.set(MEDIA_THEME, e.matches)
+		[screenSmall, screenMedium, screenLarge, screenXLarge, screenOrientation]
+			.forEach(mql => mql.onchange = () => this.set(MEDIA_VIEWPORT, getViewport()))
+        screenOrientation.onchange = e => this.set(MEDIA_ORIENTATION, e.matches ? ORIENTATION_LANDSCAPE : ORIENTATION_PORTRAIT)
 	}
 }
-
 MediaContext.define('media-context')

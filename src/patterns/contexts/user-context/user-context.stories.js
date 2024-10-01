@@ -1,4 +1,4 @@
-// import { html } from 'lit'
+import { html } from 'lit'
 
 import UserContext from './user-context.html'
 
@@ -19,18 +19,18 @@ export default {
 		},
 	},
 	args: {
-		/* content: html`${HelloWorld({ greeting: 'Hello', name: 'World' })}
+		content: html`${HelloWorld({ greeting: 'Hello', name: 'World' })}
 			${LoginForm({
 				onLoginSubmit: e => console.log('Login'),
 				onLogoutClick: () => console.log('Logout'),
-			})}`, */
-		content: [
+			})}`,
+		/* content: [
 			HelloWorld({ greeting: 'Hello', name: 'World' }),
 			LoginForm({
 				onLoginSubmit: () => console.log('Login'),
 				onLogoutClick: () => console.log('Logout'),
 			})
-		],
+		], */
 		loggedIn: false,
 		displayName: undefined,
 	},

@@ -3,16 +3,12 @@ import { html } from 'lit'
 import './media-inspect.css'
 import './media-inspect.js'
 
-export default () => html`
+export default ({ motion, theme, viewport, orientation }) => html`
 <media-inspect>
 	<dl>
-	    <dt>User prefers reduced motion:</dt>
-		<dd class="reduced-motion"></dd>
-		<dt>User prefers dark color scheme:</dt>
-		<dd class="dark-mode"></dd>
-		<dt>User screen viewport is:</dt>
-		<dd class="screen-viewport"></dd>
-		<dt>User screen orientation is:</dt>
-		<dd class="screen-orientation"></dd>
+		${motion && html`<dt>${motion}:</dt><dd class="media-motion"></dd>`}
+		${theme && html`<dt>${theme}:</dt><dd class="media-theme"></dd>`}
+		${viewport && html`<dt>${viewport}:</dt><dd class="media-viewport"></dd>`}
+		${orientation && html`<dt>${orientation}:</dt><dd class="media-orientation"></dd>`}
 	</dl>
 </media-inspect>`
