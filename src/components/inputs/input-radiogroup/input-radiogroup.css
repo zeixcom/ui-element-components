@@ -18,6 +18,7 @@ input-radiogroup {
 
 		& fieldset {
 			gap: 0;
+			padding: 0;
 		}
 
 		& label {

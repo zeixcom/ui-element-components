@@ -25,7 +25,7 @@ class InputField extends UIElement {
 		this.set('length', this.input.value.length)
 		
 		// derived states
-		this.set('empty', () => this.get('length') === 0)
+		this.set('empty', () => !this.get('length'))
 
 		// setup sub elements
 		this.#setupErrorMessage()
@@ -65,6 +65,7 @@ class InputField extends UIElement {
 		this.input.value = ''
 		this.set('value', '')
 		this.set('length', 0)
+		this.input.focus()
 	}
 
 	/**
@@ -94,7 +95,7 @@ class InputField extends UIElement {
 		const error = this.first('.error')
 
 		// derived states
-		this.set('aria-invalid', () => String(Boolean(this.get('error'))))
+		this.set('ariaInvalid', () => String(Boolean(this.get('error'))))
 		this.set('aria-errormessage', () => this.get('error')
 			? error[0]?.target.id
 			: undefined
@@ -104,7 +105,7 @@ class InputField extends UIElement {
 		error
 			.map(setText('error'))
 		this.first('input')
-			.map(setAttribute('aria-invalid'))
+			.map(setProperty('ariaInvalid'))
 			.map(setAttribute('aria-errormessage'))
 	}
 

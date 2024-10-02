@@ -27,7 +27,13 @@ export default ({ onLoginSubmit, onLogoutClick }) => html`
 			required: true,
 			className: 'password'
 		})}
-		${InputButton({ type: 'submit', label: 'Login', variant: 'primary', disabled: true, className: 'login' })}
+		${InputButton({
+			type: 'submit',
+			label: 'Login',
+			variant: 'primary',
+			disabled: true,
+			className: 'login'
+		})}
 	</form>
 	${InputButton({ label: 'Logout', className: 'logout', onClick: onLogoutClick })}
 </login-form>`

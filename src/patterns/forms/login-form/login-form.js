@@ -6,9 +6,6 @@ class LoginForm extends UIElement {
 	connectedCallback() {
 		super.connectedCallback()
 
-		// this.set('logged-in', false, false)
-		this.set('logged-out', () => !this.get('logged-in'))
-
 		const usernameField = this.querySelector('.username')
 		const passwordField = this.querySelector('.password')
 
@@ -38,7 +35,7 @@ class LoginForm extends UIElement {
 					bubbles: true
 				}))
 			}))
-			.map(toggleClass('hidden', 'logged-out'))
+			.map(toggleClass('hidden', () => !this.get('logged-in')))
 	}
 
 }
