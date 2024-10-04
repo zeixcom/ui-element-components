@@ -18,21 +18,21 @@
   "license": "ISC",
   "devDependencies": {
     "@chromatic-com/storybook": "^2.0.2",
-    "@storybook/addon-a11y": "^8.3.4",
-    "@storybook/addon-essentials": "^8.3.4",
-    "@storybook/addon-interactions": "^8.3.4",
-    "@storybook/addon-links": "^8.3.4",
-    "@storybook/blocks": "^8.3.4",
-    "@storybook/test": "^8.3.4",
-    "@storybook/web-components": "^8.3.4",
-    "@storybook/web-components-vite": "^8.3.4",
-    "chromatic": "^11.10.4",
+    "@storybook/addon-a11y": "^8.3.5",
+    "@storybook/addon-essentials": "^8.3.5",
+    "@storybook/addon-interactions": "^8.3.5",
+    "@storybook/addon-links": "^8.3.5",
+    "@storybook/blocks": "^8.3.5",
+    "@storybook/test": "^8.3.5",
+    "@storybook/web-components": "^8.3.5",
+    "@storybook/web-components-vite": "^8.3.5",
+    "chromatic": "^11.11.0",
     "lit": "^3.2.0",
-    "storybook": "^8.3.4",
+    "storybook": "^8.3.5",
     "vite-bundle-visualizer": "^1.2.1"
   },
   "dependencies": {
-    "@efflore/ui-element": "^0.8.4",
+    "@efflore/ui-element": "^0.8.5",
     "culori": "^4.0.1",
     "prismjs": "^1.29.0"
   }

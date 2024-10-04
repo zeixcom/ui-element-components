@@ -5,9 +5,7 @@ class HelloWorld extends UIElement {
 
 	connectedCallback() {
 		super.connectedCallback()
-		
 		this.first('span').map(setText('display-name'))
 	}
 }
-
 HelloWorld.define('hello-world')

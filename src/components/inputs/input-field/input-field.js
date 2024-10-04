@@ -96,17 +96,13 @@ class InputField extends UIElement {
 
 		// derived states
 		this.set('ariaInvalid', () => String(Boolean(this.get('error'))))
-		this.set('aria-errormessage', () => this.get('error')
-			? error[0]?.target.id
-			: undefined
-		)
+		this.set('aria-errormessage', () => this.get('error') ? error[0]?.target.id : undefined)
 
 		// effects
-		error
-			.map(setText('error'))
+		error.forEach(setText('error'))
 		this.first('input')
 			.map(setProperty('ariaInvalid'))
-			.map(setAttribute('aria-errormessage'))
+			.forEach(setAttribute('aria-errormessage'))
 	}
 
 	/**
@@ -222,5 +218,4 @@ class InputField extends UIElement {
 	}
 
 }
-
 InputField.define('input-field')

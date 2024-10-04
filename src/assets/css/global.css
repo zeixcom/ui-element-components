@@ -55,6 +55,16 @@
 	--color-crimson-80: oklch(24.74% 0.104 25); /* #470004 */
 	--color-crimson-90: oklch(12.72% 0.0449 25); /* #150101 */
 
+	--color-meteor-10: oklch(95.13% 0.0289 65); /* #fdebdb */
+	--color-meteor-20: oklch(89.51% 0.067 65); /* #fcd4ae */
+	--color-meteor-30: oklch(83.04% 0.1056 65); /* #f7b97c */
+	--color-meteor-40: oklch(75.59% 0.1344 65); /* #ea9c49 */
+	--color-meteor-50: oklch(67% 0.145 65); /* #d17f15 */
+	--color-meteor-60: oklch(57.11% 0.1344 65); /* #ac6400 */
+	--color-meteor-70: oklch(45.7% 0.1056 65); /* #7e4800 */
+	--color-meteor-80: oklch(32.57% 0.067 65); /* #4b2c07 */
+	--color-meteor-90: oklch(17.44% 0.0289 65); /* #190d03 */
+
 	--color-malachite-10: oklch(95.13% 0.0449 145); /* #ddf7dd */
 	--color-malachite-20: oklch(89.51% 0.104 145); /* #b1efb2 */
 	--color-malachite-30: oklch(83.04% 0.1639 145); /* #7de382 */
@@ -85,6 +95,9 @@
 	--color-error: var(--color-crimson-50);
 	--color-error-hover: var(--color-crimson-60);
 	--color-error-active: var(--color-crimson-70);
+	--color-warning: var(--color-meteor-50);
+	--color-warning-hover: var(--color-meteor-60);
+	--color-warning-active: var(--color-meteor-70);
 	--color-success: var(--color-malachite-50);
 	--color-success-hover: var(--color-malachite-60);
 	--color-success-active: var(--color-malachite-70);
@@ -159,6 +172,9 @@
 		--color-error: var(--color-crimson-40);
 		--color-error-hover: var(--color-crimson-30);
 		--color-error-active: var(--color-crimson-20);
+		--color-warning: var(--color-meteor-40);
+		--color-warning-hover: var(--color-meteor-30);
+		--color-warning-active: var(--color-meteor-20);
 		--color-success: var(--color-malachite-40);
 		--color-success-hover: var(--color-malachite-30);
 		--color-success-active: var(--color-malachite-20);

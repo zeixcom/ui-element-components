@@ -1,0 +1,11 @@
+component-demo {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-m);
+
+	.preview {
+		border: 1px dotted var(--color-border);
+		border-radius: var(--space-xs); 
+		padding: var(--space-s);
+	}
+}

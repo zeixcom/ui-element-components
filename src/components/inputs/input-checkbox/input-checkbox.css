@@ -24,6 +24,11 @@ input-checkbox {
 			background-color: var(--color-secondary);
 		}
 
+		&:hover::before {
+			background-color: var(--color-secondary-hover);
+			opacity: var(--opacity-solid);
+		}
+
 		&:active::before {
 			background-color: var(--color-secondary-active);
 		}
@@ -44,23 +49,12 @@ input-checkbox {
 			content: '✓';
 		}
 
+		&:hover::before {
+			background-color: var(--color-success-hover);
+		}
+
 		&:active::before {
 			background-color: var(--color-success-active);
-		}
-	}
-}
-
-@media (hover: hover) {
-
-	input-checkbox.todo {
-
-		& label:hover::before {
-			background-color: var(--color-secondary-hover);
-			opacity: var(--opacity-solid);
-		}
-
-		&[checked] label:hover::before {
-			background-color: var(--color-success-hover);
 		}
 	}
 }

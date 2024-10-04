@@ -7,7 +7,11 @@ class MediaInspect extends UIElement {
 		super.connectedCallback()
 
 		MediaInspect.consumedContexts.forEach(context => {
-			this.first(`.${context}`).map(setText(context))
+			this.first(`.${context}`).map(ui => {
+				const newUI = setText(context)(ui)
+				console.log(context, this.get(context))
+				return newUI
+			})
 		})
 	}
 }

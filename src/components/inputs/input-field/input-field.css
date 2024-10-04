@@ -5,6 +5,15 @@ input-field {
 		color: color-mix(in srgb, var(--color-text) 50%, transparent);
 	}
 
+	&:hover button {
+		opacity: var(--opacity-translucent);
+
+		&:not(:disabled) {
+			opacity: var(--opacity-solid);
+			cursor: pointer;
+		}
+	}
+
 	&:focus-within {
 
 		& label,
@@ -139,13 +148,20 @@ input-field {
 		transition: opacity var(--transition-short) var(--easing-inout);
 		user-select: none;
 
-		&:active {
-			background-color: var(--color-secondary-active);
-		}
-
 		&:disabled {
 			cursor: revert;
 			background-color: var(--color-background);
+		}
+
+		&:not(:disabled) {
+
+			&:hover {
+				background-color: var(--color-secondary-hover);
+			}
+
+			&:active {
+				background-color: var(--color-secondary-active);
+			}
 		}
 	}
 
@@ -176,24 +192,4 @@ input-field {
 	.description {
 		color: var(--color-text-soft);
 	}
-}
-
-@media (hover: hover) {
-
-	input-field {
-
-		&:hover button {
-			opacity: var(--opacity-translucent);
-
-			&:not(:disabled) {
-				opacity: var(--opacity-solid);
-				cursor: pointer;
-			}
-		}
-
-		& button:not(:disabled):hover {
-			background-color: var(--color-secondary-hover);
-		}
-	}
-
 }

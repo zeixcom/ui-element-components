@@ -35,6 +35,11 @@ input-radiogroup {
 			line-height: var(--line-height-s);
 			opacity: var(--opacity-dimmed);
 			transition: opacity var(--transition-short) var(--easing-inout);
+
+			&:hover {
+				background-color: var(--color-secondary-hover);
+                opacity: var(--opacity-solid);
+			}
 	  
 			&:active {
 				background-color: var(--color-secondary-active);
@@ -44,6 +49,10 @@ input-radiogroup {
 				color: var(--color-text-inverted);
 				background-color: var(--color-primary);
 				border-color: var(--color-primary-active);
+
+				&:hover {
+                    background-color: var(--color-primary-hover);
+                }
 		
 				&:active {
 					background-color: var(--color-primary-active);
@@ -60,16 +69,4 @@ input-radiogroup {
 			border-radius: 0 var(--space-xs) var(--space-xs) 0;
 		}
 	}
-}
-
-
-@media (hover: hover) {
-    todo-filter.split-button label:hover {
-		background-color: var(--color-secondary-hover);
-		opacity: var(--opacity-solid);
-
-		&.selected {
-			background-color: var(--color-primary-hover);
-		}
-    }
 }

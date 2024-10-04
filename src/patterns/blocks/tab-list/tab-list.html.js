@@ -7,13 +7,12 @@ import './tab-list.css'
 
 export default ({ accordion, tabs }) => html`
 <tab-list ?accordion=${accordion}>
-	<ul class="tab-nav" aria-hidden=${accordion}>
+	<menu aria-hidden=${accordion}>
 	    ${tabs.map(({ title, active }) => html`
             <li>
-                <button class="tab-button" ?aria-pressed=${active}>
-                    ${title}
-                </button>
-			</li>`)}
-	</ul>
+                <button type="button" ?aria-pressed=${active}>${title}</button>
+			</li>`
+		)}
+	</menu>
     ${tabs.map(AccordionPanel)}
 </tab-list>`

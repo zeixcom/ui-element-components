@@ -1,7 +1,6 @@
 input-button {
 	display: inline-block;
-	flex-grow: 0;
-	flex-shrink: 0;
+	flex: 0;
 
 	& button {
 		height: var(--input-height);
@@ -11,14 +10,26 @@ input-button {
 		background-color: var(--color-secondary);
 		color: var(--color-text);
 		padding: 0 var(--space-s);
-		cursor: pointer;
 		font-size: var(--font-size-s);
 		line-height: var(--line-height-s);
 		opacity: var(--opacity-dimmed);
 		transition: all var(--transition-shorter) var(--easing-inout);
 
-		&:not(:disabled):active {
-			background-color: var(--color-secondary-active);
+		&:disabled {
+			opacity: var(--opacity-translucent);
+		}
+
+		&:not(:disabled) {
+            cursor: pointer;
+			opacity: var(--opacity-solid);
+
+			&:hover {
+				background-color: var(--color-secondary-hover);
+			}
+
+			&:active {
+				background-color: var(--color-secondary-active);
+			}
 		}
 
 		&.primary {
@@ -27,8 +38,15 @@ input-button {
 			border-color: var(--color-primary-active);
 			opacity: var(--opacity-solid);
 
-			&:not(:disabled):active {
-				background-color: var(--color-primary-active);
+			&:not(:disabled) {
+
+				&:hover {
+					background-color: var(--color-primary-hover);
+				}
+
+				&:active {
+					background-color: var(--color-primary-active);
+				}
 			}
 		}
 
@@ -38,8 +56,15 @@ input-button {
 			border-color: var(--color-error-active);
 			opacity: var(--opacity-solid);
 
-			&:not(:disabled):active {
-				background-color: var(--color-error-active);
+			&:not(:disabled) {
+				
+				&:hover {
+					background-color: var(--color-error-hover);
+				}
+
+				&:active {
+					background-color: var(--color-error-active);
+				}
 			}
 		}
 
@@ -49,8 +74,15 @@ input-button {
 			border-color: var(--color-success-active);
 			opacity: var(--opacity-solid);
 
-			&:not(:disabled):active {
-				background-color: var(--color-success-active);
+			&:not(:disabled) {
+				
+				&:hover {
+					background-color: var(--color-success-hover);
+				}
+
+				&:active {
+					background-color: var(--color-success-active);
+				}
 			}
 		}
 
@@ -64,34 +96,6 @@ input-button {
 			--input-height: var(--space-xl);
 			font-size: var(--font-size-m);
 			padding-inline: var(--space-m);
-		}
-
-		&:disabled {
-			cursor: revert;
-			opacity: var(--opacity-translucent);
-		}
-	}
-}
-
-@media (hover: hover) {
-
-	input-button {
-
-		& button:not(:disabled):hover {
-			background-color: var(--color-secondary-hover);
-			opacity: var(--opacity-solid);
-		}
-
-		& button.primary:not(:disabled):hover {
-			background-color: var(--color-primary-hover);
-		}
-
-		& button.error:not(:disabled):hover {
-			background-color: var(--color-error-hover);
-		}
-
-		& button.success:not(:disabled):hover {
-			background-color: var(--color-success-hover);
 		}
 	}
 }

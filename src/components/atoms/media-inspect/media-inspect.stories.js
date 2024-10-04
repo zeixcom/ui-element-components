@@ -6,7 +6,7 @@ export default {
 	argTypes: {},
 	args: {
 		motion: 'User prefers reduced motion',
-        theme: 'User prefers dark color scheme',
+        theme: 'User prefers color scheme',
         viewport: 'User screen viewport is',
         orientation: 'User screen orientation is',
 	},
