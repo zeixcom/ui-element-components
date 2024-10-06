@@ -5,6 +5,7 @@ export default {
 	render: LazyLoad,
 	args: {
 		src: '/lazy-load/snippet.html',
+		loading: 'Loading...',
 	},
 }
 
