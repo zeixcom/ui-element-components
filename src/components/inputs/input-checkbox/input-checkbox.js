@@ -9,9 +9,8 @@ class InputCheckbox extends UIElement {
 	connectedCallback() {
 		this.first('input')
 			.map(on('change', e => this.set('checked', Boolean(e.target.checked))))
-			.map(setProperty('checked'))
-		this.self
-			.map(toggleAttribute('checked'))
+			.forEach(setProperty('checked'))
+		this.self.forEach(toggleAttribute('checked'))
 	}
 }
 InputCheckbox.define('input-checkbox')

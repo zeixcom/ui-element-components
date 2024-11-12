@@ -1,11 +1,7 @@
 import { UIElement, effect, maybe, on, setText, setProperty, setAttribute, toggleClass } from '@efflore/ui-element'
 
-/* === Pure Functions === */
-
 const isNumber = num => typeof num === 'number'
 const parseNumber = (v, int = false) => int ? parseInt(v, 10) : parseFloat(v)
-
-/* === Class Definition === */
 
 class InputField extends UIElement {
 	static observedAttributes = ['value', 'description']
@@ -20,29 +16,30 @@ class InputField extends UIElement {
 		this.isNumber = this.input && this.input.type === 'number'
 		this.isInteger = this.hasAttribute('integer')
 
-		// set default states
+		// Set default states
 		this.set('value', this.isNumber ? this.input.valueAsNumber : this.input.value, false)
 		this.set('length', this.input.value.length)
 		
-		// derived states
+		// Derived states
 		this.set('empty', () => !this.get('length'))
 
-		// setup sub elements
+		// Setup sub elements
 		this.#setupErrorMessage()
 		this.#setupDescription()
 		this.#setupSpinButton()
 		this.#setupClearButton()
 
-		// handle input changes
+		// Handle input changes
 		this.input.onchange = () => this.#triggerChange(this.isNumber ? this.input.valueAsNumber : this.input.value)
 		this.input.oninput = () => this.set('length', this.input.value.length)
 
-		// update value
+		// Update value
 		effect(async () => {
 			const value = this.get('value')
 			const validate = this.getAttribute('validate')
 			if (value && validate) {
-				// validate input value against a server-side endpoint
+
+				// Validate input value against a server-side endpoint
 				await fetch(`${validate}?name=${this.input.name}value=${this.input.value}`)
 				.then(async response => {
 					const text = await response.text()
@@ -55,12 +52,10 @@ class InputField extends UIElement {
 				return this.set('value', parseNumber(value, this.isInteger)) // effect will be called again with numeric value
 			if (this.isNumber && !Number.isNaN(value)) // change value only if it is a valid number
 				this.input.value = value
-		});
+		})
  	}
 
-	/**
-	 * Clear the input field
-	 */
+	// Clear the input field
 	clear() {
 		this.input.value = ''
 		this.set('value', '')
@@ -68,12 +63,7 @@ class InputField extends UIElement {
 		this.input.focus()
 	}
 
-	/**
-	 * Trigger value-change event to commit the value change
-	 * 
-	 * @private
-	 * @param {number|string|function} value - value to set
-	 */
+	// Trigger value-change event to commit the value change
 	#triggerChange = value => {
 		this.set('value', value)
 		this.set('error', this.input.validationMessage)
@@ -86,30 +76,22 @@ class InputField extends UIElement {
 			}))
 	}
 
-	/**
-	 * Setup error message
-	 * 
-	 * @private
-	 */
+	// Setup error message
 	#setupErrorMessage() {
 		const error = this.first('.error')
 
-		// derived states
+		// Derived states
 		this.set('ariaInvalid', () => String(Boolean(this.get('error'))))
 		this.set('aria-errormessage', () => this.get('error') ? error[0]?.target.id : undefined)
 
-		// effects
+		// Effects
 		error.forEach(setText('error'))
 		this.first('input')
 			.map(setProperty('ariaInvalid'))
 			.forEach(setAttribute('aria-errormessage'))
 	}
 
-	/**
-	 * Setup description
-	 * 
-	 * @private
-	 */
+	// Setup description
 	#setupDescription() {
 		const description = this.first('.description')
 		if (!description[0])
@@ -134,16 +116,12 @@ class InputField extends UIElement {
 			: undefined
 		)
 
-		// effects
+		// Effects
 		description.forEach(setText('description'))
 		input.forEach(setAttribute('aria-describedby'))
 	}
 
-	/**
-	 * Setup spin button
-	 * 
-	 * @private
-	 */
+	// Setup spin button
 	#setupSpinButton() {
 		const spinButton = this.querySelector('.spinbutton')
 		if (!this.isNumber || !spinButton)
@@ -155,7 +133,7 @@ class InputField extends UIElement {
 			? [tempStep, getNumber('min'), getNumber('max')]
 			: []
 
-		// bring value to nearest step
+		// Bring value to nearest step
 		const nearestStep = v => {
 			const steps = Math.round((max - min) / step)
 			let zerone = Math.round((v - min) * steps / (max - min)) / steps // bring to 0-1 range
@@ -164,25 +142,17 @@ class InputField extends UIElement {
 			return this.isInteger ? Math.round(value) : value
 		}
 
-		/**
-		 * Step down
-		 * 
-		 * @param {number} [stepDecrement=step] - value to increment by
-		 */
+		// Step down
 		this.stepDown = (stepDecrement = step) => this.#triggerChange(v => nearestStep(v - stepDecrement))
 
-		/**
-		 * Step up
-		 * 
-		 * @param {number} [stepIncrement=step] - value to increment by
-		 */
+		// Step up
 		this.stepUp = (stepIncrement = step) => this.#triggerChange(v => nearestStep(v + stepIncrement))
 
 		// derived states
 		this.set('decrement-disabled', () => isNumber(min) && (this.get('value') - step < min))
 		this.set('increment-disabled', () => isNumber(max) && (this.get('value') + step > max))
 
-		// handle spin button clicks and update their disabled state
+		// Handle spin button clicks and update their disabled state
 		this.first('.decrement')
 			.map(setProperty('disabled', 'decrement-disabled'))
 			.forEach(on('click', e => this.stepDown(e.shiftKey ? step * 10 : step)))
@@ -190,7 +160,7 @@ class InputField extends UIElement {
 			.map(setProperty('disabled', 'increment-disabled'))
 			.forEach(on('click', e => this.stepUp(e.shiftKey ? step * 10 : step)))
 
-		// handle arrow key events
+		// Handle arrow key events
 		this.input.onkeydown = e => {
 			if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
 				e.stopPropagation()
@@ -203,11 +173,7 @@ class InputField extends UIElement {
 		}
 	}
 
-	/**
-	 * Setup clear button
-	 * 
-	 * @private
-	 */
+	// Setup clear button
 	#setupClearButton() {
 		this.first('.clear')
 			.map(toggleClass('hidden', 'empty'))

@@ -5,14 +5,14 @@ class TodoList extends UIElement {
         this.set('filter', 'all') // set initial filter
 		this.#updateList()
 
-		// event listener and attribute on own element
+		// Event listener and attribute on own element
         this.self
             .map(on('click', e => {
                 if (e.target.localName === 'button') this.removeItem(e.target)
             }))
-            .map(setAttribute('filter'))
+            .forEach(setAttribute('filter'))
 
-        // update count on each change
+        // Update count on each change
         this.set('count', () => {
             const tasks = this.get('tasks').map(el => el.signal('checked'))
             const completed = tasks.filter(fn => fn()).length

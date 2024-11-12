@@ -20,16 +20,16 @@ class LazyLoad extends UIElement {
 
 	connectedCallback() {
 
-		// show / hide loading message
+		// Show / hide loading message
 		this.first('.loading')
 			.forEach(setProperty('ariaHidden', () => !!this.get('error')))
 
-		// set and show / hide error message
+		// Set and show / hide error message
 		this.first('.error')
 			.map(setText('error'))
 			.forEach(setProperty('ariaHidden', () => !this.get('error')))
 
-		// load content from provided URL
+		// Load content from provided URL
 		effect(enqueue => {
 			const src = this.get('src')
 			if (!src) return // silently fail if no valid URL is provided

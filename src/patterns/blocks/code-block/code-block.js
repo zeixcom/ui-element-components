@@ -8,12 +8,13 @@ class CodeBlock extends UIElement {
 	}
 
   	connectedCallback() {
-		// enhance code block with Prism.js
+
+		// Enhance code block with Prism.js
 		const language = this.getAttribute('language') || 'html'
 		const content = this.querySelector('code')
 		this.set('code', content.textContent.trim(), false)
 		effect(enqueue => {
-			// apply syntax highlighting while preserving Lit's marker nodes in Storybook
+			// Apply syntax highlighting while preserving Lit's marker nodes in Storybook
 			const code = document.createElement('code')
 			code.innerHTML = Prism.highlight(this.get('code'), Prism.languages[language], language)
 			enqueue(content, 'h', el => () => {
@@ -25,7 +26,7 @@ class CodeBlock extends UIElement {
 			})
 		})
 
-		// copy to clipboard
+		// Copy to clipboard
 		this.first('.copy').map(ui => on('click', async () => {
 			const copyButton = ui.target
 			const label = copyButton.textContent
@@ -44,7 +45,7 @@ class CodeBlock extends UIElement {
 			}, status === 'success' ? 1000 : 3000)
 		})(ui))
 
-		// expand
+		// Expand
 		this.first('.overlay').map(on('click', () => this.set('collapsed', false)))
 		this.self.map(toggleAttribute('collapsed'))
 	}

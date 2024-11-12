@@ -3,8 +3,8 @@ input-button {
 	flex: 0;
 
 	& button {
-		height: var(--input-height);
-		min-width: var(--input-height);
+		height: var(--input-height, 2rem);
+		min-width: var(--input-height, 2rem);
 		border: 1px solid var(--color-border);
 		border-radius: var(--space-xs);
 		background-color: var(--color-secondary);
@@ -12,6 +12,7 @@ input-button {
 		padding: 0 var(--space-s);
 		font-size: var(--font-size-s);
 		line-height: var(--line-height-s);
+		white-space: nowrap;
 		opacity: var(--opacity-dimmed);
 		transition: all var(--transition-shorter) var(--easing-inout);
 
