@@ -1,9 +1,8 @@
-import { UIElement, on } from '@efflore/ui-element'
-class InputRange extends UIElement {
+import { Capsula } from '@efflore/capsula'
+class InputRange extends Capsula {
 
 	connectedCallback() {
-		this.first('input')
-			.map(on('change', e => this.set('value', e.target.value)))
+		this.first('input').on('change', e => this.set('value', e.target.value))
 	}
 }
 

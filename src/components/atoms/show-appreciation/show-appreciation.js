@@ -1,21 +1,20 @@
-import { UIElement, maybe, on, setText } from '@efflore/ui-element'
+import { Capsula, asInteger, setText } from '@efflore/capsula'
 
-class ShowAppreciation extends UIElement {
-	#count = Symbol() // signal keys can be Symbols too
+class ShowAppreciation extends Capsula {
+	#count = Symbol() // Use a private Symbol as state key
 
 	connectedCallback() {
+		// Initialize count state
+		this.set(this.#count, asInteger(this.querySelector('.count').textContent) ?? 0)
 
-		// set initial count from attribute or default to 0
-		this.set(this.#count, maybe(parseInt(this.getAttribute('count'), 10)).filter(Number.isFinite)[0] || 0)
+		// Bind click event to increment count
+		this.first('button').on('click', () => this.set(this.#count, v => ++v))
 
-		// update .count text when count changes
-		this.first('.count').forEach(setText(this.#count))
-
-		// bind click event to increment count
-		this.first('button').forEach(on('click', () => this.set(this.#count, v => ++v)))
+		// Update .count text when count changes
+		this.first('.count').sync(setText(this.#count))
 	}
 
-	// read-only count property
+	// Expose read-only property for count
 	get count() {
 		return this.get(this.#count)
 	}

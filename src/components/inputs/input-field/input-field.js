@@ -1,11 +1,11 @@
-import { UIElement, effect, maybe, on, setText, setProperty, setAttribute, toggleClass } from '@efflore/ui-element'
+import { Capsula, effect, setText, setProperty, setAttribute, toggleClass } from '@efflore/capsula'
 
 const isNumber = num => typeof num === 'number'
 const parseNumber = (v, int = false) => int ? parseInt(v, 10) : parseFloat(v)
 
-class InputField extends UIElement {
+class InputField extends Capsula {
 	static observedAttributes = ['value', 'description']
-	static attributeMap = {
+	static states = {
 		value: value => this.isNumber
 			? value.map(v => parseNumber(v, this.isInteger)).filter(Number.isFinite)
 			: value
@@ -30,8 +30,10 @@ class InputField extends UIElement {
 		this.#setupClearButton()
 
 		// Handle input changes
-		this.input.onchange = () => this.#triggerChange(this.isNumber ? this.input.valueAsNumber : this.input.value)
-		this.input.oninput = () => this.set('length', this.input.value.length)
+		this.input.onchange = () =>
+			this.#triggerChange(this.isNumber ? this.input.valueAsNumber : this.input.value)
+		this.input.oninput = () =>
+			this.set('length', this.input.value.length)
 
 		// Update value
 		effect(async () => {
@@ -81,27 +83,34 @@ class InputField extends UIElement {
 		const error = this.first('.error')
 
 		// Derived states
-		this.set('ariaInvalid', () => String(Boolean(this.get('error'))))
-		this.set('aria-errormessage', () => this.get('error') ? error[0]?.target.id : undefined)
+		this.set(
+			'ariaInvalid',
+			() => String(Boolean(this.get('error')))
+		)
+		this.set(
+			'aria-errormessage',
+			() => this.get('error') ? error.targets[0]?.id : undefined
+		)
 
 		// Effects
-		error.forEach(setText('error'))
-		this.first('input')
-			.map(setProperty('ariaInvalid'))
-			.forEach(setAttribute('aria-errormessage'))
+		error.sync(setText('error'))
+		this.first('input').sync(
+			setProperty('ariaInvalid'),
+			setAttribute('aria-errormessage')
+		)
 	}
 
 	// Setup description
 	#setupDescription() {
 		const description = this.first('.description')
-		if (!description[0])
+		if (!description.targets.length)
 			return // no description, so skip
 		
 		// derived states
 		const input = this.first('input')
 		const maxLength = this.input.maxLength
-		const remainingMessage = maxLength && description[0].target.dataset.remaining
-		const defaultDescription = description[0].target.textContent
+		const remainingMessage = maxLength && description.targets[0].dataset.remaining
+		const defaultDescription = description.targets[0].textContent
 		this.set('description', remainingMessage
 			? () => {
 				const length = this.get('length')
@@ -112,13 +121,13 @@ class InputField extends UIElement {
 			: defaultDescription
 		)
 		this.set('aria-describedby', () => this.get('description')
-			? description[0].target.id
+			? description.targets[0].id
 			: undefined
 		)
 
 		// Effects
-		description.forEach(setText('description'))
-		input.forEach(setAttribute('aria-describedby'))
+		description.sync(setText('description'))
+		input.sync(setAttribute('aria-describedby'))
 	}
 
 	// Setup spin button
@@ -127,7 +136,10 @@ class InputField extends UIElement {
 		if (!this.isNumber || !spinButton)
 			return // no spin button, so skip
 
-		const getNumber = attr => maybe(parseNumber(this.input[attr], this.isInteger)).filter(Number.isFinite)[0]
+		const getNumber = attr => {
+			const temp = parseNumber(this.input[attr], this.isInteger)
+			return Number.isFinite(temp) ? temp : 0
+		}
 		const tempStep = parseNumber(spinButton.dataset.step, this.isInteger)
 		const [step, min, max] = Number.isFinite(tempStep)
 			? [tempStep, getNumber('min'), getNumber('max')]
@@ -143,10 +155,12 @@ class InputField extends UIElement {
 		}
 
 		// Step down
-		this.stepDown = (stepDecrement = step) => this.#triggerChange(v => nearestStep(v - stepDecrement))
+		this.stepDown = (stepDecrement = step) =>
+			this.#triggerChange(v => nearestStep(v - stepDecrement))
 
 		// Step up
-		this.stepUp = (stepIncrement = step) => this.#triggerChange(v => nearestStep(v + stepIncrement))
+		this.stepUp = (stepIncrement = step) =>
+			this.#triggerChange(v => nearestStep(v + stepIncrement))
 
 		// derived states
 		this.set('decrement-disabled', () => isNumber(min) && (this.get('value') - step < min))
@@ -154,11 +168,11 @@ class InputField extends UIElement {
 
 		// Handle spin button clicks and update their disabled state
 		this.first('.decrement')
-			.map(setProperty('disabled', 'decrement-disabled'))
-			.forEach(on('click', e => this.stepDown(e.shiftKey ? step * 10 : step)))
+			.sync(setProperty('disabled', 'decrement-disabled'))
+			.on('click', e => this.stepDown(e.shiftKey ? step * 10 : step))
 		this.first('.increment')
-			.map(setProperty('disabled', 'increment-disabled'))
-			.forEach(on('click', e => this.stepUp(e.shiftKey ? step * 10 : step)))
+			.sync(setProperty('disabled', 'increment-disabled'))
+			.on('click', e => this.stepUp(e.shiftKey ? step * 10 : step))
 
 		// Handle arrow key events
 		this.input.onkeydown = e => {
@@ -176,11 +190,11 @@ class InputField extends UIElement {
 	// Setup clear button
 	#setupClearButton() {
 		this.first('.clear')
-			.map(toggleClass('hidden', 'empty'))
-			.forEach(on('click', () => {
+			.sync(toggleClass('hidden', 'empty'))
+			.on('click', () => {
 				this.clear()
 				this.input.focus()
-			}))
+			})
 	}
 
 }

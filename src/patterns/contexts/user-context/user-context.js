@@ -1,27 +1,29 @@
-import { UIElement, on } from '@efflore/ui-element'
+import { Capsula, UNSET } from '@efflore/capsula'
 
-class UserContext extends UIElement {
-	static providedContexts = ['logged-in', 'display-name']
+const USER_LOGGED_IN = 'logged-in'
+const USER_DISPLAY_NAME = 'display-name'
+
+class UserContext extends Capsula {
+	static providedContexts = [USER_LOGGED_IN, USER_DISPLAY_NAME]
 
 	connectedCallback() {
 		super.connectedCallback()
 
 		// set initial values from attributes if provided
-		this.set('logged-in', this.hasAttribute('logged-in'))
-		this.set('display-name', this.getAttribute('display-name'))
+		this.set(USER_LOGGED_IN, this.hasAttribute(USER_LOGGED_IN))
+		this.set(USER_DISPLAY_NAME, this.getAttribute(USER_DISPLAY_NAME))
 
 		// handle user login and logout events
 		this.self
-			.map(on('user-login', e => {
-				this.set('logged-in', true)
-				this.set('display-name', e.detail)
-			}))
-			.map(on('user-logout', () => {
-				this.set('logged-in', false)
+			.on('user-login', e => {
+				this.set(USER_LOGGED_IN, true)
+				this.set(USER_DISPLAY_NAME, e.detail)
+			})
+			.on('user-logout', () => {
+				this.set(USER_LOGGED_IN, false)
 				// we don't delete the context, so registered listeners get updated if the user logs in again
-				this.set('display-name', undefined)
-			}))
+				this.set(USER_DISPLAY_NAME, UNSET)
+			})
 	}
 }
-
 UserContext.define('user-context')

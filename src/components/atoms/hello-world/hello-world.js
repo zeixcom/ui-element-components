@@ -1,11 +1,12 @@
-import { UIElement, setText } from '@efflore/ui-element'
+import { Capsula, setText } from '@efflore/capsula'
 
-class HelloWorld extends UIElement {
+class HelloWorld extends Capsula {
 	static consumedContexts = ['display-name']
 
 	connectedCallback() {
 		super.connectedCallback()
-		this.first('span').map(setText('display-name'))
+		this.first('span')
+			.sync(setText('display-name'))
 	}
 }
 HelloWorld.define('hello-world')

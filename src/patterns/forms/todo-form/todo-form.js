@@ -1,10 +1,10 @@
-import { UIElement, on, pass } from '@efflore/ui-element'
+import { Capsula } from '@efflore/capsula'
 
-class TodoForm extends UIElement {
+class TodoForm extends Capsula {
 	connectedCallback() {
 		const inputField = this.querySelector('input-field')
 
-        this.first('form').forEach(on('submit', e => {
+        this.first('form').on('submit', e => {
 			e.preventDefault()
 			setTimeout(() => {
 				this.dispatchEvent(new CustomEvent('add-todo', {
@@ -13,11 +13,11 @@ class TodoForm extends UIElement {
 				}))
 				inputField.clear()
 			}, 0)
-		}))
+		})
 		
-		this.first('input-button').forEach(pass({
+		this.first('input-button').pass({
 			disabled: () => inputField.get('empty')
-		}))
+		})
     }
 }
 TodoForm.define('todo-form')

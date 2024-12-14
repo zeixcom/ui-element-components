@@ -1,15 +1,15 @@
-import { UIElement, on, toggleClass, setAttribute } from '@efflore/ui-element'
+import { Capsula, toggleClass, setAttribute } from '@efflore/capsula'
 
-export class InputRadiogroup extends UIElement {
+export class InputRadiogroup extends Capsula {
 	static observedAttributes = ['value']
 
 	connectedCallback() {
-		this.self.forEach(setAttribute('value'))
-        this.all('input').forEach(on('change', e => this.set('value', e.target.value)))
-		this.all('label').forEach(ui => toggleClass(
-				'selected',
-				() => ui.host.get('value') === ui.target.querySelector('input').value
-			)(ui))
+		this.self.sync(setAttribute('value'))
+        this.all('input').on('change', e => this.set('value', e.target.value))
+		this.all('label').sync((host, target) => toggleClass(
+			'selected',
+			() => host.get('value') === target.querySelector('input').value
+		)(host, target))
     }
 }
 InputRadiogroup.define('input-radiogroup')

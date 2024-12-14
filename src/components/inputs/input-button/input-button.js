@@ -1,15 +1,15 @@
-import { UIElement, asBoolean, setText, setProperty } from '@efflore/ui-element'
+import { Capsula, asBoolean, setText, setProperty } from '@efflore/capsula'
 
-class InputButton extends UIElement {
+class InputButton extends Capsula {
 	static observedAttributes = ['disabled']
-	static attributeMap = {
+	static states = {
 		disabled: asBoolean
 	}
 
 	connectedCallback() {
 		this.first('button')
-			.map(setText('label'))
-			.map(setProperty('disabled'))
+			.sync(setText('label'))
+			.sync(setProperty('disabled'))
 	}
 }
 InputButton.define('input-button')

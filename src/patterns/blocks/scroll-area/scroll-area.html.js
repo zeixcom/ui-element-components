@@ -5,7 +5,7 @@ import './scroll-area.js';
 
 export default ({ content, orientation = 'vertical' }) => html`
 <scroll-area orientation=${orientation}>
-  <div class="scroll-area__content">
+  <div>
     ${content}
   </div>
 </scroll-area>`;

@@ -1,17 +1,13 @@
-import { UIElement, setText } from '@efflore/ui-element'
+import { Capsula, setText } from '@efflore/capsula'
 
-class MediaInspect extends UIElement {
+class MediaInspect extends Capsula {
 	static consumedContexts = ['media-motion', 'media-theme', 'media-viewport', 'media-orientation']
 
 	connectedCallback() {
 		super.connectedCallback()
 
 		MediaInspect.consumedContexts.forEach(context => {
-			this.first(`.${context}`).map(ui => {
-				const newUI = setText(context)(ui)
-				console.log(context, this.get(context))
-				return newUI
-			})
+			this.first(`.${context}`).sync(setText(context))
 		})
 	}
 }

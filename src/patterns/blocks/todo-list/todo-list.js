@@ -1,19 +1,15 @@
-import { UIElement, on, setAttribute } from '@efflore/ui-element'
+import { Capsula, setAttribute } from '@efflore/capsula'
 
-class TodoList extends UIElement {
+class TodoList extends Capsula {
+	static states = {
+		filter: 'all',
+	}
+
     connectedCallback() {
-        this.set('filter', 'all') // set initial filter
-		this.#updateList()
 
-		// Event listener and attribute on own element
-        this.self
-            .map(on('click', e => {
-                if (e.target.localName === 'button') this.removeItem(e.target)
-            }))
-            .forEach(setAttribute('filter'))
-
-        // Update count on each change
-        this.set('count', () => {
+		// Set computed states
+		this.set('tasks', () => Array.from(this.querySelectorAll('input-checkbox')))
+		this.set('count', () => {
             const tasks = this.get('tasks').map(el => el.signal('checked'))
             const completed = tasks.filter(fn => fn()).length
             const total = tasks.length
@@ -23,30 +19,29 @@ class TodoList extends UIElement {
 				total
 			}
         })
+
+		// Event listener and attribute on own element
+        this.self
+            .on('click', e => {
+                if (e.target.localName === 'button') this.removeItem(e.target)
+            })
+            .sync(setAttribute('filter'))
     }
 
     addItem = task => {
         const template = this.querySelector('template').content.cloneNode(true)
         template.querySelector('span').textContent = task
         this.querySelector('ol').appendChild(template)
-        this.#updateList()
     }
 
     removeItem = element => {
         element.closest('li').remove()
-        this.#updateList()
     }
 
     clearCompleted = () => {
         this.get('tasks')
             .filter(el => el.get('checked'))
             .forEach(el => el.parentElement.remove())
-        this.#updateList()
     }
-
-	#updateList() {
-        this.set('tasks', Array.from(this.querySelectorAll('input-checkbox')))
-    }
-
 }
 TodoList.define('todo-list')

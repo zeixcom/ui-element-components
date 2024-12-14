@@ -1,6 +1,6 @@
-import { UIElement, toggleAttribute, setProperty } from '@efflore/ui-element'
+import { Capsula, toggleAttribute, setProperty } from '@efflore/capsula'
 
-class AccordionPanel extends UIElement {
+class AccordionPanel extends Capsula {
 	connectedCallback() {
 
 		// Set defaults from attributes
@@ -8,15 +8,17 @@ class AccordionPanel extends UIElement {
 		this.set('collapsible', this.hasAttribute('collapsible'), false)
 
 		// Handle open and collapsible state changes
-		this.self
-		    .map(toggleAttribute('open'))
-			.map(toggleAttribute('collapsible'))
-			.forEach(setProperty('ariaHidden', () => !this.get('open') && !this.get('collapsible')))
+		this.self.sync(
+			toggleAttribute('open'),
+			toggleAttribute('collapsible'),
+			setProperty('ariaHidden', () => !this.get('open') && !this.get('collapsible'))
+		)
 
 		// Control inner details panel
-		this.first('details')
-			.map(setProperty('open'))
-			.forEach(setProperty('ariaDisabled', () => !this.get('collapsible')))
+		this.first('details').sync(
+			setProperty('open'),
+			setProperty('ariaDisabled', () => !this.get('collapsible'))
+		)
 	}
 }
 AccordionPanel.define('accordion-panel')

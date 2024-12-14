@@ -1,20 +1,28 @@
-import { UIElement, on, toggleClass } from '@efflore/ui-element'
+import { Capsula, toggleClass } from '@efflore/capsula'
 
-class MySlider extends UIElement {
-	connectedCallback() {
+class MySlider extends Capsula {
+	static states = {
+		active: 0 // Initialize state for the active slide index
+	}
 	
-		// Initialize state for the active slide index
-		this.set('active', 0)
+	connectedCallback() {
+		super.connectedCallback()
 	
 		// Event listeners for navigation
 		const total = this.querySelectorAll('.slide').length
-		const getNewIndex = (prev, direction) => (prev + direction + total) % total
-		this.first('.prev').map(on('click', () => this.set('active', v => getNewIndex(v, -1))))
-		this.first('.next').map(on('click', () => this.set('active', v => getNewIndex(v, 1))))
+		const newIndex = (prev, direction) => (prev + direction + total) % total
+		this.first('.prev').on('click', () => this.set('active', v => newIndex(v, -1)))
+		this.first('.next').on('click', () => this.set('active', v => newIndex(v, 1)))
 	
 		// Auto-effects for updating slides and dots
-		this.all('.slide').map((ui, idx) => toggleClass('active', () => idx === this.get('active'))(ui))
-		this.all('.dots span').map((ui, idx) => toggleClass('active', () => idx === this.get('active'))(ui))
+		this.all('.slide').sync((host, target, idx) => toggleClass(
+			'active',
+			() => idx === this.get('active')
+		)(host, target))
+		this.all('.dots span').sync((host, target, idx) => toggleClass(
+			'active',
+			() => idx === this.get('active')
+		)(host, target))
 	}
 }
 MySlider.define('my-slider')

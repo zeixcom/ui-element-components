@@ -1,11 +1,17 @@
-import { UIElement, maybe } from '@efflore/ui-element'
+import { Capsula } from '@efflore/capsula'
 
 const MEDIA_MOTION = 'media-motion'
 const MEDIA_THEME = 'media-theme'
 const MEDIA_VIEWPORT = 'media-viewport'
 const MEDIA_ORIENTATION = 'media-orientation'
-class MediaContext extends UIElement {
-	static providedContexts = [MEDIA_MOTION, MEDIA_THEME, MEDIA_VIEWPORT, MEDIA_ORIENTATION]
+
+class MediaContext extends Capsula {
+	static providedContexts = [
+		MEDIA_MOTION,
+		MEDIA_THEME,
+		MEDIA_VIEWPORT,
+		MEDIA_ORIENTATION,
+	]
 
 	connectedCallback() {
 		super.connectedCallback()
@@ -20,21 +26,22 @@ class MediaContext extends UIElement {
 		const ORIENTATION_LANDSCAPE = 'landscape'
 		const ORIENTATION_PORTRAIT = 'portrait'
 
-		const getBreakpoints = () => {
+		// IIFE to parse breakpoints from attributes
+		const breakpoints = (() => {
 			const parseBreakpoint = breakpoint => {
 				const attr = this.getAttribute(breakpoint)?.trim()
 				if (!attr) return null
 				const unit = attr.match(/em$/) ? 'em' : 'px'
-				const value = maybe(parseFloat(attr)).filter(Number.isFinite)[0]
-				return value ? value + unit : null
+				const value = parseFloat(attr)
+				return Number.isFinite(value) ? value + unit : null
 			}
-			const sm = parseBreakpoint(VIEWPORT_SM) || '32em'
-			const md = parseBreakpoint(VIEWPORT_MD) || '48em'
-			const lg = parseBreakpoint(VIEWPORT_LG) || '72em'
-			const xl = parseBreakpoint(VIEWPORT_XL) || '108em'
-			return { sm, md, lg, xl }
-		}
-		const breakpoints = getBreakpoints()
+			return {
+				sm: parseBreakpoint(VIEWPORT_SM) || '32em',
+				md: parseBreakpoint(VIEWPORT_MD) || '48em',
+				lg: parseBreakpoint(VIEWPORT_LG) || '72em',
+				xl: parseBreakpoint(VIEWPORT_XL) || '108em',
+			}
+		})()
 
 		const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
 		const colorScheme = matchMedia('(prefers-color-scheme: dark)')
@@ -52,13 +59,13 @@ class MediaContext extends UIElement {
             return VIEWPORT_XS
 		}
 
-		// set initial values
+		// Set initial values
 		this.set(MEDIA_MOTION, reducedMotion.matches)
 		this.set(MEDIA_THEME, colorScheme.matches ? THEME_DARK : THEME_LIGHT)
 		this.set(MEDIA_VIEWPORT, getViewport())
 		this.set(MEDIA_ORIENTATION, screenOrientation.matches ? ORIENTATION_LANDSCAPE : ORIENTATION_PORTRAIT)
 
-		// event listeners
+		// Event listeners
 		reducedMotion.addEventListener(
 			'change',
 			e => this.set(MEDIA_MOTION, e.matches)

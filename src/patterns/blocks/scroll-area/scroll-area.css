@@ -5,7 +5,7 @@ scroll-area {
   position: relative;
   -webkit-overflow-scrolling: touch; /* iOS Overflow Momentum Scroll */
 
-  .scroll-area__content {
+  > * {
 
     &::before,
     &::after {
@@ -22,7 +22,7 @@ scroll-area {
   &[orientation="horizontal"] {
     overflow-x: auto;
 
-    .scroll-area__content {
+    > * {
 
       &::before,
       &::after {
@@ -41,11 +41,11 @@ scroll-area {
       }
     }
   
-    &.overflow-start .scroll-area__content::before {
+    &.overflow-start > *::before {
       opacity: 1;
     }
   
-    &.overflow-end .scroll-area__content::after {
+    &.overflow-end > *::after {
       opacity: 1;
     }
   }
@@ -53,7 +53,7 @@ scroll-area {
   &[orientation="vertical"] {
     overflow-y: auto;
 
-    .scroll-area__content {
+    > * {
       container-type: inline-size;
 
       &::before,
@@ -73,11 +73,11 @@ scroll-area {
       }
     }
   
-    &.overflow-start .scroll-area__content::before {
+    &.overflow-start > *::before {
       opacity: 1;
     }
   
-    &.overflow-end .scroll-area__content::after {
+    &.overflow-end > *::after {
       opacity: 1;
     }
   }

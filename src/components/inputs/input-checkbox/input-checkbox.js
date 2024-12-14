@@ -1,16 +1,16 @@
-import { UIElement, asBoolean, on, setProperty, toggleAttribute } from '@efflore/ui-element'
+import { Capsula, asBoolean, setProperty, toggleAttribute } from '@efflore/capsula'
 
-class InputCheckbox extends UIElement {
+class InputCheckbox extends Capsula {
 	static observedAttributes = ['checked']
-	static attributeMap = {
+	static states = {
 		checked: asBoolean,
 	}
 
 	connectedCallback() {
 		this.first('input')
-			.map(on('change', e => this.set('checked', Boolean(e.target.checked))))
-			.forEach(setProperty('checked'))
-		this.self.forEach(toggleAttribute('checked'))
+			.on('change', e => this.set('checked', Boolean(e.target.checked)))
+			.sync(setProperty('checked'))
+		this.self.sync(toggleAttribute('checked'))
 	}
 }
 InputCheckbox.define('input-checkbox')

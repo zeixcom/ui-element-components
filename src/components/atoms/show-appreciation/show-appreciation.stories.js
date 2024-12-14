@@ -7,7 +7,7 @@ export default {
 	render: ShowAppreciation,
 	argTypes: {
 		label: {
-			defaultValue: { summary: 'Appreciation' },
+			defaultValue: { summary: 'Show appreciation' },
 		},
 		emoji: {
 			defaultValue: { summary: '💐' },
@@ -17,7 +17,7 @@ export default {
 		},
 	},
 	args: {
-		label: 'Appreciation',
+		label: 'Show appreciation',
 		emoji: '💐',
 		count: 0,
 		onClick: fn()

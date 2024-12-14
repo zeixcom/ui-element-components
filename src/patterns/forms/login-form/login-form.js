@@ -1,6 +1,6 @@
-import { UIElement, on, pass, toggleClass } from '@efflore/ui-element'
+import { Capsula, toggleClass } from '@efflore/capsula'
 
-class LoginForm extends UIElement {
+class LoginForm extends Capsula {
 	static consumedContexts = ['logged-in']
 
 	connectedCallback() {
@@ -10,7 +10,7 @@ class LoginForm extends UIElement {
 		const passwordField = this.querySelector('.password')
 
 		this.first('form')
-			.map(on('submit', async e => {
+			.on('submit', async e => {
 				e.preventDefault()
 				await new Promise(resolve => setTimeout(resolve, 1000)) // TODO do real auth work here instead
 				this.set('logged-in', true)
@@ -18,26 +18,24 @@ class LoginForm extends UIElement {
 					bubbles: true,
 					detail: usernameField.get('value')
 				}))
-			}))
-			.map(toggleClass('hidden', 'logged-in'))
+			})
+			.sync(toggleClass('hidden', 'logged-in'))
 		
-		this.first('.login')
-			.map(pass({
-				disabled: () => usernameField.get('empty') || passwordField.get('empty')
-			}))
+		this.first('.login').pass({
+			disabled: () => usernameField.get('empty') || passwordField.get('empty')
+		})
 		
 		this.first('.logout')
-			.map(on('click', () => {
+			.on('click', () => {
 				usernameField.clear()
 				passwordField.clear()
 				this.set('logged-in', false)
 				this.dispatchEvent(new CustomEvent('user-logout', {
 					bubbles: true
 				}))
-			}))
-			.map(toggleClass('hidden', () => !this.get('logged-in')))
+			})
+			.sync(toggleClass('hidden', () => !this.get('logged-in')))
 	}
 
 }
-
 LoginForm.define('login-form')

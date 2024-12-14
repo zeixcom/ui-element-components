@@ -1,8 +1,8 @@
-import { UIElement, asInteger, on, setProperty, setAttribute, setText, setStyle } from '@efflore/ui-element'
+import { Capsula, asInteger, setProperty, setAttribute, setText, setStyle } from '@efflore/capsula'
 
-class ProgressGauge extends UIElement {
+class ProgressGauge extends Capsula {
 	static observedAttributes = ['value']
-	static attributeMap = {
+	static states = {
         value: asInteger
     }
 
@@ -26,23 +26,24 @@ class ProgressGauge extends UIElement {
 		})
 
 		// bind progress value to value state
-        this.first('progress').forEach(setProperty('value'))
-		this.first('.value span').forEach(setText('value'))
+        this.first('progress').sync(setProperty('value'))
+		this.first('.value span').sync(setText('value'))
 
 		// set progress-gauge styles based on progress and qualification
-		this.self
-			.map(setAttribute('value'))
-			.map(setStyle('--progress-gauge-degree', () => `${240 * this.get('value') / max}deg`))
-		    .forEach(setStyle('--progress-gauge-color', () => this.get('qualification').color))
-		this.first('small').forEach(setText(() => this.get('qualification').label))
+		this.self.sync(
+			setAttribute('value'),
+			setStyle('--progress-gauge-degree', () => `${240 * this.get('value') / max}deg`),
+		    setStyle('--progress-gauge-color', () => this.get('qualification').color)
+		)
+		this.first('small').sync(setText(() => this.get('qualification').label))
 
 		// spin-button click handlers
 		this.first('.decrement')
-			.map(setProperty('disabled', () => this.get('value') < 1))
-			.forEach(on('click', () => this.set('value', v => --v)))
+			.on('click', () => this.set('value', v => --v))
+			.sync(setProperty('disabled', () => this.get('value') < 1))
 		this.first('.increment')
-		    .map(setProperty('disabled', () => this.get('value') >= max))
-			.forEach(on('click', () => this.set('value', v => ++v)))
+			.on('click', () => this.set('value', v => ++v))
+		    .sync(setProperty('disabled', () => this.get('value') >= max))
     }
 }
 ProgressGauge.define('progress-gauge')
