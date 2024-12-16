@@ -1,17 +1,17 @@
-import { UIElement, setText, effect } from '@efflore/ui-element'
+import { Capsula, setText, effect, enqueue } from '@efflore/capsula'
 import 'culori/css'
 import { converter, formatCss, formatHex } from 'culori/fn'
 import { getStepColor } from '../../../assets/js/utils'
 
-class ColorScale extends UIElement {
+class ColorScale extends Capsula {
 	static observedAttributes = ['color', 'name']
-	static attributeMap = {
-		color: v => v.map(converter('oklch'))
+	static states = {
+		color: converter('oklch')
 	}
 
 	connectedCallback() {
 		
-		// derived states
+		// Derived states
 		this.set('hex', () => formatHex(this.get('color')))
 		this.set('colorProps', () => {
 			const base = this.get('color')
@@ -30,12 +30,14 @@ class ColorScale extends UIElement {
 			return props
 		})
 
-		// effects
-		this.first('.label strong').forEach(setText('name'))
-		this.first('.label small').forEach(setText('hex'))
-		effect(enqueue => {
+		// Effects
+		this.first('.label strong').sync(setText('name'))
+		this.first('.label small').sync(setText('hex'))
+		effect(() => {
 			for (const [key, value] of this.get('colorProps')) {
-				enqueue(this, `s-${key}`, el => () => el.style.setProperty(`--color-${key}`, value))
+				enqueue(() => {
+					this.style.setProperty(`--color-${key}`, value)
+				}, [this, `s-${key}`])
 			}
 		})
 	}

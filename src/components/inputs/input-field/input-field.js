@@ -30,10 +30,13 @@ class InputField extends Capsula {
 		this.#setupClearButton()
 
 		// Handle input changes
-		this.input.onchange = () =>
-			this.#triggerChange(this.isNumber ? this.input.valueAsNumber : this.input.value)
-		this.input.oninput = () =>
-			this.set('length', this.input.value.length)
+		this.first('input')
+			.on('change', () => {
+				this.#triggerChange(this.isNumber ? this.input.valueAsNumber : this.input.value)
+			})
+			.on('input', () => {
+				this.set('length', this.input.value.length)
+			})
 
 		// Update value
 		effect(async () => {
@@ -80,7 +83,7 @@ class InputField extends Capsula {
 
 	// Setup error message
 	#setupErrorMessage() {
-		const error = this.first('.error')
+		const errorId = this.querySelector('.error').id
 
 		// Derived states
 		this.set(
@@ -89,11 +92,11 @@ class InputField extends Capsula {
 		)
 		this.set(
 			'aria-errormessage',
-			() => this.get('error') ? error.targets[0]?.id : undefined
+			() => this.get('error') ? errorId : undefined
 		)
 
 		// Effects
-		error.sync(setText('error'))
+		this.first('.error').sync(setText('error'))
 		this.first('input').sync(
 			setProperty('ariaInvalid'),
 			setAttribute('aria-errormessage')
@@ -102,15 +105,13 @@ class InputField extends Capsula {
 
 	// Setup description
 	#setupDescription() {
-		const description = this.first('.description')
-		if (!description.targets.length)
-			return // no description, so skip
+		const description = this.querySelector('.description')
+		if (!description) return // no description, so skip
 		
-		// derived states
-		const input = this.first('input')
+		// Derived states
 		const maxLength = this.input.maxLength
-		const remainingMessage = maxLength && description.targets[0].dataset.remaining
-		const defaultDescription = description.targets[0].textContent
+		const remainingMessage = maxLength && description.dataset.remaining
+		const defaultDescription = description.textContent
 		this.set('description', remainingMessage
 			? () => {
 				const length = this.get('length')
@@ -121,13 +122,13 @@ class InputField extends Capsula {
 			: defaultDescription
 		)
 		this.set('aria-describedby', () => this.get('description')
-			? description.targets[0].id
+			? description.id
 			: undefined
 		)
 
 		// Effects
-		description.sync(setText('description'))
-		input.sync(setAttribute('aria-describedby'))
+		this.first('.description').sync(setText('description'))
+		this.first('input').sync(setAttribute('aria-describedby'))
 	}
 
 	// Setup spin button
@@ -162,7 +163,7 @@ class InputField extends Capsula {
 		this.stepUp = (stepIncrement = step) =>
 			this.#triggerChange(v => nearestStep(v + stepIncrement))
 
-		// derived states
+		// Derived states
 		this.set('decrement-disabled', () => isNumber(min) && (this.get('value') - step < min))
 		this.set('increment-disabled', () => isNumber(max) && (this.get('value') + step > max))
 

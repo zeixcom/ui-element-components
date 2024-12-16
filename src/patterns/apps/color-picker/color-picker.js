@@ -1,11 +1,11 @@
-import { UIElement, on, setText, effect } from '@efflore/ui-element';
-import 'culori/css';
+import { Capsula, setText, effect } from '@efflore/capsula'
+import 'culori/css'
 import { converter, formatHex } from 'culori/fn'
 
-class ColorPicker extends UIElement {
+class ColorPicker extends Capsula {
 	static observedAttributes = ['color', 'name']
 	static attributeMap = {
-		color: v => v.map(converter('oklch'))
+		color: converter('oklch')
 	}
 
   /* constructor() {
@@ -41,34 +41,31 @@ class ColorPicker extends UIElement {
     }
   } */
 
-  connectedCallback() {
-    const scale = this.querySelector('color-scale')
-    const editor = this.querySelector('color-editor')
-    const name = this.first('modal-dialog > button > .label strong')
-    const color = this.first('modal-dialog > button > .label small')
+	connectedCallback() {
 
-	// derived states
-	this.set('hex', () => formatHex(this.get('color')))
+		// Derived states
+		this.set('hex', () => formatHex(this.get('color')))
 
-	// event listeners
-	this.self
-		.map(on('color-change', e => this.set('color', e.detail)))
-		.map(on('value-change', e => this.set('name', e.detail)))
+		// Event listeners
+		this.self
+			.on('color-change', e => { this.set('color', e.detail) })
+			.on('value-change', e => { this.set('name', e.detail) })
 
-	// effects
-	color.forEach(setText('hex'))
-	name.forEach(setText('name'))
-    effect(() => {
-      const base = this.get('color')
-      scale.set('color', base)
-      editor.set('color', base)
-    })
-    effect(() => {
-      const label = this.get('name')
-      scale.set('name', label)
-      editor.set('name', label)
-    })
-  }
+		// Effects
+		this.first('modal-dialog > button > .label small').sync(setText('hex'))
+		this.first('modal-dialog > button > .label strong').sync(setText('name'))
+		const scale = this.querySelector('color-scale')
+		const editor = this.querySelector('color-editor')
+		effect(() => {
+			const base = this.get('color')
+			scale.set('color', base)
+			editor.set('color', base)
+		})
+		effect(() => {
+			const label = this.get('name')
+			scale.set('name', label)
+			editor.set('name', label)
+		})
+	}
 }
-
 ColorPicker.define('color-picker')

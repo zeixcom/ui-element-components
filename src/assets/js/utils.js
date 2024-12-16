@@ -6,22 +6,11 @@
  * @returns {string} formatted number
  */
 export const formatNumber = (number, digits = 2) => new Intl.NumberFormat('en-US', {
-  style: 'decimal',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: digits,
-  useGrouping: false,
-}).format(number);
-
-/**
- * Replace textContent while preserving Lit's marker nodes in Storybook
- * 
- * @param {Node} parentNode 
- * @param {string} text 
- */
-export const replaceText = (parentNode, text) => {
-  Array.from(parentNode.childNodes).filter(node => node.nodeType !== Node.COMMENT_NODE).forEach(node => node.remove());
-  parentNode.append(document.createTextNode(text));
-};
+	style: 'decimal',
+	minimumFractionDigits: 0,
+	maximumFractionDigits: digits,
+	useGrouping: false,
+}).format(number)
 
 /**
  * Calculate a step color from a base color
@@ -31,15 +20,15 @@ export const replaceText = (parentNode, text) => {
  * @returns {import('culori').Color} Culori step color
  */
 export const getStepColor = (base, step) => {
-  const calcLightness = () => {
-    const l = base.l;
-    const exp = 2 * Math.log((1 - l) / l);
-    return (Math.exp(exp * step) - 1) / (Math.exp(exp) - 1);
-  };
-  const calcSinChroma = () => {
-    return base.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7;
-  };
-  const stepL = base.l !== 0.5 ? calcLightness() : step;
-  const stepC = base.c > 0 ? calcSinChroma() : 0;
-  return { mode: 'oklch', l: stepL, c: stepC, h: base.h };
-};
+	const calcLightness = () => {
+		const l = base.l
+		const exp = 2 * Math.log((1 - l) / l)
+		return (Math.exp(exp * step) - 1) / (Math.exp(exp) - 1)
+	}
+	const calcSinChroma = () => {
+		return base.c * (8 * (Math.sin(Math.PI * (4 * step + 1) / 6) ** 3) - 1) / 7
+	}
+	const stepL = base.l !== 0.5 ? calcLightness() : step
+	const stepC = base.c > 0 ? calcSinChroma() : 0
+	return { mode: 'oklch', l: stepL, c: stepC, h: base.h }
+}

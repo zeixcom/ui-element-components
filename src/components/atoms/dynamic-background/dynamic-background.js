@@ -1,13 +1,13 @@
-import { UIElement, on, effect } from '@efflore/ui-element'
+import { Capsula, effect, enqueue } from '@efflore/capsula'
 import 'culori/css'
 import { converter, formatCss } from 'culori/fn'
 import { getStepColor } from '../../../assets/js/utils'
 
-class DynamicBackground extends UIElement {
+class DynamicBackground extends Capsula {
 	static observedAttributes = ['color']
 	static consumedContexts = ['dark-mode']
-	static attributeMap = {
-		color: v => v.map(converter('oklch'))
+	static states = {
+		color: converter('oklch')
 	}
 
 	constructor() {
@@ -48,29 +48,28 @@ class DynamicBackground extends UIElement {
 			}
 			move()
 
-			this.self.forEach(on('pointermove', e => {
+			this.self.on('pointermove', e => {
 				const rect = this.getBoundingClientRect()
 				pointerX = e.clientX - rect.left
 				pointerY = e.clientY - rect.top
-			}))
+			})
 		}
 
 		// update if base color changes
-		effect(enqueue => {
+		effect(() => {
 			const base = this.get('color')
 			const dark = this.get('dark-mode')
 			const prop = '--color-bubble'
 			const bubbles = this.shadowRoot.querySelectorAll('gradient-bubble')
 			for (let i = 0; i < 4; i++) {
-				enqueue(bubbles[i], `s-${prop}`, el => () =>
-					el.style.setProperty(prop, formatCss(getStepColor(base, (dark ? 1 + i : 9 - i) / 10)))
-				)
+				enqueue(() => {
+					bubbles[i].style.setProperty(prop, formatCss(getStepColor(base, (dark ? 1 + i : 9 - i) / 10)))
+				}, [bubbles[i], `s-${prop}`])
 			}
-			enqueue(bubbles[4], `s-${prop}`, el => () =>
-				el.style.setProperty(prop, formatCss(base))
-			)
+			enqueue(() => {
+				bubbles[4].style.setProperty(prop, formatCss(base))
+			}, [bubbles[4], `s-${prop}`])
 		})
 	}
 }
-
-DynamicBackground.define('dynamic-background');
+DynamicBackground.define('dynamic-background')

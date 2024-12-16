@@ -1,4 +1,4 @@
-import { UIElement, effect } from '@efflore/ui-element'
+import { Capsula, effect } from '@efflore/capsula'
 import 'culori/css'
 import { converter, inGamut, formatCss } from 'culori/fn'
 import { formatNumber, getStepColor } from '../../../assets/js/utils'
@@ -6,9 +6,9 @@ import VisibilityObserver from '../../../assets/js/visibility-observer'
 import RedrawObserver from '../../../assets/js/redraw-observer'
 import dragHandler from '../../../assets/js/drag-handler'
 
-class ColorGraph extends UIElement {
+class ColorGraph extends Capsula {
 	static observedAttributes = ['color']
-	static attributeMap = {
+	static states = {
 		color: converter('oklch')
 	}
 
@@ -20,7 +20,7 @@ class ColorGraph extends UIElement {
 		const redrawTimeout = 250; // milliseconds
 		const knob = this.querySelector('.knob')
 
-		// redraw canvas if size or hue changes
+		// Redraw canvas if size or hue changes
 		const redrawCanvas = h => {
 			const inP3Gamut = inGamut('p3')
 			const inRGBGamut = inGamut('rgb')
@@ -66,7 +66,7 @@ class ColorGraph extends UIElement {
 			// console.log(`time to draw canvas: ${performance.now() - start}ms`)
 		};
 
-		// reposition knob and scale if color changes
+		// Reposition knob and scale if color changes
 		const repositionScale = color => {
 			base = color
 
@@ -92,7 +92,7 @@ class ColorGraph extends UIElement {
 			for (let i = 1; i < 5; i++) setStepColor(`darken${i * 20}`, (5 - i) / 10)
 		};
 
-		// adjust to box size changes
+		// Adjust to box size changes
 		const resizeCallback = contentBoxSize => {
 			canvasSize = contentBoxSize.inlineSize
 			this.style.setProperty('--canvas-size', canvasSize)
@@ -100,7 +100,7 @@ class ColorGraph extends UIElement {
 		}
 		this.redrawObserver = new RedrawObserver(this, resizeCallback, redrawTimeout)
 
-		// move knob to a new position
+		// Move knob to a new position
 		const moveKnob = (x, y) => {
 			const getColorFromPosition = (x, y) => ({
 				mode: 'oklch',
@@ -114,14 +114,14 @@ class ColorGraph extends UIElement {
 			inP3Gamut(color) && repositionScale(color)
 		};
 
-		// trigger color-change event to commit the color change
+		// Trigger color-change event to commit the color change
 		const triggerChange = color => {
 			this.set('color', color)
 			const event = new CustomEvent('color-change', { detail: color, bubbles: true })
 			this.dispatchEvent(event)
 		};
 		
-		// handle dragging
+		// Handle dragging
 		let dragBoundingBox
 		dragHandler({
 			element: knob,
@@ -130,7 +130,7 @@ class ColorGraph extends UIElement {
 			end: () => triggerChange(base),
 		});
 
-		// handle arrow key events
+		// Handle arrow key events
 		knob.onkeydown = e => {
 			if (e.key.substring(0, 5) !== 'Arrow') return
 			e.stopPropagation()
@@ -160,14 +160,14 @@ class ColorGraph extends UIElement {
 			triggerChange(base)
 		}
 
-		// reclaculate if base color changes
+		// Recalculate if base color changes
 		effect(() => {
 			base = this.get('color')
 			repositionScale(base)
 			this.get('visible') && (hue !== base.h) && this.set('redraw', true)
 		})
 
-		// redraw canvas after hue change or resize
+		// Redraw canvas after hue change or resize
 		effect(() => {
 			this.get('redraw') && redrawCanvas(base.h)
 		})
@@ -179,5 +179,4 @@ class ColorGraph extends UIElement {
 	}
 
 }
-
 ColorGraph.define('color-graph')

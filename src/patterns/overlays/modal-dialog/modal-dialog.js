@@ -1,38 +1,34 @@
-import { UIElement } from '@efflore/ui-element';
+import { Capsula } from '@efflore/capsula'
 
-class ModalDialog extends UIElement {
-  scrollLockClass = 'scroll-lock';
-  scrollTop = 0;
+class ModalDialog extends Capsula {
+  scrollLockClass = 'scroll-lock'
+  scrollTop = 0
 
   connectedCallback() {
-    const openButton = this.querySelector('.open');
-    const closeButton = this.querySelector('.close');
-    this.dialog = this.querySelector('dialog');
-    const form = this.querySelector('form');
+    this.dialog = this.querySelector('dialog')
 
-    openButton.onclick = () => this.open();
-    closeButton.onclick = () => this.close();
-    this.dialog.addEventListener('pointerdown', e => (e.target === this.dialog) && this.close());
-    form.onsubmit = e => e.preventDefault();
+	this.first('.open').on('click', () => this.open())
+	this.first('.close').on('click', () => this.close())
+	this.first('form').on('submit', e => e.preventDefault())
+    this.dialog.addEventListener('click', e => (e.target === this.dialog) && this.close())
   }
 
   disconnectedCallback() {
-    this.close();
+    this.close()
   }
 
   open() {
-    this.dialog.showModal();
-    this.scrollTop = document.documentElement.scrollTop;
-    document.body.classList.add(this.scrollLockClass);
-    document.body.style.top = `-${this.scrollTop}px`;
+    this.dialog.showModal()
+    this.scrollTop = document.documentElement.scrollTop
+    document.body.classList.add(this.scrollLockClass)
+    document.body.style.top = `-${this.scrollTop}px`
   }
 
   close() {
-    document.body.classList.remove(this.scrollLockClass);
-    window.scrollTo({ top: this.scrollTop, left: 0, behavior: 'instant' });
-    document.body.style.top = null;
-    this.dialog.close();
+    document.body.classList.remove(this.scrollLockClass)
+    window.scrollTo({ top: this.scrollTop, left: 0, behavior: 'instant' })
+    document.body.style.top = null
+    this.dialog.close()
   }
 }
-
-ModalDialog.define('modal-dialog');
+ModalDialog.define('modal-dialog')

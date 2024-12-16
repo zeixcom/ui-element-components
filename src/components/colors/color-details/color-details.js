@@ -1,17 +1,17 @@
-import { UIElement, setText, setAttribute } from '@efflore/ui-element'
+import { Capsula, setText, setAttribute } from '@efflore/capsula'
 import 'culori/css'
 import { converter, formatCss, formatHex, formatRgb, formatHsl } from 'culori/fn'
 import { formatNumber } from '../../../assets/js/utils'
 
-class ColorDetails extends UIElement {
+class ColorDetails extends Capsula {
 	static observedAttributes = ['color', 'name']
-	static attributeMap = {
-		color: v => v.map(converter('oklch'))
+	static states = {
+		color: converter('oklch')
 	}
 
 	connectedCallback() {
 
-		// derived states
+		// Derived states
 		this.set('css', () => `--color-swatch: ${formatCss(this.get('color'))}`)
 		this.set('hex', () => formatHex(this.get('color')))
 		this.set('rgb', () => formatRgb(this.get('color')))
@@ -21,12 +21,12 @@ class ColorDetails extends UIElement {
 		this.set('hue', () => `${formatNumber(this.get('color').h)}°`)
 		this.set('oklch', () => `oklch(${this.get('lightness')} ${this.get('chroma')} ${formatNumber(this.get('color').h)})`)
 
-		// effects
-		this.self.forEach(setAttribute('style', 'css')) // no idea why setStyle doesn't work here
-		this.first('.label strong').forEach(setText('name'))
-		this.first('.value').forEach(setText('hex'))
+		// Effects
+		this.self.sync(setAttribute('style', 'css')) // no idea why setStyle doesn't work here
+		this.first('.label strong').sync(setText('name'))
+		this.first('.value').sync(setText('hex'))
 		for (const value of ['lightness', 'chroma', 'hue', 'oklch', 'rgb', 'hsl']) {
-			this.first(`.${value}`).forEach(setText(value))
+			this.first(`.${value}`).sync(setText(value))
 		}
 	}
 }

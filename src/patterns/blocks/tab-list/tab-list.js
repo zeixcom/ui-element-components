@@ -1,4 +1,4 @@
-import { Capsula, UI, asBoolean, toggleAttribute, setProperty } from '@efflore/capsula'
+import { Capsula, asBoolean, toggleAttribute, setProperty } from '@efflore/capsula'
 			  
 class TabList extends Capsula {
 	static observedAttributes = ['accordion']

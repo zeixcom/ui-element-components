@@ -30,37 +30,42 @@ export default {
 	},
 	args: {
 		language: 'js',
-		code: `import { UIElement, asBoolean, on, effect, toggleAttribute } from '@efflore/ui-element'
+		code: `import { Capsula, asBoolean, effect, enqueue, toggleAttribute } from '@efflore/capsula'
 import Prism from 'prismjs'
 
-class CodeBlock extends UIElement {
+class CodeBlock extends Capsula {
 	static observedAttributes = ['collapsed']
-	static attributeMap = {
+	static states = {
 		collapsed: asBoolean
 	}
 
   	connectedCallback() {
-		// enhance code block with Prism.js
+
+		// Enhance code block with Prism.js
 		const language = this.getAttribute('language') || 'html'
 		const content = this.querySelector('code')
 		this.set('code', content.textContent.trim(), false)
-		effect(enqueue => {
-			// apply syntax highlighting while preserving Lit's marker nodes in Storybook
+		effect(() => {
+			// Apply syntax highlighting while preserving Lit's marker nodes in Storybook
 			const code = document.createElement('code')
-			code.innerHTML = Prism.highlight(this.get('code'), Prism.languages[language], language)
-			enqueue(content, 'h', el => () => {
-				Array.from(el.childNodes)
+			code.innerHTML = Prism.highlight(
+				this.get('code'),
+				Prism.languages[language],
+				language
+			)
+			enqueue(() => {
+				Array.from(content.childNodes)
 					.filter(node => node.nodeType !== Node.COMMENT_NODE)
 					.forEach(node => node.remove())
 				Array.from(code.childNodes)
-					.forEach(node => el.appendChild(node))
-			})
+					.forEach(node => content.appendChild(node))
+			}, [content, 'h'])
 		})
 
-		// copy to clipboard
-		this.first('.copy').map(ui => on('click', async () => {
-			const copyButton = ui.target
-			const label = copyButton.textContent
+		// Copy to clipboard
+		const button = this.querySelector('.copy')
+		button.onclick = async () => {
+			const label = button.textContent
 			let status = 'success'
 			try {
 				await navigator.clipboard.writeText(content.textContent)
@@ -68,17 +73,17 @@ class CodeBlock extends UIElement {
 				console.error('Error when trying to use navigator.clipboard.writeText()', err)
 				status = 'error'
 			}
-			copyButton.set('disabled', true)
-			copyButton.set('label', ui.host.getAttribute(\`copy-\${status}\`))
+			button.set('disabled', true)
+			button.set('label', this.getAttribute(\`copy-\${status}\`))
 			setTimeout(() => {
-				copyButton.set('disabled', false)
-				copyButton.set('label', label)
+				button.set('disabled', false)
+				button.set('label', label)
 			}, status === 'success' ? 1000 : 3000)
-		})(ui))
+		}
 
-		// expand
-		this.first('.overlay').map(on('click', () => this.set('collapsed', false)))
-		this.self.map(toggleAttribute('collapsed'))
+		// Expand
+		this.first('.overlay').on('click', () => this.set('collapsed', false))
+		this.self.sync(toggleAttribute('collapsed'))
 	}
 }
 CodeBlock.define('code-block')`,
