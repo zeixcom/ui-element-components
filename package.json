@@ -1,7 +1,7 @@
 {
   "name": "ui-element-components",
   "version": "1.0.0",
-  "description": "Component library of Capsula Web Components in Storybook",
+  "description": "Component library of UIElement Components in Storybook",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,25 +17,24 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@chromatic-com/storybook": "^3.2.2",
-    "@storybook/addon-a11y": "^8.4.7",
-    "@storybook/addon-essentials": "^8.4.7",
-    "@storybook/addon-interactions": "^8.4.7",
-    "@storybook/addon-links": "^8.4.7",
-    "@storybook/blocks": "^8.4.7",
-    "@storybook/test": "^8.4.7",
-    "@storybook/web-components": "^8.4.7",
-    "@storybook/web-components-vite": "^8.4.7",
-    "chromatic": "^11.20.2",
-    "lit": "^3.2.1",
-    "storybook": "^8.4.7",
+    "@chromatic-com/storybook": "^3.2.6",
+    "@storybook/addon-a11y": "^8.6.12",
+    "@storybook/addon-essentials": "^8.6.12",
+    "@storybook/addon-interactions": "^8.6.12",
+    "@storybook/addon-links": "^8.6.12",
+    "@storybook/blocks": "^8.6.12",
+    "@storybook/test": "^8.6.12",
+    "@storybook/web-components": "^8.6.12",
+    "@storybook/web-components-vite": "^8.6.12",
+    "chromatic": "^11.28.2",
+    "lit": "^3.3.0",
+    "storybook": "^8.6.12",
     "vite-bundle-visualizer": "^1.2.1"
   },
   "dependencies": {
-    "@efflore/capsula": "^0.9.3",
-    "@efflore/flow-sure": "^0.10.0",
-    "@efflore/ui-element": "^0.8.5",
+    "@zeix/cause-effect": "^0.13.1",
+    "@zeix/ui-element": "^0.11.0",
     "culori": "^4.0.1",
-    "prismjs": "^1.29.0"
+    "prismjs": "^1.30.0"
   }
 }
