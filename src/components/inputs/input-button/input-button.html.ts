@@ -32,6 +32,6 @@ export default ({
 		@click=${onClick}
 	>
 		<span class="label">${label}</span>
-		${badge != null && html`<span class="badge">${badge}</span>`}
+		${badge != null ? html`<span class="badge">${badge}</span>` : nothing}
 	</button>
 </input-button>`

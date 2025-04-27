@@ -11,7 +11,7 @@ export type ColorScaleProps = {
 
 export default component('color-scale', {
 	name: asString(RESET),
-	color: asLCHColor
+	color: asLCHColor()
 }, el => [
 	first('.label strong', setText('name')),
 	first('.label small', setText(() => formatHex(el.color))),

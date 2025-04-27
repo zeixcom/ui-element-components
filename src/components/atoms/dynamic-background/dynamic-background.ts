@@ -38,7 +38,7 @@ const polyfillShadowRoot = (host: HTMLElement): void => {
 }
 
 export default component('dynamic-background', {
-	color: asLCHColor,
+	color: asLCHColor(),
 	theme: consume(MEDIA_THEME)
 }, el => {
 	const fns: FxFunction<DynamicBackgroundProps, HTMLElement>[] = []

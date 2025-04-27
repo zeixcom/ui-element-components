@@ -13,7 +13,7 @@ export type ColorSliderProps = {
 }
 
 export default component('color-slider', {
-	color: asLCHColor
+	color: asLCHColor()
 }, el => {
 	let base
 	let channel

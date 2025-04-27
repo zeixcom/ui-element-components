@@ -14,7 +14,7 @@ export type ColorDetailsProps = {
 
 export default component('color-details', {
 	name: asString(RESET),
-	color: asLCHColor
+	color: asLCHColor()
 }, el => {
 	const fns: FxFunction<ColorDetailsProps, HTMLElement>[] = [
 		setStyle('--color-swatch', () => formatCss(el.color)),

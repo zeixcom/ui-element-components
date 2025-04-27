@@ -1,7 +1,7 @@
 import ColorEditor from './color-editor.html'
 
 export default {
-	title: 'blocks/color-editor',
+	title: 'colors/color-editor',
 	render: ColorEditor,
 	argTypes: {},
 	args: {

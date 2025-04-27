@@ -12,7 +12,7 @@ export type ColorDetailsParams = {
 }
 
 export default ({ color, name, open, className, onClick }: ColorDetailsParams) => html`
-<color-details ?color=${color} ?class=${className}>
+<color-details color=${color} ?class=${className}>
 	<details ?open=${open}>
 		<summary @click=${onClick}>
 			<div class="summary">
@@ -20,6 +20,7 @@ export default ({ color, name, open, className, onClick }: ColorDetailsParams) =
 				<span class="label">
 					<strong>${name}</strong>
 					<small class="value">${color}</small>
+				</span>
 			</div>
 		</summary>
 		<div class="details">

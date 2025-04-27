@@ -1,4 +1,4 @@
-import { html } from 'lit'
+import { html, nothing } from 'lit'
 
 import './input-checkbox.css'
 import './input-checkbox.ts'
@@ -7,11 +7,11 @@ export default ({ label, checked = false, className, onChange }) => html`
 <input-checkbox ?checked=${checked} class=${className}>
 	<label>
 		<input
-			${className ?? 'visually-hidden'}
+			class=${className ? 'visually-hidden' : nothing}
 			type="checkbox"
 			?checked=${checked}
 			@change=${onChange}
 		/>
-		<span>${label}</span>
+		<span class="label">${label}</span>
 	</label>
 </input-checkbox>`

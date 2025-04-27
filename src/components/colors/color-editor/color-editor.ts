@@ -12,7 +12,7 @@ export type ColorEditorProps = {
 }
 
 export default component('color-editor', {
-	color: asLCHColor,
+	color: asLCHColor(),
 	name: asString(RESET)
 }, el => {
 	return [

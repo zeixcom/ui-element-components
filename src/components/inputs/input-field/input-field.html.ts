@@ -10,7 +10,7 @@ export type InputFieldParams = {
 	id: string,
 	name?: string,
 	value?: string | number,
-	autocomplete?: 'on' | 'off' | 'name' | 'email' | 'username' | 'new-password' | 'current-password',
+	autocomplete?: AutoFill,
 	placeholder?: string,
 	disabled?: boolean,
 	readonly?: boolean,
@@ -95,11 +95,14 @@ export default ({
 				maxlength=${maxlength || nothing}
 				min=${(type === 'number') && (typeof min === 'number') ? min : nothing}
 				max=${(type === 'number') && (typeof max === 'number') ? max : nothing}
-				step=${(type === 'number') ? (integer ? step : 'any') : nothing}
+				step=${(type === 'number')
+					? (integer ? step : 'any')
+					/* Native step is broken for floating point values if we want to allow any manual value but have stepUp() / stepDown() adhere to steps */
+					: nothing}
 				pattern=${pattern || nothing}
 			/>
 			${clearButton
-				? html`<button type="button" class="clear${!value && ' hidden'}" aria-label=${clearLabel}>×</button>`
+				? html`<button type="button" class="clear" hidden=${!value} aria-label=${clearLabel}>×</button>`
 				: nothing}
 			${suffix && html`<span>${suffix}</span>`}
 		</div>

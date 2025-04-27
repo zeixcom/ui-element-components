@@ -1,4 +1,3 @@
-import { AttributeParser } from "@zeix/ui-element"
 import { converter } from "culori/fn"
 
 export type LCHColor = {
@@ -7,6 +6,6 @@ export type LCHColor = {
 	h: number
 }
 
-export const asLCHColor: AttributeParser<HTMLElement, LCHColor> = (_, v) => {
-	return v ? converter('oklch')(v) : { l: 0, c: 0, h: 0  }
-}
+export const asLCHColor = (fallback: LCHColor = { l: 0.46, c: 0.24, h: 265 }) =>
+	(_: HTMLElement, v: string | null) =>
+		v ? converter('oklch')(v) : fallback
