@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@zeix/cause-effect": "^0.13.1",
-    "@zeix/ui-element": "^0.11.0",
+    "@zeix/ui-element": "^0.12.0",
     "culori": "^4.0.1",
     "prismjs": "^1.30.0"
   }
