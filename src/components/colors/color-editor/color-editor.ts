@@ -3,7 +3,7 @@ import { type Component, all, asString, component, first, on, pass, RESET, setPr
 import 'culori/css'
 import { converter, formatHex } from 'culori/fn'
 import { formatNumber, getStepColor } from '../../../assets/js/utils'
-import { type LCHColor, asLCHColor } from '../../../assets/js/parsers'
+import { type LCHColor, asOklch } from '../../../assets/js/parsers'
 import { InputFieldProps } from '../../inputs/input-field/input-field'
 
 export type ColorEditorProps = {
@@ -12,7 +12,7 @@ export type ColorEditorProps = {
 }
 
 export default component('color-editor', {
-	color: asLCHColor(),
+	color: asOklch(),
 	name: asString(RESET)
 }, el => {
 	return [

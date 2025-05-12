@@ -1,17 +1,26 @@
-import { type Component, asString, component, first, RESET, setText } from '@zeix/ui-element'
+import {
+	type Component,
+	asString,
+	component,
+	first,
+	RESET,
+	setText,
+} from "@zeix/ui-element";
 
 export type HelloWorldProps = {
-	name: string
-}
+	name: string;
+};
 
-export default component('hello-world', {
-	name: asString(RESET)
-}, () => [
-	first('span', setText('name'))
-])
+export default component(
+	"hello-world",
+	{
+		name: asString(RESET),
+	},
+	() => [first("span", setText("name"))],
+);
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'hello-world': Component<HelloWorldProps>
+		"hello-world": Component<HelloWorldProps>;
 	}
 }

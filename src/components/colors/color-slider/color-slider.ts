@@ -1,19 +1,19 @@
 /* import { Capsula, effect } from '@efflore/capsula'
 import { component } from '@zeix/ui-element'
 import 'culori/css'
-import { converter, inGamut, formatCss } from 'culori/fn'
+import { type Oklch, converter, inGamut, formatCss } from 'culori/fn'
 import { formatNumber } from '../../../assets/js/utils'
 import VisibilityObserver from '../../../assets/js/visibility-observer'
 import RedrawObserver from '../../../assets/js/redraw-observer'
 import dragHandler from '../../../assets/js/drag-handler'
-import { type LCHColor, asLCHColor } from '../../../assets/js/parsers'
+import { asOklch } from '../../../assets/js/parsers'
 
 export type ColorSliderProps = {
-	color: LCHColor
+	color: Oklch
 }
 
 export default component('color-slider', {
-	color: asLCHColor()
+	color: asOklch()
 }, el => {
 	let base
 	let channel
@@ -117,7 +117,7 @@ class ColorSlider extends Capsula {
 			const event = new CustomEvent('color-change', { detail: color, bubbles: true })
 			this.dispatchEvent(event)
 		}
-		
+
 		// Handle dragging
 		let dragBoundingBox
 		dragHandler({
@@ -132,10 +132,10 @@ class ColorSlider extends Capsula {
 			if (e.key.substring(0, 5) !== 'Arrow') return
 			e.stopPropagation()
 			e.preventDefault()
-		
+
 			const stepOffset = e.shiftKey ? 10 : 1
 			let x = thumb.offsetLeft - trackOffset
-		
+
 			switch (e.key) {
 				case 'ArrowLeft':
 					x -= stepOffset
@@ -161,7 +161,7 @@ class ColorSlider extends Capsula {
 					case 'c': return (color.l!== base.l) || (color.h!== base.h)
 				}
 			}
-			
+
 			const color = this.get('color')
 			const updateTrack = shouldUpdateTrack()
 			base = color

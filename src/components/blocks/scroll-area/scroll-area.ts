@@ -1,45 +1,71 @@
-customElements.define('scroll-area', class ScrollArea extends HTMLElement {
-	connectedCallback() {
-		const orientation = this.getAttribute('orientation')
-		const threshold = 0.999 // ignore rounding errors of fraction pixels
-		let scrolling
+import {
+	type Component,
+	batch,
+	component,
+	on,
+	toggleClass,
+} from "@zeix/ui-element";
 
-		// Scroll event handler
-		const onScroll = () => {
-			if (scrolling) cancelAnimationFrame(scrolling)
-			scrolling = requestAnimationFrame(() => {
-				scrolling = null
-				this.classList.toggle(
-					'overflow-start',
-					orientation === 'horizontal'
-						? (this.scrollLeft > 0)
-						: (this.scrollTop > 0)
-				)
-				this.classList.toggle(
-					'overflow-end',
-					orientation === 'horizontal'
-						? (this.scrollLeft < (this.scrollWidth - this.offsetWidth))
-						: (this.scrollTop < (this.scrollHeight - this.offsetHeight))
-				)
-			})
+export type ScrollAreaProps = {
+	overflowStart: boolean;
+	overflowEnd: boolean;
+};
+
+const connectIntersectionObserver = (el: Component<ScrollAreaProps>) => {
+	const child = el.firstElementChild;
+	if (!child) return;
+	const observer = new IntersectionObserver(([entry]) => {
+		if (
+			entry.intersectionRatio > 0 &&
+			entry.intersectionRatio < 0.999 // ignore rounding errors of fraction pixels
+		) {
+			el.overflowEnd = true;
+		} else {
+			batch(() => {
+				el.overflowStart = false;
+				el.overflowEnd = false;
+			});
 		}
+	});
+	observer.observe(child);
+	return () => observer.disconnect();
+};
 
-		// Setup intersection observer
-		this.intersectionObserver = new IntersectionObserver(([entry]) => {
-			if (entry.intersectionRatio > 0 && entry.intersectionRatio < threshold) {
-				this.addEventListener('scroll', onScroll)
-				this.classList.add('overflow', 'overflow-end')
-			} else {
-				this.removeEventListener('scroll', onScroll)
-				this.classList.remove('overflow', 'overflow-start', 'overflow-end')
-			}
-		}, {
-			root: this,
-			threshold: [0, threshold]
-		}).observe(this.children[0])
-	}
+export default component(
+	"scroll-area",
+	{
+		overflowStart: false,
+		overflowEnd: false,
+	},
+	(el) => {
+		const isHorizontal = el.getAttribute("orientation") === "horizontal";
+		const hasOverflow = () => el.overflowStart || el.overflowEnd;
+		let scrolling: number | null = null;
 
-	disconnectedCallback() {
-		if (this.intersectionObserver) this.intersectionObserver.disconnect()
+		return [
+			connectIntersectionObserver,
+			toggleClass("overflow", hasOverflow),
+			toggleClass("overflow-start", "overflowStart"),
+			toggleClass("overflow-end", "overflowEnd"),
+			on("scroll", () => {
+				if (!hasOverflow()) return;
+				if (scrolling) cancelAnimationFrame(scrolling);
+				scrolling = requestAnimationFrame(() => {
+					scrolling = null;
+					el.overflowStart = isHorizontal
+						? el.scrollLeft > 0
+						: el.scrollTop > 0;
+					el.overflowEnd = isHorizontal
+						? el.scrollLeft < el.scrollWidth - el.offsetWidth
+						: el.scrollTop < el.scrollHeight - el.offsetHeight;
+				});
+			}),
+		];
+	},
+);
+
+declare global {
+	interface HTMLElementTagNameMap {
+		"scroll-area": Component<ScrollAreaProps>;
 	}
-})
+}
