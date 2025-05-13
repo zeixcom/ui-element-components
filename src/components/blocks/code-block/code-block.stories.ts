@@ -1,111 +1,156 @@
-import { fn } from '@storybook/test'
+import { fn } from "@storybook/test";
 
-import CodeBlock from './code-block.html'
+import "./code-block";
+
+// HTML template for rendering the code-block component
+const CodeBlockTemplate = (args) => {
+	return `
+    <code-block
+      language="${args.language}"
+      ${args.collapsed ? "collapsed" : ""}
+      ${args.theme ? `theme="${args.theme}"` : ""}
+      ${args.lineNumbers ? "line-numbers" : ""}
+      ${args.highlightLines ? `highlight-lines="${args.highlightLines}"` : ""}>
+      <div class="meta">
+        ${args.file ? `<div class="file">${args.file}</div>` : ""}
+        <div class="language">${args.language}</div>
+      </div>
+      <pre>
+        <code>${args.code}</code>
+      </pre>
+      <button class="copy" copy-success="${args.copySuccess}" copy-error="${args.copyError}">${args.copyLabel}</button>
+      <button class="overlay">${args.expandLabel}</button>
+    </code-block>
+  `;
+};
 
 export default {
-	title: 'blocks/code-block',
-	render: CodeBlock,
+	title: "blocks/code-block",
+	render: (args) => CodeBlockTemplate(args),
 	argTypes: {
 		language: {
-			control: { type: 'select' },
-			options: ['html', 'css', 'js', 'ts'],
-			defaultValue: { summary: 'html' },
+			control: { type: "select" },
+			options: [
+				"html",
+				"css",
+				"js",
+				"ts",
+				"jsx",
+				"tsx",
+				"json",
+				"markdown",
+			],
+			defaultValue: { summary: "markdown" },
+		},
+		theme: {
+			control: { type: "select" },
+			options: ["gruvbox-dark-medium", "gruvbox-light-medium"],
+			defaultValue: { summary: "gruvbox-dark-medium" },
+		},
+		lineNumbers: {
+			control: "boolean",
+			defaultValue: { summary: false },
+		},
+		highlightLines: {
+			control: "text",
+			defaultValue: { summary: "" },
+			description:
+				'Comma-separated line numbers or ranges, e.g. "1,3-5,7"',
 		},
 		collapsed: {
-			control: 'boolean',
+			control: "boolean",
 			defaultValue: { summary: false },
 		},
 		copyLabel: {
-			defaultValue: { summary: 'Copy' },
+			defaultValue: { summary: "Copy" },
 		},
 		copySuccess: {
-			defaultValue: { summary: 'Copied!' },
+			defaultValue: { summary: "Copied!" },
 		},
 		copyError: {
-			defaultValue: { summary: 'Error trying to copy to clipboard!' },
+			defaultValue: { summary: "Error trying to copy to clipboard!" },
 		},
 		expandLabel: {
-			defaultValue: { summary: 'Expand' },
+			defaultValue: { summary: "Expand" },
 		},
 	},
 	args: {
-		language: 'js',
-		code: `import { Capsula, asBoolean, effect, enqueue, toggleAttribute } from '@efflore/capsula'
-import Prism from 'prismjs'
+		language: "ts",
+		theme: "github-dark",
+		code: `import {
+	type Component,
+	asBoolean,
+	asString,
+	component,
+	first,
+	on,
+	toggleAttribute,
+} from "@zeix/ui-element";
 
-class CodeBlock extends Capsula {
-	static observedAttributes = ['collapsed']
-	static states = {
-		collapsed: asBoolean
-	}
+import { getHighlighter, type Lang, type Theme } from 'shiki';
 
-  	connectedCallback() {
+import type { InputButtonProps } from "../../inputs/input-button/input-button";
 
-		// Enhance code block with Prism.js
-		const language = this.getAttribute('language') || 'html'
-		const content = this.querySelector('code')
-		this.set('code', content.textContent.trim(), false)
-		effect(() => {
-			// Apply syntax highlighting while preserving Lit's marker nodes in Storybook
-			const code = document.createElement('code')
-			code.innerHTML = Prism.highlight(
-				this.get('code'),
-				Prism.languages[language],
-				language
-			)
-			enqueue(() => {
-				Array.from(content.childNodes)
-					.filter(node => node.nodeType !== Node.COMMENT_NODE)
-					.forEach(node => node.remove())
-				Array.from(code.childNodes)
-					.forEach(node => content.appendChild(node))
-			}, [content, 'h'])
-		})
+export type CodeBlockProps = {
+	collapsed: boolean;
+	language?: string;
+	theme?: string;
+};
 
-		// Copy to clipboard
-		const button = this.querySelector('.copy')
-		button.onclick = async () => {
-			const label = button.textContent
-			let status = 'success'
-			try {
-				await navigator.clipboard.writeText(content.textContent)
-			} catch (err) {
-				console.error('Error when trying to use navigator.clipboard.writeText()', err)
-				status = 'error'
-			}
-			button.set('disabled', true)
-			button.set('label', this.getAttribute(\`copy-\${status}\`))
-			setTimeout(() => {
-				button.set('disabled', false)
-				button.set('label', label)
-			}, status === 'success' ? 1000 : 3000)
+export default component(
+	"code-block",
+	{
+		collapsed: asBoolean,
+		language: asString,
+		theme: asString,
+	},
+	async (el) => {
+		const code = el.querySelector("code");
+		const defaultLanguage = 'typescript';
+		const defaultTheme = 'github-dark';
+
+		// Apply syntax highlighting if code element exists
+		if (code) {
+			const language = el.language || defaultLanguage;
+			const theme = el.theme || defaultTheme;
+			await applyHighlighting(code, language, theme);
 		}
-
-		// Expand
-		this.first('.overlay').on('click', () => this.set('collapsed', false))
-		this.self.sync(toggleAttribute('collapsed'))
-	}
-}
-CodeBlock.define('code-block')`,
-		file: 'code-block.js',
+		return [
+			toggleAttribute("collapsed"),
+			first(
+				".overlay",
+				on("click", () => {
+					el.collapsed = false;
+				}),
+			),
+			first(
+				".copy",
+				on("click", async (e) => {
+					// Copy code to clipboard
+				}),
+			),
+		];
+	},
+);`,
+		file: "code-block.js",
 		collapsed: false,
-		copyLabel: 'Copy',
-		copySuccess: 'Copied!',
-		copyError: 'Error trying to copy to clipboard!',
-		expandLabel: 'Expand',
+		copyLabel: "Copy",
+		copySuccess: "Copied!",
+		copyError: "Error trying to copy to clipboard!",
+		expandLabel: "Expand",
 		onCopyClick: fn(),
 		onExpandClick: fn(),
 	},
-}
+};
 
 export const Expanded = {
 	args: {},
-}
+};
 
 export const Collapsed = {
 	args: {
-		language: 'css',
-		file: 'code-block.css',
+		language: "css",
+		file: "code-block.css",
 		code: `code-block {
 	position: relative;
 	display: block;
@@ -145,50 +190,92 @@ export const Collapsed = {
 	&[collapsed] {
 		max-height: 12rem;
 		overflow: hidden;
-
-		&::after {
-			content: '';
-			display: block;
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			height: var(--space-m);
-			background: linear-gradient(-135deg, var(--color-secondary) 0.5rem, transparent 0) 0 0.5rem, linear-gradient(135deg, var(--color-secondary) 0.5rem, var(--color-background) 0) 0 0.5rem;
-			background-color: var(--color-secondary);
-			background-size: var(--space-m) var(--space-m);
-			background-position: bottom;
-		}
-
-		.copy {
-			display: none;
-		}
-
-		.overlay {
-			display: flex;
-			flex-direction: column-reverse;
-			align-items: center;
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			height: 6rem;
-			color: var(--color-text);
-			background: linear-gradient(transparent, var(--color-secondary));
-			border: 0;
-			cursor: pointer;
-			padding: var(--space-xs) var(--space-s);
-			margin-bottom: var(--space-m);
-			font-size: var(--font-size-s);
-			transition: background var(--transition-short) var(--easing-inout);
-			text-shadow: var(--color-background) 1px 0 var(--space-xs);
-
-			&:hover,
-			&:active {
-				text-shadow: var(--color-text-inverted) var(--space-xs) 0 var(--space-s);
-			}
-		}
 	}
 }`,
 		collapsed: true,
 	},
+};
+
+export const JavaScript = {
+	args: {
+		language: "js",
+		file: "example.js",
+		code: `function calculateFactorial(n) {
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+  return n * calculateFactorial(n - 1);
 }
+
+// Example usage
+const number = 5;
+const result = calculateFactorial(number);
+console.log(\`The factorial of \${number} is \${result}\`);
+
+// Using modern JavaScript features
+const arrowFactorial = (n) => (n <= 1 ? 1 : n * arrowFactorial(n - 1));
+const numbers = [1, 2, 3, 4, 5];
+const results = numbers.map(arrowFactorial);
+console.log(results);`,
+	},
+};
+
+export const Json = {
+	args: {
+		language: "json",
+		theme: "monokai",
+		file: "package.json",
+		lineNumbers: true,
+		code: `{
+  "name": "ui-element-components",
+  "version": "1.0.0",
+  "description": "Component library of UIElement Components in Storybook",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\"Error: no test specified\\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@zeix/ui-element": "^0.12.1",
+    "shiki": "^3.4.0"
+  }
+}`,
+	},
+};
+
+export const TypeScriptWithLineHighlighting = {
+	args: {
+		language: "ts",
+		theme: "github-dark",
+		file: "component.ts",
+		lineNumbers: true,
+		highlightLines: "3,7-9,15-18",
+		code: `import { component, asString, asBoolean } from '@zeix/ui-element';
+
+// This component demonstrates line highlighting
+export default component(
+  'highlighted-example',
+  {
+    // These are the observed attributes
+    name: asString,
+    active: asBoolean,
+    count: (val) => parseInt(val || '0', 10)
+  },
+  (el) => {
+    const logger = (msg: string) => console.log(msg);
+
+    // The following lines are important
+    return [
+      (host) => {
+        logger(\`Component initialized: \${host.name}\`);
+        console.log(\`Active status: \${host.active}\`);
+      }
+    ];
+  }
+);`,
+	},
+};

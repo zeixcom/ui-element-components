@@ -12,11 +12,28 @@ code-block {
 		&:not(:has(.file)) .language {
 			margin-block-start: calc(-1 * var(--space-m));
 		}
+
+		.file {
+			display: flex;
+			align-items: center;
+		}
 	}
 
 	.language {
 		margin-left: auto;
 		text-transform: uppercase;
+		display: flex;
+		align-items: center;
+		gap: var(--space-xs);
+
+		&::before {
+			content: "";
+			display: inline-block;
+			width: var(--space-s);
+			height: var(--space-s);
+			border-radius: 50%;
+			background-color: var(--color-text-soft);
+		}
 	}
 
 	& pre {
@@ -27,6 +44,15 @@ code-block {
 		margin: var(--space-xs) 0;
 		overflow: auto;
 		border-radius: var(--space-xs);
+		font-family: var(--font-family-mono, monospace);
+
+		/* Styling for code with Shiki highlighting */
+		& code[data-theme] {
+			font-family: inherit;
+			tab-size: 4;
+			-moz-tab-size: 4;
+			-o-tab-size: 4;
+		}
 	}
 
 	.copy {
@@ -44,13 +70,25 @@ code-block {
 		overflow: hidden;
 
 		&::after {
-			content: '';
+			content: "";
 			display: block;
 			position: absolute;
 			bottom: 0;
 			width: 100%;
 			height: var(--space-m);
-			background: linear-gradient(-135deg, var(--color-secondary) 0.5rem, transparent 0) 0 0.5rem, linear-gradient(135deg, var(--color-secondary) 0.5rem, var(--color-background) 0) 0 0.5rem;
+			background:
+				linear-gradient(
+						-135deg,
+						var(--color-secondary) 0.5rem,
+						transparent 0
+					)
+					0 0.5rem,
+				linear-gradient(
+						135deg,
+						var(--color-secondary) 0.5rem,
+						var(--color-background) 0
+					)
+					0 0.5rem;
 			background-color: var(--color-secondary);
 			background-size: var(--space-m) var(--space-m);
 			background-position: bottom;
@@ -76,12 +114,14 @@ code-block {
 			padding: var(--space-xs) var(--space-s);
 			margin-bottom: var(--space-m);
 			font-size: var(--font-size-s);
-			transition: background-color var(--transition-short) var(--easing-inout);
+			transition: background-color var(--transition-short)
+				var(--easing-inout);
 			text-shadow: var(--color-background) 1px 0 var(--space-xs);
 
 			&:hover,
 			&:active {
-				text-shadow: var(--color-text-inverted) var(--space-xs) 0 var(--space-s);
+				text-shadow: var(--color-text-inverted) var(--space-xs) 0
+					var(--space-s);
 			}
 		}
 	}
